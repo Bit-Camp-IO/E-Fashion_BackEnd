@@ -1,4 +1,5 @@
 import express from 'express';
+import api from '../api';
 
 const app = express();
 
@@ -12,6 +13,8 @@ app.get('/h', async (_, res) => {
     pid: process.pid,
   });
 });
+
+api(app);
 
 app.listen(8080, () => {
   console.log('app listen in port 8080');

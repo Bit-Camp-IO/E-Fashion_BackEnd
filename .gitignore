@@ -1,0 +1,8 @@
+node_modules/
+.env
+logs
+*/*.log
+*.log
+.DS_Store
+TODO
+endpoints
