@@ -4,10 +4,15 @@
   "description": "Fashion store",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node src/index.ts",
-    "start-wtach": "nodemon src/index.ts",
-    "build": "tsc .",
+    "start": "ts-node -r tsconfig-paths/register ./src/index.ts",
+    "start-watch": "nodemon",
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "nodemonConfig": {
+    "exec": "ts-node -r tsconfig-paths/register ./src/index.ts",
+    "watch": "./src/*",
+    "ext": "ts"
   },
   "repository": {
     "type": "git",
@@ -29,9 +34,13 @@
     "@types/node": "^20.3.1",
     "nodemon": "^2.0.22",
     "prettier": "^2.8.8",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.1.3"
   },
   "dependencies": {
-    "express": "^4.18.2"
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "joi": "^17.9.2",
+    "mongoose": "^7.3.1"
   }
 }

@@ -1,23 +1,23 @@
 import express from 'express';
-import api from '../api';
+import api from './api';
+import { errorMiddleware } from './utils/errors';
+import Config from '@/config';
 
-const app = express();
+function createServer(): express.Express {
+  const app = express();
 
-app.get('/h', async (_, res) => {
-  // console.log(process.pid);
-  let a = 0;
-  for (let i = 0; i <= 100_000; i++) {
-    a++;
-  }
-  res.json({
-    pid: process.pid,
+  initMiddleware(app);
+  api(app);
+  errorMiddleware(app);
+
+  app.listen(Config.PORT, () => {
+    console.log(`app listen in port ${Config.PORT}`);
   });
-});
+  return app;
+}
 
-api(app);
+function initMiddleware(app: express.Express) {
+  app.use(express.json());
+}
 
-app.listen(8080, () => {
-  console.log('app listen in port 8080');
-});
-
-export default app;
+createServer();

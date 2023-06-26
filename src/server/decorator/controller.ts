@@ -1,10 +1,17 @@
-const TryCatchWrapper = (_: any, __: string, descriptor: PropertyDescriptor) => {
+import { HttpStatus } from '@server/utils/status';
+
+const TryCatchWrapper = (
+  _: any,
+  __: string,
+  descriptor: PropertyDescriptor,
+) => {
   const fn = descriptor.value;
   descriptor.value = async (...args: any) => {
     try {
       await fn.apply(this, args);
     } catch (error) {
-      if (!error.code || error.code > 504) error.code = 500;
+      if (!error.code || !(error.code in HttpStatus))
+        error.code = HttpStatus.InternalServerError;
       const [, , next] = args;
       next(error);
     }

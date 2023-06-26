@@ -20,7 +20,13 @@
     "esModuleInterop": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "paths": {
+      "@type/*": ["./src/types/*"],
+      "@server/*": ["./src/server/*"],
+      "@api/*": ["./src/server/api/*"],
+      "@/*": ["./src/*"]
+    }
   },
   "exclude": ["node_modules"]
 }

@@ -1,6 +1,8 @@
-import { Router, Express } from 'express';
+import { Router } from 'express';
+import { InitRouterFunc } from '@type/server';
+import initAuth from './auth';
 
-export default (app: Express) => {
+const initApi: InitRouterFunc = app => {
   const router = Router();
   router.get('/version', (_, res) => {
     res.json({
@@ -8,5 +10,8 @@ export default (app: Express) => {
     });
   });
   // TODO: set up routers
+  initAuth(router);
   app.use('/api', router);
 };
+
+export default initApi;
