@@ -8,7 +8,7 @@ export function createToken(payload: any, key: string, exp: string): string {
   });
 }
 
-export function verfieToken(token: string, key: string): any {
+export function verfiyToken(token: string, key: string): any {
   try {
     const keyEncoded = Buffer.from(key, 'base64').toString('utf-8');
     return jwt.verify(token, keyEncoded, {
