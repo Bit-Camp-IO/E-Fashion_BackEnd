@@ -7,11 +7,13 @@ import { Relation, RelationList } from '@type/database';
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
-export interface UserDB {
+export type AuthProvider = 'LOCAL' | 'GOOGLE';
+
+export interface UserDB extends mongoose.Document {
   email: string;
   password: string;
   phoneNumber: string;
-  provider: 'LOCAL' | 'GOOGLE';
+  provider: AuthProvider;
   settings: SettingsDB;
   fullName: string;
   banned: boolean;
@@ -82,3 +84,22 @@ const userSchema = new Schema<UserDB>(
 );
 
 const UserModel = mongoose.model('User', userSchema);
+
+interface UserRegistrationData {
+  email: string;
+  fullName: string;
+  phone?: string;
+}
+
+interface UserRegistrationLocalData extends UserRegistrationData {
+  provider: 'LOCAL';
+  hashPassword: string;
+}
+
+interface UserRegistrationGOOGLEData extends UserRegistrationData {
+  provider: 'GOOGLE';
+}
+
+export type UserRegistration = UserRegistrationLocalData | UserRegistrationGOOGLEData;
+
+export default UserModel;

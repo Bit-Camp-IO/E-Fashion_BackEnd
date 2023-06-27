@@ -9,9 +9,12 @@ export interface RegisterSchema {
   email: string;
   password: string;
   confirmPassword: string;
+  fullName: string;
+  phone: string;
 }
 
 const passwordValidate = Joi.string()
+  .trim()
   .min(8)
   .max(30)
   .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*-_])'))
@@ -30,4 +33,6 @@ export const registerSchema = Joi.object({
   email: Joi.string().email().required(),
   password: passwordValidate,
   confirmPassword: confirmPasswordValidate,
+  fullName: Joi.string().trim().min(2).max(55).required(),
+  phone: Joi.string(),
 });

@@ -4,6 +4,7 @@ import { Validate } from '@server/decorator/validate';
 import { LoginSchema, RegisterSchema, loginSchema, registerSchema } from './auth.valid';
 import { HttpStatus } from '@server/utils/status';
 import { wrappResponse } from '@server/utils/response';
+import AuthService from '@/core/auth';
 
 interface IAuth {
   login: RequestHandler;
@@ -19,10 +20,15 @@ class AuthController implements IAuth {
     res.status(HttpStatus.Ok).json(wrappResponse(body, HttpStatus.Ok));
   }
   @Validate(registerSchema)
-  public register(req: Request, res: Response) {
+  public async register(req: Request, res: Response) {
     const body: RegisterSchema = req.body;
-    // TODO: call auth service method
-    res.status(HttpStatus.Created).json(wrappResponse(body, HttpStatus.Ok));
+    const response = await AuthService.register({
+      email: body.email,
+      fullName: body.fullName,
+      password: body.password,
+      phone: body.phone,
+    });
+    res.status(HttpStatus.Created).json(wrappResponse(response, HttpStatus.Ok));
   }
 }
 

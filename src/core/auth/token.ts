@@ -1,0 +1,21 @@
+import jwt from 'jsonwebtoken';
+
+export function createToken(payload: any, key: string, exp: string): string {
+  const keyEncoded = Buffer.from(key, 'base64').toString('utf-8');
+  return jwt.sign(payload, keyEncoded, {
+    algorithm: 'RS256',
+    expiresIn: exp,
+  });
+}
+
+export function verfieToken(token: string, key: string): any {
+  try {
+    const keyEncoded = Buffer.from(key, 'base64').toString('utf-8');
+    return jwt.verify(token, keyEncoded, {
+      ignoreExpiration: false,
+      algorithms: ['RS256'],
+    });
+  } catch (err) {
+    return err;
+  }
+}
