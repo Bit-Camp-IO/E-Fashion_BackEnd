@@ -14,10 +14,10 @@ interface IAuth {
 @Controller()
 class AuthController implements IAuth {
   @Validate(loginSchema)
-  public login(req: Request, res: Response) {
+  public async login(req: Request, res: Response) {
     const body: LoginSchema = req.body;
-    // TODO: call auth service method
-    res.status(HttpStatus.Ok).json(wrappResponse(body, HttpStatus.Ok));
+    const response = await AuthService.login(body);
+    res.status(HttpStatus.Ok).json(wrappResponse(response, HttpStatus.Ok));
   }
   @Validate(registerSchema)
   public async register(req: Request, res: Response) {

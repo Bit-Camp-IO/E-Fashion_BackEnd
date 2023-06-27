@@ -18,6 +18,11 @@ interface RegisterResponse {
   refreshToken: string;
 }
 
+interface UserLogin {
+  email: string;
+  password: string;
+}
+
 class AuthService {
   static async register(userData: UserRegistrationData): Promise<RegisterResponse> {
     try {
@@ -40,6 +45,29 @@ class AuthService {
       };
     } catch (err) {
       throw new Error(err.message);
+    }
+  }
+
+  static async login(userData: UserLogin): Promise<{ access_token: string }> {
+    try {
+      const { email, password } = userData;
+
+      const user  = await UserModel.findOne({ email }).exec();
+
+      if (!user) {
+        throw new Error('Invalid credintials');
+      }
+
+      const validPass = await bcrypt.compare(password, user.password);
+
+      if (validPass) {
+        const token = createToken({ id: user.id }, Config.ACCESS_TOKEN_PRIVATE_KEY, '600s');
+        return { access_token: token, };
+      } else {
+        throw new Error('Invalid credintials');
+      }
+    } catch (err) {
+      throw new Error(err.message)
     }
   }
 }
