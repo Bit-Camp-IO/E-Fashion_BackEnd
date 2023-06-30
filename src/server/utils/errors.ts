@@ -11,12 +11,7 @@ class RequestError extends Error {
 }
 
 export function errorMiddleware(app: Express) {
-  const errorHandler: ErrorRequestHandler = async (
-    err: RequestError,
-    _,
-    res,
-    __,
-  ) => {
+  const errorHandler: ErrorRequestHandler = async (err: RequestError, _, res, __) => {
     let code = err.code;
     if (!err.code || !(err instanceof RequestError)) {
       code = 500;

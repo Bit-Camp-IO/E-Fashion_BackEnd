@@ -1,7 +1,9 @@
 import UserModel from '@/database/models/user';
 import bcrypt from 'bcrypt';
-import { createToken } from './token';
+import { createToken, verifyToken } from './token';
 import Config from '@/config';
+import { SafeResult } from '@type/common';
+import { DuplicateUserError, InvalidCredentialsError } from './errors';
 
 interface UserRegistrationData {
   email: string;
@@ -10,7 +12,7 @@ interface UserRegistrationData {
   phone?: string;
 }
 
-interface RegisterResponse {
+interface AuthResponse {
   email: string;
   fullName: string;
   id: string;
@@ -24,7 +26,7 @@ interface UserLogin {
 }
 
 class AuthService {
-  static async register(userData: UserRegistrationData): Promise<RegisterResponse> {
+  static async register(userData: UserRegistrationData): Promise<SafeResult<AuthResponse>> {
     try {
       const hashedPassword = await bcrypt.hash(userData.password, 12);
       let user = await new UserModel({
@@ -35,39 +37,100 @@ class AuthService {
         provider: 'LOCAL',
       }).save();
       const accessToken = createToken({ id: user._id }, Config.ACCESS_TOKEN_PRIVATE_KEY, '600s');
-      const refreshToken = createToken({ id: user._id }, Config.REFRESH_TOKEN_PRIVATE_KEY, '20d');
+      const refreshToken = createToken(
+        { id: user._id },
+        Config.REFRESH_TOKEN_PRIVATE_KEY,
+        Config.REFRESH_TOKEN_EXP,
+      );
       return {
-        id: user._id,
-        email: user.email,
-        fullName: user.fullName,
-        accessToken,
-        refreshToken,
+        result: {
+          id: user._id,
+          email: user.email,
+          fullName: user.fullName,
+          accessToken,
+          refreshToken,
+        },
+        error: null,
       };
     } catch (err) {
-      throw new Error(err.message);
+      if (err.code === 11000) {
+        err = new DuplicateUserError();
+      }
+      return {
+        error: err,
+        result: null,
+      };
     }
   }
 
-  static async login(userData: UserLogin): Promise<{ access_token: string }> {
+  static async login(userData: UserLogin): Promise<SafeResult<AuthResponse>> {
     try {
       const { email, password } = userData;
-
-      const user  = await UserModel.findOne({ email }).exec();
-
+      const user = await UserModel.findOne({ email }).select('+password').exec();
       if (!user) {
-        throw new Error('Invalid credintials');
+        throw new InvalidCredentialsError();
       }
-
       const validPass = await bcrypt.compare(password, user.password);
-
-      if (validPass) {
-        const token = createToken({ id: user.id }, Config.ACCESS_TOKEN_PRIVATE_KEY, '600s');
-        return { access_token: token, };
-      } else {
-        throw new Error('Invalid credintials');
+      if (!validPass) {
+        throw new InvalidCredentialsError();
       }
+      const accessToken = createToken(
+        { id: user.id },
+        Config.ACCESS_TOKEN_PRIVATE_KEY,
+        Config.ACCESS_TOKEN_EXP,
+      );
+      const refreshToken = createToken(
+        { id: user._id },
+        Config.REFRESH_TOKEN_PRIVATE_KEY,
+        Config.REFRESH_TOKEN_EXP,
+      );
+      return {
+        result: {
+          id: user._id,
+          email: user.email,
+          fullName: user.fullName,
+          accessToken,
+          refreshToken,
+        },
+        error: null,
+      };
     } catch (err) {
-      throw new Error(err.message)
+      return {
+        error: err,
+        result: null,
+      };
+    }
+  }
+  static verifyAccessToken(token: string): SafeResult<string> {
+    try {
+      return {
+        result: verifyToken(token, Config.ACCESS_TOKEN_PUBLIC_KEY).id as string,
+        error: null,
+      };
+    } catch (err) {
+      return {
+        error: err,
+        result: null,
+      };
+    }
+  }
+  static refreshToken(token: string): SafeResult<string> {
+    try {
+      const payload = verifyToken(token, Config.REFRESH_TOKEN_PUBLIC_KEY);
+      const newAccessToken = createToken(
+        { id: payload.id },
+        Config.ACCESS_TOKEN_PRIVATE_KEY,
+        Config.ACCESS_TOKEN_EXP,
+      );
+      return {
+        error: null,
+        result: newAccessToken,
+      };
+    } catch (err) {
+      return {
+        error: err,
+        result: null,
+      };
     }
   }
 }

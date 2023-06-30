@@ -88,7 +88,7 @@ export const HttpStatusMessage = {
 
 export function codeToString(code: HttpStatus): string {
   if (code in HttpStatus) {
-    return HttpStatus[code];
+    return HttpStatusMessage[code];
   }
   return HttpStatus[500];
 }

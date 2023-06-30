@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import { InvalidTokenError } from './errors';
 
 export function createToken(payload: any, key: string, exp: string): string {
   const keyEncoded = Buffer.from(key, 'base64').toString('utf-8');
@@ -16,6 +17,6 @@ export function verifyToken(token: string, key: string): any {
       algorithms: ['RS256'],
     });
   } catch (err) {
-    return err;
+    throw new InvalidTokenError();
   }
 }

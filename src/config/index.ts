@@ -5,5 +5,7 @@ const Config = {
   ACCESS_TOKEN_PUBLIC_KEY: process.env['ACCESS_TOKEN_PUBLIC_KEY']!,
   REFRESH_TOKEN_PRIVATE_KEY: process.env['REFRESH_TOKEN_PRIVATE_KEY']!,
   REFRESH_TOKEN_PUBLIC_KEY: process.env['REFRESH_TOKEN_PUBLIC_KEY']!,
+  REFRESH_TOKEN_EXP: process.env['REFRESH_TOKEN_EXP']!,
+  ACCESS_TOKEN_EXP: process.env['ACCESS_TOKEN_EXP']!,
 };
 export default Config;
