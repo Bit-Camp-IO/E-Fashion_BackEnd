@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test OAuth2</title>
+</head>
+
+<body>
+  <h1>OAuth2</h1>
+  <button onclick="version()">version</button>
+  <button onclick="google()">Google</button>
+  <a href="http://localhost:8080/api/auth/google">Google</a>
+  <script>
+    function google() {
+      fetch("http://localhost:8080/api/auth/r")
+    }
+    function version() {
+      fetch("http://localhost:8080/api/version")
+        .then(d => d.json())
+        .then(console.log)
+        .catch(console.log)
+    }
+  </script>
+</body>
+
+</html>

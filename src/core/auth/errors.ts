@@ -15,3 +15,9 @@ export class InvalidCredentialsError extends Error {
     super('Invalid email or password');
   }
 }
+
+export class UnauthorizedGoogleError extends Error {
+  constructor() {
+    super('Failed to authenticate with Google.');
+  }
+}

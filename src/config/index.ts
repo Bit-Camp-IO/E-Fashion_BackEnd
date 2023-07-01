@@ -7,5 +7,8 @@ const Config = {
   REFRESH_TOKEN_PUBLIC_KEY: process.env['REFRESH_TOKEN_PUBLIC_KEY']!,
   REFRESH_TOKEN_EXP: process.env['REFRESH_TOKEN_EXP']!,
   ACCESS_TOKEN_EXP: process.env['ACCESS_TOKEN_EXP']!,
+  GOOGLE_ID: process.env['GOOGLE_CLIENT_ID']!,
+  GOOGLE_SECRET: process.env['GOOGLE_CLIENT_SECRET']!,
+  GOOGLE_REDIRECT: 'http://localhost:8080/api/auth/google/redirect',
 };
 export default Config;
