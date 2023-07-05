@@ -1,9 +1,6 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import { ProductDB } from './product';
-import { RelationList } from '@type/database';
-
-const Schema = mongoose.Schema;
-const ObjectId = mongoose.Schema.Types.ObjectId;
+import { ObjectId, RelationList } from '@type/database';
 
 export interface BrandDB {
   name: string;

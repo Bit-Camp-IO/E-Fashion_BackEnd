@@ -1,9 +1,6 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import { AdminDB } from './admin';
-import { Relation, RelationList } from '@type/database';
-
-const Schema = mongoose.Schema;
-const ObjectId = mongoose.Schema.Types.ObjectId;
+import { ObjectId, Relation, RelationList } from '@type/database';
 
 export interface CategorieDB {
   name: string;

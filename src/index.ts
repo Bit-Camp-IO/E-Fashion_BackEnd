@@ -8,7 +8,6 @@ import { initDB } from './database/init';
 async function main() {
   await initDB();
   import('./server/index');
-
   // Don't work with mongoose
   // cluster.setupPrimary({
   //   exec: path.join(__dirname, 'server', 'index.ts'),

@@ -1,6 +1,4 @@
-import mongoose from 'mongoose';
-
-const Schema = mongoose.Schema;
+import mongoose, { Schema } from 'mongoose';
 
 export interface AddressDB {
   city: string;

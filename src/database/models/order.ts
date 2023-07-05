@@ -1,12 +1,9 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import { UserDB } from './user';
 import { AddressDB } from './address';
 import { PaymentDB } from './payment';
 import { ProductDB } from './product';
-import { Relation } from '@type/database';
-
-const Schema = mongoose.Schema;
-const ObjectId = mongoose.Schema.Types.ObjectId;
+import { ObjectId, Relation } from '@type/database';
 
 export interface OrderDB {
   items: {

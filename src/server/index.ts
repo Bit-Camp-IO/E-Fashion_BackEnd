@@ -1,5 +1,6 @@
 import express from 'express';
-import api from './api';
+import initApi from './api';
+import initAdminApi from './admin_api';
 import errorMiddleware from './middleware/error';
 import Config from '@/config';
 import _404Middleware from './middleware/404';
@@ -9,7 +10,8 @@ function createServer(): express.Express {
   const app = express();
 
   initMiddleware(app);
-  api(app);
+  initApi(app);
+  initAdminApi(app)
   _404Middleware(app);
   errorMiddleware(app);
   app.listen(Config.PORT, () => {

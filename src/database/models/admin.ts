@@ -1,3 +1,4 @@
+import { ObjectId, Relation } from '@type/database';
 import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
@@ -10,7 +11,7 @@ export interface AdminDB {
   role: string;
   phone: string;
   address: string;
-  isVerified: boolean;
+  addedBy: Relation<AdminDB>;
 }
 
 const adminSchema = new Schema(
@@ -28,11 +29,11 @@ const adminSchema = new Schema(
     password: {
       type: String,
       required: true,
-      select: false, // To prevent password from being returned in query results
+      select: false,
     },
     role: {
       type: String,
-      enum: ['admin', 'superadmin'],
+      enum: ['admin', 'superadmin', 'manager'],
       default: 'admin',
     },
     phone: {
@@ -43,12 +44,16 @@ const adminSchema = new Schema(
     address: {
       type: String,
     },
-    isVerified: {
-      type: Boolean,
-      default: false,
+    addedBy: {
+      type: ObjectId,
+      required: function (this: AdminDB) {
+        return this.role !== 'manager';
+      },
     },
   },
   { timestamps: true },
 );
 
-module.exports = mongoose.model('Admin', adminSchema);
+const AdminModel = mongoose.model('Admin', adminSchema);
+
+export default AdminModel;

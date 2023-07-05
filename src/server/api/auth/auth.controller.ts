@@ -55,7 +55,7 @@ class AuthController implements IAuth {
     if (!refreshToken) {
       throw new RequestError('not authorized', 401);
     }
-    const newAccessToken = JWTAuthService.refreshToken(refreshToken);
+    const newAccessToken = await JWTAuthService.refreshToken(refreshToken);
     if (newAccessToken.error) {
       if (newAccessToken.error instanceof InvalidTokenError) {
         throw new RequestError(newAccessToken.error.message, HttpStatus.Unauthorized);

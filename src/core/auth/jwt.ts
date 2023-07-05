@@ -12,17 +12,17 @@ interface UserRegistrationData {
   phone?: string;
 }
 
+interface UserLogin {
+  email: string;
+  password: string;
+}
+
 export interface AuthResponse {
   email: string;
   fullName: string;
   id: string;
   accessToken: string;
   refreshToken: string;
-}
-
-interface UserLogin {
-  email: string;
-  password: string;
 }
 
 export class JWTAuthService {
@@ -114,11 +114,17 @@ export class JWTAuthService {
       };
     }
   }
-  static refreshToken(token: string): SafeResult<string> {
+  static async refreshToken(token: string): Promise<SafeResult<string>> {
     try {
       const payload = verifyToken(token, Config.REFRESH_TOKEN_PUBLIC_KEY);
+      // TODO: search for user in data base
+      const user = await UserModel.findById(payload.id)
+      if(!user){
+        // Create new error for bad id
+        throw new Error("")       
+      }
       const newAccessToken = createToken(
-        { id: payload.id },
+        { id: user._id },
         Config.ACCESS_TOKEN_PRIVATE_KEY,
         Config.ACCESS_TOKEN_EXP,
       );

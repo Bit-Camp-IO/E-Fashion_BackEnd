@@ -1,11 +1,8 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import { AddressDB } from './address';
 import { CartDB } from './cart';
 import { PaymentDB } from './payment';
-import { Relation, RelationList } from '@type/database';
-
-const Schema = mongoose.Schema;
-const ObjectId = mongoose.Schema.Types.ObjectId;
+import { ObjectId, Relation, RelationList } from '@type/database';
 
 export type AuthProvider = 'LOCAL' | 'GOOGLE';
 

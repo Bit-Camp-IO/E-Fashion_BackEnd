@@ -1,24 +1,21 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import { BrandDB } from './brand';
 import { ReviewDB } from './review';
 import { CategorieDB } from './categorie';
 import { AdminDB } from './admin';
-import { Relation, RelationList } from '@type/database';
-
-const Schema = mongoose.Schema;
-const ObjectId = mongoose.Schema.Types.ObjectId;
+import { ObjectId, Relation, RelationList } from '@type/database';
 
 export interface ProductDB {
-  name: string;
+  title: string;
   description: string;
-  price: Number;
+  price: number;
   imagesURL: string[];
   colors?: { name: string; hex: string }[];
   sizes?: string[];
   brandName?: string;
   brand?: Relation<BrandDB>;
-  stock?: Number;
-  rate: Number;
+  stock?: number;
+  rate: number;
   isNew: boolean;
   available: boolean;
   discount?: number;
@@ -28,10 +25,10 @@ export interface ProductDB {
 }
 const productSchema = new Schema<ProductDB>(
   {
-    name: { type: String, required: true },
+    title: { type: String, required: true },
     description: { type: String, required: true },
     price: { type: Number, required: true },
-    imagesURL: [{ type: String, required: true }],
+    imagesURL: [String],
     colors: [{ type: { name: String, hex: String } }],
     sizes: [String],
     brandName: String,
@@ -49,3 +46,4 @@ const productSchema = new Schema<ProductDB>(
 );
 
 const ProductModel = mongoose.model('Product', productSchema);
+export default ProductModel;
