@@ -20,12 +20,12 @@ export interface ProductResult {
 
 class Product {
   constructor() {}
-  static async create(data: ProductData, adminId: string) {
+  static async create(data: ProductData) {
     try {
       const product = await ProductModel.create({
         title: data.title,
         description: data.description,
-        addedBy: adminId,
+        addedBy: data.adminId,
         price: data.price,
         sizes: data.sizes,
         colors: data.colors,
@@ -41,6 +41,16 @@ class Product {
       return result;
     } catch (err) {
       throw err;
+    }
+  }
+
+  static async getAll() {
+    try {
+      const products = ProductModel.find({});
+      return products;
+    } catch (error) {
+      console.error('Error retrieving products:', error);
+      throw error;
     }
   }
 }
