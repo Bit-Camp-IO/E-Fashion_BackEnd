@@ -1,4 +1,4 @@
-import AuthService from '@/core/auth';
+import { JWTAuthService } from '@/core/auth';
 import { InvalidTokenError } from '@/core/auth/errors';
 import RequestError from '@server/utils/errors';
 import { NextFunction, Request, Response } from 'express';
@@ -10,7 +10,7 @@ export async function isAuth(req: Request, _: Response, next: NextFunction) {
       throw new RequestError('not authorized', 401);
     }
     const token = authHeader.split(' ')[1];
-    const userId = AuthService.verifyAccessToken(token);
+    const userId = JWTAuthService.verifyAccessToken(token);
     if (userId.error) {
       if (userId.error instanceof InvalidTokenError) {
         throw new RequestError('not authorized', 401);

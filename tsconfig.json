@@ -28,5 +28,9 @@
       "@/*": ["./src/*"]
     }
   },
-  "exclude": ["node_modules"]
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": ["node_modules"],
+  "files": ["custom.d.ts"]
 }
