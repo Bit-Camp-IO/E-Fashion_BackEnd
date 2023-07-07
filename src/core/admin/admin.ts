@@ -1,9 +1,10 @@
-import Product, { ProductData, ProductResult } from '../product';
-import { AsyncSafeResult } from '@type/common';
-import { AdminData, AdminResult } from './interfaces';
+import Product, {ProductData, ProductResult} from '../product';
+import {AsyncSafeResult} from '@type/common';
+import {AdminData, AdminResult} from './interfaces';
 import AdminModel from '@/database/models/admin';
 import bcrypt from 'bcrypt';
-import { DuplicateUserError } from '../errors';
+import {DuplicateUserError} from '../errors';
+
 interface AdminService {
   addProduct(data: ProductData): AsyncSafeResult<ProductResult>;
   deleteProduct(id: string): void;
@@ -18,9 +19,9 @@ export class Admin implements AdminService {
   async addProduct(data: ProductData): AsyncSafeResult<ProductResult> {
     try {
       const product = await Product.create(data, this._id);
-      return { result: product, error: null };
+      return {result: product, error: null};
     } catch (err) {
-      return { error: err, result: null };
+      return {error: err, result: null};
     }
   }
   // TODO: Admin Services
@@ -28,7 +29,7 @@ export class Admin implements AdminService {
     try {
       throw new Error('not implemented');
     } catch (err) {
-      return { error: err, result: null };
+      return {error: err, result: null};
     }
   }
 
@@ -68,12 +69,12 @@ export class SuperAdmin extends Admin implements SuperAdminService {
         role: admin.role,
         createdAt: admin.createdAt,
       };
-      return { error: null, result };
+      return {error: null, result};
     } catch (err) {
       if (err.code === 11000) {
         err = new DuplicateUserError('Admin already exists');
       }
-      return { error: err, result: null };
+      return {error: err, result: null};
     }
   }
   removeAdmin(_: string): void {}

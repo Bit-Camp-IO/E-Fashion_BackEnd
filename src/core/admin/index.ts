@@ -1,11 +1,11 @@
 import bcrypt from 'bcrypt';
 import AdminModel from '@/database/models/admin';
-import { AsyncSafeResult, SafeResult } from '@type/common';
-import { createToken } from '../auth/token';
+import {AsyncSafeResult, SafeResult} from '@type/common';
+import {createToken} from '../auth/token';
 import Config from '@/config';
 import Manager from './manager';
-import { Admin, SuperAdmin } from './admin';
-import { InvalidCredentialsError, UnauthorizedError } from '../errors';
+import {Admin, SuperAdmin} from './admin';
+import {InvalidCredentialsError, UnauthorizedError} from '../errors';
 
 interface AdminLogin {
   email: string;
@@ -18,8 +18,8 @@ interface TokenResult {
 
 export async function login(adminData: AdminLogin): Promise<SafeResult<TokenResult>> {
   try {
-    const { email, password } = adminData;
-    const admin = await AdminModel.findOne({ email }).select('+password').exec();
+    const {email, password} = adminData;
+    const admin = await AdminModel.findOne({email}).select('+password').exec();
     if (!admin) {
       throw new InvalidCredentialsError();
     }
@@ -30,13 +30,13 @@ export async function login(adminData: AdminLogin): Promise<SafeResult<TokenResu
     }
 
     const accessToken = createToken(
-      { id: admin.id },
+      {id: admin.id},
       Config.ACCESS_TOKEN_PRIVATE_KEY,
       Config.ACCESS_TOKEN_EXP,
     );
-    return { result: { token: accessToken }, error: null };
+    return {result: {token: accessToken}, error: null};
   } catch (err) {
-    return { error: err, result: null };
+    return {error: err, result: null};
   }
 }
 
@@ -63,13 +63,13 @@ export async function getAdminServices(id: string, role: AdminRole) {
       throw new UnauthorizedError();
     }
     if (role === AdminRole.ADMIN) {
-      return { result: new Admin(adminDB._id.toString()), error: null };
+      return {result: new Admin(adminDB._id.toString()), error: null};
     }
     if (role === AdminRole.SUPER_ADMIN && ['superAdmin', 'manager'].includes(adminDB.role)) {
-      return { result: new SuperAdmin(adminDB._id.toString()), error: null };
+      return {result: new SuperAdmin(adminDB._id.toString()), error: null};
     }
     if (role === AdminRole.MANAGER && adminDB.role === 'manager') {
-      return { result: new Manager(adminDB.id.toString()), error: null };
+      return {result: new Manager(adminDB.id.toString()), error: null};
     }
     // Throw new Error Unauth
     throw new UnauthorizedError();
