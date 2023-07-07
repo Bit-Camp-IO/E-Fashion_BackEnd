@@ -1,14 +1,11 @@
-import { Router } from 'express';
+// import { Router } from 'express';
 import { InitRouterFunc } from '@type/server';
-import initAuth from './auth';
-import initManager from './manager';
+import adminRouter from './router';
 
 const initAdminApi: InitRouterFunc = app => {
-  const router = Router();
   // TODO: set up routers
-  initAuth(router);
-  initManager(router);
-  app.use('/admin', router);
+
+  app.use('/admin', adminRouter);
 };
 
 export default initAdminApi;

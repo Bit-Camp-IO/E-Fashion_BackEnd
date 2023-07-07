@@ -5,8 +5,8 @@ export class InvalidTokenError extends Error {
 }
 
 export class DuplicateUserError extends Error {
-  constructor() {
-    super('User already exists');
+  constructor(message: string = 'User already exists') {
+    super(message);
   }
 }
 
@@ -19,5 +19,19 @@ export class InvalidCredentialsError extends Error {
 export class UnauthorizedGoogleError extends Error {
   constructor() {
     super('Failed to authenticate with Google.');
+  }
+}
+
+// ----------------------------------------------------------------------
+
+export class ManagerExistError extends Error {
+  constructor() {
+    super('Manager aleady exists');
+  }
+}
+
+export class UnauthorizedError extends Error {
+  constructor() {
+    super('You do not have permission to access this endpoint.');
   }
 }

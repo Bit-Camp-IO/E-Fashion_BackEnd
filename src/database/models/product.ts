@@ -16,7 +16,7 @@ export interface ProductDB {
   brand?: Relation<BrandDB>;
   stock?: number;
   rate: number;
-  isNew: boolean;
+  is_new: boolean;
   available: boolean;
   discount?: number;
   reviews: RelationList<ReviewDB>;
@@ -35,7 +35,7 @@ const productSchema = new Schema<ProductDB>(
     brand: { type: ObjectId, ref: 'Brand' },
     stock: { type: Number, default: 0 },
     rate: { type: Number, default: 0 },
-    isNew: { type: Boolean, default: true },
+    is_new: { type: Boolean, default: true },
     available: { type: Boolean, default: true },
     discount: Number,
     reviews: [{ type: ObjectId, ref: 'Review' }],

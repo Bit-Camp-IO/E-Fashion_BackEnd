@@ -6,7 +6,6 @@ export interface ProductData {
   price: number;
   colors: { name: string; hex: string };
   sizes: string[];
-  adminId: string;
 }
 
 export interface ProductResult {
@@ -20,12 +19,12 @@ export interface ProductResult {
 
 class Product {
   constructor() {}
-  static async create(data: ProductData) {
+  static async create(data: ProductData, adminId:string) {
     try {
       const product = await ProductModel.create({
         title: data.title,
         description: data.description,
-        addedBy: data.adminId,
+        addedBy: adminId,
         price: data.price,
         sizes: data.sizes,
         colors: data.colors,

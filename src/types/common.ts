@@ -9,3 +9,4 @@ interface WithoutError<T> {
 }
 
 export type SafeResult<T> = WithError | WithoutError<T>;
+export type AsyncSafeResult<T> = Promise<SafeResult<T>>;

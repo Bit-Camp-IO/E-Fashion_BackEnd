@@ -6,7 +6,7 @@ import UserModel from '@/database/models/user';
 import { AuthResponse } from './jwt';
 import { SafeResult } from '@type/common';
 import { createToken } from './token';
-import { UnauthorizedGoogleError } from './errors';
+import { UnauthorizedGoogleError } from '../errors';
 
 interface GooglePayload {
   email: string;

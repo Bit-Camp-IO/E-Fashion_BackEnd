@@ -10,7 +10,7 @@ import {
   InvalidCredentialsError,
   InvalidTokenError,
   UnauthorizedGoogleError,
-} from '@/core/auth/errors';
+} from '@/core/errors';
 import RequestError from '@server/utils/errors';
 
 interface IAuth {

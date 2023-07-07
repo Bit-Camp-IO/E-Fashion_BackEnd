@@ -1,18 +1,18 @@
 import { Controller, Validate } from '@server/decorator';
 import { Request, Response } from 'express';
-import { ManagerBody, managerSchema } from './manager.valid';
-import Manager from '@/core/admin/manager';
+import { AdminBody, adminSchema } from '../valid';
+import { createManager } from '@/core/admin/manager';
 import RequestError from '@server/utils/errors';
 import { HttpStatus } from '@server/utils/status';
 import { wrappResponse } from '@server/utils/response';
-import { ManagerExistError } from '@/core/admin/errors';
+import { ManagerExistError } from '@/core/errors';
 
 @Controller()
 class ManagerController {
-  @Validate(managerSchema)
+  @Validate(adminSchema)
   async create(req: Request, res: Response) {
-    const body: ManagerBody = req.body;
-    const manager = await Manager.createManager({
+    const body: AdminBody = req.body;
+    const manager = await createManager({
       email: body.email,
       name: body.name,
       password: body.password,

@@ -4,3 +4,11 @@ export interface AdminResult {
   createdAt: Date;
   role: string;
 }
+
+export interface AdminData {
+  name: string;
+  email: string;
+  password: string;
+  phone: string;
+  address?: string;
+}

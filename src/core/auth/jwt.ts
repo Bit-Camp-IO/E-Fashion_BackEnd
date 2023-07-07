@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import { createToken, verifyToken } from './token';
 import Config from '@/config';
 import { SafeResult } from '@type/common';
-import { DuplicateUserError, InvalidCredentialsError } from './errors';
+import { DuplicateUserError, InvalidCredentialsError } from '../errors';
 
 interface UserRegistrationData {
   email: string;
@@ -42,24 +42,19 @@ export class JWTAuthService {
         Config.REFRESH_TOKEN_PRIVATE_KEY,
         Config.REFRESH_TOKEN_EXP,
       );
-      return {
-        result: {
-          id: user._id,
-          email: user.email,
-          fullName: user.fullName,
-          accessToken,
-          refreshToken,
-        },
-        error: null,
+      const result = {
+        id: user._id,
+        email: user.email,
+        fullName: user.fullName,
+        accessToken,
+        refreshToken,
       };
+      return { result, error: null };
     } catch (err) {
       if (err.code === 11000) {
         err = new DuplicateUserError();
       }
-      return {
-        error: err,
-        result: null,
-      };
+      return { error: err, result: null };
     }
   }
 
@@ -70,10 +65,12 @@ export class JWTAuthService {
       if (!user) {
         throw new InvalidCredentialsError();
       }
+
       const validPass = await bcrypt.compare(password, user.password);
       if (!validPass) {
         throw new InvalidCredentialsError();
       }
+
       const accessToken = createToken(
         { id: user.id },
         Config.ACCESS_TOKEN_PRIVATE_KEY,
@@ -84,21 +81,16 @@ export class JWTAuthService {
         Config.REFRESH_TOKEN_PRIVATE_KEY,
         Config.REFRESH_TOKEN_EXP,
       );
-      return {
-        result: {
-          id: user._id,
-          email: user.email,
-          fullName: user.fullName,
-          accessToken,
-          refreshToken,
-        },
-        error: null,
+      const result = {
+        id: user._id,
+        email: user.email,
+        fullName: user.fullName,
+        accessToken,
+        refreshToken,
       };
+      return { result, error: null };
     } catch (err) {
-      return {
-        error: err,
-        result: null,
-      };
+      return { error: err, result: null };
     }
   }
   static verifyAccessToken(token: string): SafeResult<string> {
@@ -108,35 +100,26 @@ export class JWTAuthService {
         error: null,
       };
     } catch (err) {
-      return {
-        error: err,
-        result: null,
-      };
+      return { error: err, result: null };
     }
   }
   static async refreshToken(token: string): Promise<SafeResult<string>> {
     try {
       const payload = verifyToken(token, Config.REFRESH_TOKEN_PUBLIC_KEY);
       // TODO: search for user in data base
-      const user = await UserModel.findById(payload.id)
-      if(!user){
+      const user = await UserModel.findById(payload.id);
+      if (!user) {
         // Create new error for bad id
-        throw new Error("")       
+        throw new Error('');
       }
       const newAccessToken = createToken(
         { id: user._id },
         Config.ACCESS_TOKEN_PRIVATE_KEY,
         Config.ACCESS_TOKEN_EXP,
       );
-      return {
-        error: null,
-        result: newAccessToken,
-      };
+      return { error: null, result: newAccessToken };
     } catch (err) {
-      return {
-        error: err,
-        result: null,
-      };
+      return { error: err, result: null };
     }
   }
 }

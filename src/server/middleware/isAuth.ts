@@ -1,5 +1,5 @@
 import { JWTAuthService } from '@/core/auth';
-import { InvalidTokenError } from '@/core/auth/errors';
+import { InvalidTokenError } from '@/core/errors';
 import RequestError from '@server/utils/errors';
 import { NextFunction, Request, Response } from 'express';
 
