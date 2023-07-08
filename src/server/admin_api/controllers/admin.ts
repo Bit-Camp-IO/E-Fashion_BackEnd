@@ -52,6 +52,25 @@ class AdminController {
     }
     res.status(HttpStatus.Ok).json(wrappResponse(newAdmin.result, HttpStatus.Created));
   }
+
+  public async removeAdmin(req: Request, res: Response) {
+    const { result: superAdmin, error } = await getAdminServices(
+      req.userId!,
+      AdminRole.SUPER_ADMIN,
+    );
+    if (error) {
+      if (error instanceof UnauthorizedError) {
+        throw new RequestError(error.message, HttpStatus.Unauthorized);
+      }
+      throw RequestError._500();
+    }
+    const { id } = req.body;
+    const deleteAdmin = await superAdmin.removeAdmin(id);
+    if (deleteAdmin.error) {
+      throw RequestError._500();
+    }
+    res.status(HttpStatus.Ok).json(wrappResponse(deleteAdmin.result, HttpStatus.Created))
+  }
 }
 
 export default new AdminController();

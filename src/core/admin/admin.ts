@@ -77,5 +77,16 @@ export class SuperAdmin extends Admin implements SuperAdminService {
       return {error: err, result: null};
     }
   }
-  removeAdmin(_: string): void {}
+  async removeAdmin(id: string) {
+    try {
+      const deleteAdmin = await AdminModel.deleteOne({_id: id}).exec();
+      if (deleteAdmin.deletedCount === 0) {
+        throw new Error('Admin not found');
+      }
+
+      return {result: deleteAdmin, error: null}
+    } catch (err) {
+      return {error: err, result: null}
+    }
+  }
 }
