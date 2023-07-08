@@ -48,7 +48,6 @@ class Product {
       const products = ProductModel.find({});
       return products;
     } catch (error) {
-      console.error('Error retrieving products:', error);
       throw error;
     }
   }
