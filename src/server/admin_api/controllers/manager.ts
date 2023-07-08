@@ -1,11 +1,12 @@
-import { Controller, Validate } from '@server/decorator';
-import { Request, Response } from 'express';
-import { AdminBody, adminSchema } from '../valid';
-import Manager, { createManager } from '@/core/admin/manager';
+import {Controller, Validate} from '@server/decorator';
+import {Request, Response} from 'express';
+import {AdminBody, adminSchema} from '../valid';
+import {createManager} from '@/core/admin/manager';
 import RequestError from '@server/utils/errors';
-import { HttpStatus } from '@server/utils/status';
-import { wrappResponse } from '@server/utils/response';
-import { ManagerExistError, UnauthorizedError } from '@/core/errors';
+import {HttpStatus} from '@server/utils/status';
+import {wrappResponse} from '@server/utils/response';
+import {DuplicateUserError, ManagerExistError, UnauthorizedError} from '@/core/errors';
+import {AdminRole, getAdminServices} from '@/core/admin';
 
 @Controller()
 class ManagerController {
@@ -30,18 +31,25 @@ class ManagerController {
   @Validate(adminSchema)
   async createSuper(req: Request, res: Response) {
     const body: AdminBody = req.body;
-    const addedById = req.userId;
-    if (!addedById) {
-      throw new UnauthorizedError();
+    const {result: manager, error} = await getAdminServices(req.userId!, AdminRole.MANAGER);
+    if (error) {
+      console.log('1: ', error);
+      if (error instanceof UnauthorizedError) {
+        throw new RequestError(error.message, HttpStatus.Unauthorized);
+      }
+      throw RequestError._500();
     }
-    const superAdmin = await Manager.createSuper({
+    const superAdmin = await manager.createSuperAdmin({
       email: body.email,
       name: body.name,
       password: body.password,
-      phone: body.phone
-    }, addedById);
+      phone: body.phone,
+    });
     if (superAdmin.error) {
-      throw RequestError._500;
+      if (superAdmin.error instanceof DuplicateUserError) {
+        throw new RequestError(superAdmin.error.message, HttpStatus.BadRequest);
+      }
+      throw RequestError._500();
     }
     res.status(HttpStatus.Created).json(wrappResponse(superAdmin.result, HttpStatus.Created));
   }

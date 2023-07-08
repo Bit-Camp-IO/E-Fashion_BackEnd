@@ -1,50 +1,44 @@
 import AdminModel from '@/database/models/admin';
-import { ManagerExistError, UnauthorizedError } from '../errors';
-import { AsyncSafeResult } from '@type/common';
-import { AdminData, AdminResult } from './interfaces';
+import {DuplicateUserError, ManagerExistError} from '../errors';
+import {AsyncSafeResult} from '@type/common';
+import {AdminData, AdminResult} from './interfaces';
 import bcrypt from 'bcrypt';
-import { SuperAdmin } from './admin';
+import {SuperAdmin} from './admin';
 
 class Manager extends SuperAdmin {
-  constructor(id: string) {
-    super(id);
+  constructor(id: string, role: string) {
+    super(id, role);
   }
 
   static async managerExist(): Promise<boolean> {
-    const managerExist = await AdminModel.findOne({ role: 'manager' }).select({ _id: 1 });
+    const managerExist = await AdminModel.findOne({role: 'manager'}).select({_id: 1});
     return !!managerExist;
   }
 
-  static async createSuper(
-    adminData: AdminData,
-    addedById: string,
-  ): Promise<AsyncSafeResult<AdminResult>> {
+  public async createSuperAdmin(adminData: AdminData): AsyncSafeResult<AdminResult> {
     try {
-      const addedBy = await AdminModel.findById(addedById).exec();
-      if (addedBy) {
-        if (addedBy.role !== 'manager') throw new UnauthorizedError();
+      const hashedPassword = await bcrypt.hash(adminData.password, 12);
 
-        const hashedPassword = await bcrypt.hash(adminData.password, 12);
-        const superAdmin = await AdminModel.create({
-          ...adminData,
-          password: hashedPassword,
-          role: 'superadmin',
-          addedBy: addedBy._id,
-        });
+      const superAdmin = await AdminModel.create({
+        ...adminData,
+        password: hashedPassword,
+        role: 'superadmin',
+        addedBy: this._id,
+      });
 
-        const result: AdminResult = {
-          createdAt: superAdmin.createdAt,
-          id: superAdmin._id.toString(),
-          name: superAdmin.name,
-          role: superAdmin.role,
-        };
+      const result: AdminResult = {
+        createdAt: superAdmin.createdAt,
+        id: superAdmin._id.toString(),
+        name: superAdmin.name,
+        role: superAdmin.role,
+      };
 
-        return { result, error: null };
-      } else {
-        throw new UnauthorizedError();
-      }
+      return {result, error: null};
     } catch (err) {
-      return { error: err, result: null };
+      if (err.code === 11000) {
+        err = new DuplicateUserError('Super Admin already exists');
+      }
+      return {error: err, result: null};
     }
   }
 }
@@ -67,9 +61,9 @@ export async function createManager(managerData: AdminData): AsyncSafeResult<Adm
       name: manager.name,
       role: manager.role,
     };
-    return { result, error: null };
+    return {result, error: null};
   } catch (err) {
-    return { error: err, result: null };
+    return {error: err, result: null};
   }
 }
 

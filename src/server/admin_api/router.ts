@@ -14,6 +14,8 @@ router.post('/auth/login', authController.login);
 
 router.post('/create', isAuth, adminController.createAdmin);
 
-router.post('/remove', isAuth, adminController.removeAdmin)
+router.delete('/remove', isAuth, adminController.removeAdmin);
+
+router.get('/list', isAuth, adminController.getAllAdmins);
 
 export default router;

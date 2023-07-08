@@ -35,3 +35,9 @@ export class UnauthorizedError extends Error {
     super('You do not have permission to access this endpoint.');
   }
 }
+
+export class PermissionError extends Error {
+  constructor() {
+    super('The authenticated user does not have permission to perform this action.');
+  }
+}

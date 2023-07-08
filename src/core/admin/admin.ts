@@ -3,7 +3,7 @@ import {AsyncSafeResult} from '@type/common';
 import {AdminData, AdminResult} from './interfaces';
 import AdminModel from '@/database/models/admin';
 import bcrypt from 'bcrypt';
-import {DuplicateUserError} from '../errors';
+import {DuplicateUserError, PermissionError} from '../errors';
 
 interface AdminService {
   addProduct(data: ProductData): AsyncSafeResult<ProductResult>;
@@ -15,7 +15,7 @@ interface AdminService {
 }
 
 export class Admin implements AdminService {
-  constructor(protected _id: string) {}
+  constructor(protected _id: string, protected _role: string) {}
   async addProduct(data: ProductData): AsyncSafeResult<ProductResult> {
     try {
       const product = await Product.create(data, this._id);
@@ -44,11 +44,12 @@ interface SuperAdminService {
   // TODO: Change Types
   createAdmin(adminData: AdminData): AsyncSafeResult<AdminResult>;
   removeAdmin(id: string): void;
+  getAdminsList(role: string): AsyncSafeResult<AdminResult[]>;
 }
 
 export class SuperAdmin extends Admin implements SuperAdminService {
-  constructor(id: string) {
-    super(id);
+  constructor(id: string, role: string) {
+    super(id, role);
   }
   // TODO: Super Admin Methods
   async createAdmin(data: AdminData): AsyncSafeResult<AdminResult> {
@@ -77,16 +78,41 @@ export class SuperAdmin extends Admin implements SuperAdminService {
       return {error: err, result: null};
     }
   }
-  async removeAdmin(id: string) {
+
+  async removeAdmin(id: string): Promise<Error | null> {
     try {
-      const deleteAdmin = await AdminModel.deleteOne({_id: id}).exec();
-      if (deleteAdmin.deletedCount === 0) {
-        throw new Error('Admin not found');
+      const adminDB = await AdminModel.findById(id);
+      if (!adminDB) throw new Error('');
+
+      if (this._id === adminDB._id.toString()) {
+        return new PermissionError();
       }
 
-      return {result: deleteAdmin, error: null}
+      if (this._role === 'superadmin' && ['superadmin', 'manager'].includes(adminDB.role)) {
+        return new PermissionError();
+      }
+
+      await AdminModel.deleteOne({_id: id});
+      return null;
     } catch (err) {
-      return {error: err, result: null}
+      return err;
+    }
+  }
+  async getAdminsList(role: string): AsyncSafeResult<AdminResult[]> {
+    try {
+      let query: {role?: string} = {};
+      if (role === 'admin') query.role = 'admin';
+      if (role === 'super') query.role = 'superadmin';
+      let adminsList = await AdminModel.find({$and: [query, {role: {$ne: 'manager'}}]});
+      const result: AdminResult[] = adminsList.map(a => ({
+        createdAt: a.createdAt,
+        id: a._id.toString(),
+        name: a.name,
+        role: a.role,
+      }));
+      return {result, error: null};
+    } catch (err) {
+      return {error: err, result: null};
     }
   }
 }

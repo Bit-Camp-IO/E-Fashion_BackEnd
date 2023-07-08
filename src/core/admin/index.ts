@@ -29,11 +29,7 @@ export async function login(adminData: AdminLogin): Promise<SafeResult<TokenResu
       throw new InvalidCredentialsError();
     }
 
-    const accessToken = createToken(
-      {id: admin.id},
-      Config.ACCESS_TOKEN_PRIVATE_KEY,
-      Config.ACCESS_TOKEN_EXP,
-    );
+    const accessToken = createToken({id: admin.id}, Config.ACCESS_TOKEN_PRIVATE_KEY, '30d');
     return {result: {token: accessToken}, error: null};
   } catch (err) {
     return {error: err, result: null};
@@ -42,7 +38,7 @@ export async function login(adminData: AdminLogin): Promise<SafeResult<TokenResu
 
 export enum AdminRole {
   ADMIN = 'admin',
-  SUPER_ADMIN = 'superAdmin',
+  SUPER_ADMIN = 'superadmin',
   MANAGER = 'manager',
 }
 
@@ -63,20 +59,17 @@ export async function getAdminServices(id: string, role: AdminRole) {
       throw new UnauthorizedError();
     }
     if (role === AdminRole.ADMIN) {
-      return {result: new Admin(adminDB._id.toString()), error: null};
+      return {result: new Admin(adminDB._id.toString(), adminDB.role), error: null};
     }
-    if (role === AdminRole.SUPER_ADMIN && ['superAdmin', 'manager'].includes(adminDB.role)) {
-      return {result: new SuperAdmin(adminDB._id.toString()), error: null};
+    if (role === AdminRole.SUPER_ADMIN && ['superadmin', 'manager'].includes(adminDB.role)) {
+      return {result: new SuperAdmin(adminDB._id.toString(), adminDB.role), error: null};
     }
     if (role === AdminRole.MANAGER && adminDB.role === 'manager') {
-      return {result: new Manager(adminDB.id.toString()), error: null};
+      return {result: new Manager(adminDB.id.toString(), adminDB.role), error: null};
     }
     // Throw new Error Unauth
     throw new UnauthorizedError();
   } catch (err) {
-    return {
-      error: new Error(),
-      result: null,
-    };
+    return {error: err, result: null};
   }
 }
