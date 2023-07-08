@@ -1,5 +1,5 @@
 import AdminModel from '@/database/models/admin';
-import { ManagerExistError } from '../errors';
+import { ManagerExistError, UnauthorizedError } from '../errors';
 import { AsyncSafeResult } from '@type/common';
 import { AdminData, AdminResult } from './interfaces';
 import bcrypt from 'bcrypt';
@@ -14,6 +14,37 @@ class Manager extends SuperAdmin {
     const managerExist = await AdminModel.findOne({ role: 'manager' }).select({ _id: 1 });
     return !!managerExist;
   }
+
+static async createSuper(adminData: AdminData, addedById: string): Promise<AsyncSafeResult<AdminResult>> {
+  try {
+    const addedBy = await AdminModel.findOne({ _id: addedById }).exec();
+    if (addedBy) {
+      if (addedBy.role !== 'manager')
+        throw new UnauthorizedError();
+
+      const hashedPassword = await bcrypt.hash(adminData.password, 12);
+      const superAdmin = await AdminModel.create({
+        ...adminData,
+        password: hashedPassword,
+        role: 'superadmin',
+        addedBy: addedBy._id,
+      });
+
+      const result: AdminResult = {
+        createdAt: superAdmin.createdAt,
+        id: superAdmin._id.toString(),
+        name: superAdmin.name,
+        role: superAdmin.role,
+      };
+
+      return { result, error: null };
+    } else {
+      throw new UnauthorizedError();
+    }
+  } catch (err) {
+    return { error: err, result: null };
+  }
+}
 }
 
 export async function createManager(managerData: AdminData): AsyncSafeResult<AdminResult> {

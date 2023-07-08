@@ -8,6 +8,8 @@ const router = Router();
 
 router.post('/create-manager', managerController.create);
 
+router.post('/create-super', isAuth, managerController.createSuper);
+
 router.post('/auth/login', authController.login);
 
 router.post('/create', isAuth, adminController.createAdmin);
