@@ -101,7 +101,20 @@ class AdminController {
       throw RequestError._500();
     }
     const users = await admin.getAllUsers();
-    res.status(HttpStatus.Ok).json(wrappResponse(users, HttpStatus.Ok));
+    res.status(HttpStatus.Ok).json(wrappResponse(users.result, HttpStatus.Ok));
+  }
+
+  public async getOneUser(req: Request, res: Response) {
+    const { id } = req.params;
+    const { result: admin, error } = await getAdminServices(req.userId!, AdminRole.ADMIN);
+    if (error) {
+      if (error instanceof UnauthorizedError) {
+        throw new RequestError(error.message, HttpStatus.Unauthorized);
+      }
+      throw RequestError._500();
+    }
+    const user = await admin.getOneUser(id);
+    res.status(HttpStatus.Ok).json(wrappResponse(user.result, HttpStatus.Ok));
   }
 }
 

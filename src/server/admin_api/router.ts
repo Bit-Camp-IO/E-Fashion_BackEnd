@@ -20,4 +20,6 @@ router.get('/list', isAuth, adminController.getAllAdmins);
 
 router.get('/users', isAuth, adminController.getAllUsers);
 
+router.get('/user/:id', isAuth, adminController.getOneUser);
+
 export default router;

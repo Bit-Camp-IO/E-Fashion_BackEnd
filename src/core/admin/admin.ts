@@ -37,7 +37,16 @@ export class Admin implements AdminService {
   async getAllUsers() {
     try {
       const users = await UserModel.find({});
-      return { users, error: null };
+      return { result: users, error: null };
+    } catch (err) {
+      return { error: err, result: null };
+    }
+  }
+
+  async getOneUser(id: string) {
+    try {
+      const user = await UserModel.findById({_id: id});
+      return { result: user, error: null };
     } catch (err) {
       return { error: err, result: null };
     }
