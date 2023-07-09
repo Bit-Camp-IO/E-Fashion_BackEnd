@@ -4,6 +4,7 @@ import {AdminData, AdminResult} from './interfaces';
 import AdminModel from '@/database/models/admin';
 import bcrypt from 'bcrypt';
 import {DuplicateUserError, PermissionError} from '../errors';
+import UserModel from '@/database/models/user';
 
 interface AdminService {
   addProduct(data: ProductData): AsyncSafeResult<ProductResult>;
@@ -19,9 +20,9 @@ export class Admin implements AdminService {
   async addProduct(data: ProductData): AsyncSafeResult<ProductResult> {
     try {
       const product = await Product.create(data, this._id);
-      return {result: product, error: null};
+      return { result: product, error: null };
     } catch (err) {
-      return {error: err, result: null};
+      return { error: err, result: null };
     }
   }
   // TODO: Admin Services
@@ -29,7 +30,16 @@ export class Admin implements AdminService {
     try {
       throw new Error('not implemented');
     } catch (err) {
-      return {error: err, result: null};
+      return { error: err, result: null };
+    }
+  }
+
+  async getAllUsers() {
+    try {
+      const users = await UserModel.find({});
+      return { users, error: null };
+    } catch (err) {
+      return { error: err, result: null };
     }
   }
 

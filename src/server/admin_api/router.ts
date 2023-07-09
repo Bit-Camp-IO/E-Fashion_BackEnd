@@ -18,4 +18,6 @@ router.delete('/remove', isAuth, adminController.removeAdmin);
 
 router.get('/list', isAuth, adminController.getAllAdmins);
 
+router.get('/users', isAuth, adminController.getAllUsers);
+
 export default router;

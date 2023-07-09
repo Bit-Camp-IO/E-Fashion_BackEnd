@@ -88,6 +88,21 @@ class AdminController {
     }
     res.status(HttpStatus.Ok).json(wrappResponse(adminsList.result, HttpStatus.Ok));
   }
+
+  public async getAllUsers(req: Request, res: Response) {
+    const {result: admin, error} = await getAdminServices(
+      req.userId!,
+      AdminRole.ADMIN
+    );
+    if (error) {
+      if (error instanceof UnauthorizedError) {
+        throw new RequestError(error.message, HttpStatus.Unauthorized);
+      }
+      throw RequestError._500();
+    }
+    const users = await admin.getAllUsers();
+    res.status(HttpStatus.Ok).json(wrappResponse(users, HttpStatus.Ok));
+  }
 }
 
 export default new AdminController();
