@@ -30,6 +30,7 @@ export class OAuthAuthService {
     const searchPrams = QueryString.stringify(options);
     return `${rootUrl}?${searchPrams}`;
   }
+
   static async handleGoogleCode(code: string): Promise<SafeResult<AuthResponse>> {
     try {
       const url = 'https://oauth2.googleapis.com/token';
@@ -56,21 +57,16 @@ export class OAuthAuthService {
         Config.REFRESH_TOKEN_PRIVATE_KEY,
         Config.REFRESH_TOKEN_EXP,
       );
-      return {
-        result: {
-          id: user._id,
-          email: user.email,
-          fullName: user.fullName,
-          accessToken,
-          refreshToken,
-        },
-        error: null,
+      const result = {
+        id: user._id,
+        email: user.email,
+        fullName: user.fullName,
+        accessToken,
+        refreshToken,
       };
+      return { result, error: null };
     } catch {
-      return {
-        result: null,
-        error: new UnauthorizedGoogleError(),
-      };
+      return { result: null, error: new UnauthorizedGoogleError() };
     }
   }
 }
