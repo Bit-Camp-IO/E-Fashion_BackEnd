@@ -1,11 +1,11 @@
 import bcrypt from 'bcrypt';
 import AdminModel from '@/database/models/admin';
-import {AsyncSafeResult, SafeResult} from '@type/common';
-import {createToken} from '../auth/token';
+import { AsyncSafeResult, SafeResult } from '@type/common';
+import { createToken } from '../auth/token';
 import Config from '@/config';
 import Manager from './manager';
-import {Admin, SuperAdmin} from './admin';
-import {InvalidCredentialsError, UnauthorizedError} from '../errors';
+import { Admin, SuperAdmin } from './admin';
+import { InvalidCredentialsError, UnauthorizedError } from '../errors';
 
 interface AdminLogin {
   email: string;
@@ -16,10 +16,10 @@ interface TokenResult {
   token: string;
 }
 
-export async function login(adminData: AdminLogin): Promise<SafeResult<TokenResult>> {
+export async function login(adminData: AdminLogin): AsyncSafeResult<TokenResult> {
   try {
-    const {email, password} = adminData;
-    const admin = await AdminModel.findOne({email}).select('+password').exec();
+    const { email, password } = adminData;
+    const admin = await AdminModel.findOne({ email }).select('+password').exec();
     if (!admin) {
       throw new InvalidCredentialsError();
     }
@@ -29,10 +29,10 @@ export async function login(adminData: AdminLogin): Promise<SafeResult<TokenResu
       throw new InvalidCredentialsError();
     }
 
-    const accessToken = createToken({id: admin.id}, Config.ACCESS_TOKEN_PRIVATE_KEY, '30d');
-    return {result: {token: accessToken}, error: null};
+    const accessToken = createToken({ id: admin.id }, Config.ACCESS_TOKEN_PRIVATE_KEY, '30d');
+    return { result: { token: accessToken }, error: null };
   } catch (err) {
-    return {error: err, result: null};
+    return { error: err, result: null };
   }
 }
 
@@ -59,17 +59,17 @@ export async function getAdminServices(id: string, role: AdminRole) {
       throw new UnauthorizedError();
     }
     if (role === AdminRole.ADMIN) {
-      return {result: new Admin(adminDB._id.toString(), adminDB.role), error: null};
+      return { result: new Admin(adminDB._id.toString(), adminDB.role), error: null };
     }
     if (role === AdminRole.SUPER_ADMIN && ['superadmin', 'manager'].includes(adminDB.role)) {
-      return {result: new SuperAdmin(adminDB._id.toString(), adminDB.role), error: null};
+      return { result: new SuperAdmin(adminDB._id.toString(), adminDB.role), error: null };
     }
     if (role === AdminRole.MANAGER && adminDB.role === 'manager') {
-      return {result: new Manager(adminDB.id.toString(), adminDB.role), error: null};
+      return { result: new Manager(adminDB.id.toString(), adminDB.role), error: null };
     }
     // Throw new Error Unauth
     throw new UnauthorizedError();
   } catch (err) {
-    return {error: err, result: null};
+    return { error: err, result: null };
   }
 }

@@ -2,7 +2,7 @@ import UserModel from '@/database/models/user';
 import bcrypt from 'bcrypt';
 import { createToken, verifyToken } from './token';
 import Config from '@/config';
-import { SafeResult } from '@type/common';
+import { AsyncSafeResult, SafeResult } from '@type/common';
 import { DuplicateUserError, InvalidCredentialsError } from '../errors';
 
 interface UserRegistrationData {
@@ -26,7 +26,7 @@ export interface AuthResponse {
 }
 
 export class JWTAuthService {
-  static async register(userData: UserRegistrationData): Promise<SafeResult<AuthResponse>> {
+  static async register(userData: UserRegistrationData): AsyncSafeResult<AuthResponse> {
     try {
       const hashedPassword = await bcrypt.hash(userData.password, 12);
       let user = await new UserModel({
@@ -58,7 +58,7 @@ export class JWTAuthService {
     }
   }
 
-  static async login(userData: UserLogin): Promise<SafeResult<AuthResponse>> {
+  static async login(userData: UserLogin): AsyncSafeResult<AuthResponse> {
     try {
       const { email, password } = userData;
       const user = await UserModel.findOne({ email }).select('+password').exec();
@@ -103,7 +103,7 @@ export class JWTAuthService {
       return { error: err, result: null };
     }
   }
-  static async refreshToken(token: string): Promise<SafeResult<string>> {
+  static async refreshToken(token: string): AsyncSafeResult<string> {
     try {
       const payload = verifyToken(token, Config.REFRESH_TOKEN_PUBLIC_KEY);
       // TODO: search for user in data base

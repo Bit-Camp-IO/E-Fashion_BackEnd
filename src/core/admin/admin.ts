@@ -1,10 +1,11 @@
-import Product, {ProductData, ProductResult} from '../product';
-import {AsyncSafeResult} from '@type/common';
-import {AdminData, AdminResult} from './interfaces';
+import Product, { ProductData, ProductResult } from '../product';
+import { AsyncSafeResult } from '@type/common';
+import { AdminData, AdminResult } from './interfaces';
 import AdminModel from '@/database/models/admin';
 import bcrypt from 'bcrypt';
-import {DuplicateUserError, PermissionError} from '../errors';
-import UserModel from '@/database/models/user';
+import { DuplicateUserError, NotFoundError, PermissionError } from '../errors';
+import UserModel, { UserDB } from '@/database/models/user';
+import { Document } from 'mongoose';
 
 interface AdminService {
   addProduct(data: ProductData): AsyncSafeResult<ProductResult>;
@@ -34,7 +35,7 @@ export class Admin implements AdminService {
     }
   }
 
-  async getAllUsers() {
+  async getAllUsers(): AsyncSafeResult<Document<UserDB>[]> {
     try {
       const users = await UserModel.find({});
       return { result: users, error: null };
@@ -43,9 +44,12 @@ export class Admin implements AdminService {
     }
   }
 
-  async getOneUser(id: string) {
+  async getOneUser(id: string): AsyncSafeResult<Document<UserDB>> {
     try {
-      const user = await UserModel.findById({_id: id});
+      const user = await UserModel.findById({ _id: id });
+      if (!user) {
+        throw new NotFoundError('User With id ' + id);
+      }
       return { result: user, error: null };
     } catch (err) {
       return { error: err, result: null };
@@ -89,12 +93,12 @@ export class SuperAdmin extends Admin implements SuperAdminService {
         role: admin.role,
         createdAt: admin.createdAt,
       };
-      return {error: null, result};
+      return { error: null, result };
     } catch (err) {
       if (err.code === 11000) {
         err = new DuplicateUserError('Admin already exists');
       }
-      return {error: err, result: null};
+      return { error: err, result: null };
     }
   }
 
@@ -111,7 +115,7 @@ export class SuperAdmin extends Admin implements SuperAdminService {
         return new PermissionError();
       }
 
-      await AdminModel.deleteOne({_id: id});
+      await AdminModel.deleteOne({ _id: id });
       return null;
     } catch (err) {
       return err;
@@ -119,19 +123,19 @@ export class SuperAdmin extends Admin implements SuperAdminService {
   }
   async getAdminsList(role: string): AsyncSafeResult<AdminResult[]> {
     try {
-      let query: {role?: string} = {};
+      let query: { role?: string } = {};
       if (role === 'admin') query.role = 'admin';
       if (role === 'super') query.role = 'superadmin';
-      let adminsList = await AdminModel.find({$and: [query, {role: {$ne: 'manager'}}]});
+      let adminsList = await AdminModel.find({ $and: [query, { role: { $ne: 'manager' } }] });
       const result: AdminResult[] = adminsList.map(a => ({
         createdAt: a.createdAt,
         id: a._id.toString(),
         name: a.name,
         role: a.role,
       }));
-      return {result, error: null};
+      return { result, error: null };
     } catch (err) {
-      return {error: err, result: null};
+      return { error: err, result: null };
     }
   }
 }

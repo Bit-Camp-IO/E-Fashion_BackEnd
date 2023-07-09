@@ -41,3 +41,9 @@ export class PermissionError extends Error {
     super('The authenticated user does not have permission to perform this action.');
   }
 }
+
+export class NotFoundError extends Error {
+  constructor(pre?: string) {
+    super(`${pre} Not Found!`);
+  }
+}

@@ -4,7 +4,7 @@ import Config from '@/config';
 import jwt from 'jsonwebtoken';
 import UserModel from '@/database/models/user';
 import { AuthResponse } from './jwt';
-import { SafeResult } from '@type/common';
+import { AsyncSafeResult } from '@type/common';
 import { createToken } from './token';
 import { UnauthorizedGoogleError } from '../errors';
 
@@ -31,7 +31,7 @@ export class OAuthAuthService {
     return `${rootUrl}?${searchPrams}`;
   }
 
-  static async handleGoogleCode(code: string): Promise<SafeResult<AuthResponse>> {
+  static async handleGoogleCode(code: string): AsyncSafeResult<AuthResponse> {
     try {
       const url = 'https://oauth2.googleapis.com/token';
       const body = {
