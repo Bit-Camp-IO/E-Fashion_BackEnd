@@ -1,38 +1,33 @@
-import {Controller, Validate} from '@server/decorator';
+import {Controller, Guard, Validate} from '@server/decorator';
 import RequestError from '@server/utils/errors';
 import {wrappResponse} from '@server/utils/response';
 import {HttpStatus} from '@server/utils/status';
 import {Request, Response} from 'express';
-import {AdminBody, adminSchema, createProductSchema} from '../valid';
+import {AdminBody, adminSchema} from '../valid';
 import {AdminRole, getAdminServices} from '@/core/admin';
 import {DuplicateUserError, PermissionError, UnauthorizedError} from '@/core/errors';
+import {SuperAdmin} from '@/core/admin/admin';
 
 @Controller()
 class AdminController {
-  @Validate(createProductSchema)
-  public async addProduct(req: Request, res: Response) {
-    const {result: admin, error} = await getAdminServices(req.userId!, AdminRole.ADMIN);
-    if (error) {
-      // TODO: Hadnle Errors
-      throw RequestError._500();
-    }
-    const product = await admin.addProduct(req.body);
-    if (product.error) {
-      // TODO: Hadnle Errors
-      throw RequestError._500();
-    }
-    res.status(HttpStatus.Created).json(wrappResponse(product.result, HttpStatus.Created));
-  }
-
+  // @Validate(createProductSchema)
+  // public async addProduct(req: Request, res: Response) {
+  //   const {result: admin, error} = await getAdminServices(req.userId!, AdminRole.ADMIN);
+  //   if (error) {
+  //     // TODO: Hadnle Errors
+  //     throw RequestError._500();
+  //   }
+  //   const product = await admin.addProduct(req.body);
+  //   if (product.error) {
+  //     // TODO: Hadnle Errors
+  //     throw RequestError._500();
+  //   }
+  //   res.status(HttpStatus.Created).json(wrappResponse(product.result, HttpStatus.Created));
+  // }
   @Validate(adminSchema)
+  @Guard(AdminRole.SUPER_ADMIN)
   public async createAdmin(req: Request, res: Response) {
-    const {result: superAdmin, error} = await getAdminServices(req.userId!, AdminRole.SUPER_ADMIN);
-    if (error) {
-      if (error instanceof UnauthorizedError) {
-        throw new RequestError(error.message, HttpStatus.Unauthorized);
-      }
-      throw RequestError._500();
-    }
+    const superAdmin = req.admin as SuperAdmin;
     const body: AdminBody = req.body;
     const newAdmin = await superAdmin.createAdmin({
       email: body.email,
@@ -90,10 +85,7 @@ class AdminController {
   }
 
   public async getAllUsers(req: Request, res: Response) {
-    const {result: admin, error} = await getAdminServices(
-      req.userId!,
-      AdminRole.ADMIN
-    );
+    const {result: admin, error} = await getAdminServices(req.userId!, AdminRole.ADMIN);
     if (error) {
       if (error instanceof UnauthorizedError) {
         throw new RequestError(error.message, HttpStatus.Unauthorized);
@@ -105,8 +97,8 @@ class AdminController {
   }
 
   public async getOneUser(req: Request, res: Response) {
-    const { id } = req.params;
-    const { result: admin, error } = await getAdminServices(req.userId!, AdminRole.ADMIN);
+    const {id} = req.params;
+    const {result: admin, error} = await getAdminServices(req.userId!, AdminRole.ADMIN);
     if (error) {
       if (error instanceof UnauthorizedError) {
         throw new RequestError(error.message, HttpStatus.Unauthorized);

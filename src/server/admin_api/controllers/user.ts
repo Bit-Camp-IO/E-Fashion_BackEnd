@@ -1,21 +1,17 @@
-import {Controller} from '@server/decorator';
+import {Controller, Guard} from '@server/decorator';
 import RequestError from '@server/utils/errors';
 import {wrappResponse} from '@server/utils/response';
 import {HttpStatus} from '@server/utils/status';
 import {Request, Response} from 'express';
 import {AdminRole, getAdminServices} from '@/core/admin';
 import {NotFoundError, UnauthorizedError} from '@/core/errors';
+import {Admin} from '@/core/admin/admin';
 
 @Controller()
 class AdminController {
+  @Guard(AdminRole.ADMIN)
   public async getAllUsers(req: Request, res: Response) {
-    const {result: admin, error} = await getAdminServices(req.userId!, AdminRole.ADMIN);
-    if (error) {
-      if (error instanceof UnauthorizedError) {
-        throw new RequestError(error.message, HttpStatus.Unauthorized);
-      }
-      throw RequestError._500();
-    }
+    const admin = req.admin as Admin;
     const users = await admin.getAllUsers();
     if (users.error) throw RequestError._500();
     res.status(HttpStatus.Ok).json(wrappResponse(users.result, HttpStatus.Ok));
