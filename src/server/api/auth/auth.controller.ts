@@ -1,10 +1,9 @@
-import { Request, RequestHandler, Response } from 'express';
-import { Controller } from '@server/decorator/controller';
-import { Validate } from '@server/decorator/validate';
-import { LoginSchema, RegisterSchema, loginSchema, registerSchema } from './auth.valid';
-import { HttpStatus } from '@server/utils/status';
-import { wrappResponse } from '@server/utils/response';
-import { JWTAuthService, OAuthAuthService } from '@/core/auth';
+import {Request, RequestHandler, Response} from 'express';
+import {Controller} from '@server/decorator/controller';
+import {Validate} from '@server/decorator/validate';
+import {LoginSchema, RegisterSchema, loginSchema, registerSchema} from './auth.valid';
+import {HttpStatus} from '@server/utils/status';
+import {JWTAuthService, OAuthAuthService} from '@/core/auth';
 import {
   DuplicateUserError,
   InvalidCredentialsError,
@@ -30,7 +29,7 @@ class AuthController implements IAuth {
       }
       throw RequestError._500();
     }
-    res.status(HttpStatus.Ok).json(wrappResponse(response.result, HttpStatus.Ok));
+    res.JSON(HttpStatus.Ok, response.result);
   }
 
   @Validate(registerSchema)
@@ -48,7 +47,7 @@ class AuthController implements IAuth {
       }
       throw RequestError._500();
     }
-    res.status(HttpStatus.Created).json(wrappResponse(response.result, HttpStatus.Ok));
+    res.JSON(HttpStatus.Created, response.result);
   }
   public async refresh(req: Request, res: Response) {
     const refreshToken = req.get('X-Refresh-Token');
@@ -62,9 +61,7 @@ class AuthController implements IAuth {
       }
       throw RequestError._500();
     }
-    res
-      .status(HttpStatus.Created)
-      .json(wrappResponse({ accessToken: newAccessToken.result }, HttpStatus.Created));
+    res.JSON(HttpStatus.Created, {accessToken: newAccessToken.result});
   }
   public google(_: Request, res: Response) {
     const url = OAuthAuthService.loginGooglePageUrl();
@@ -81,7 +78,7 @@ class AuthController implements IAuth {
       }
       throw RequestError._500();
     }
-    res.status(HttpStatus.Created).json(response.result);
+    res.JSON(HttpStatus.Created, response.result);
   }
 }
 

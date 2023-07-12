@@ -1,6 +1,5 @@
 import {Controller, Guard} from '@server/decorator';
 import RequestError from '@server/utils/errors';
-import {wrappResponse} from '@server/utils/response';
 import {HttpStatus} from '@server/utils/status';
 import {Request, Response} from 'express';
 import {AdminRole, getAdminServices} from '@/core/admin';
@@ -14,7 +13,7 @@ class AdminController {
     const admin = req.admin as Admin;
     const users = await admin.getAllUsers();
     if (users.error) throw RequestError._500();
-    res.status(HttpStatus.Ok).json(wrappResponse(users.result, HttpStatus.Ok));
+    res.JSON(HttpStatus.Ok, users.result);
   }
 
   public async getOneUser(req: Request, res: Response) {
@@ -31,7 +30,7 @@ class AdminController {
       if (user.error instanceof NotFoundError)
         throw new RequestError(user.error.message, HttpStatus.NotFound);
     }
-    res.status(HttpStatus.Ok).json(wrappResponse(user.result, HttpStatus.Ok));
+    res.JSON(HttpStatus.Ok, user.result);
   }
 }
 

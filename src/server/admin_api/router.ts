@@ -27,5 +27,6 @@ router.post('/user/:id/ban');
 router.post('/user/:id/unban');
 
 router.post('/product/create', isAuth, productController.create);
+router.delete('/product/:id/remove', isAuth, productController.remove);
 
 export default router;

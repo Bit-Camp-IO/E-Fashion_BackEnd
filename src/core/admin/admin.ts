@@ -1,4 +1,4 @@
-import {ProductData, ProductResult, createProduct} from '../product';
+import {ProductData, ProductResult, createProduct, removeProduct} from '../product';
 import {AsyncSafeResult} from '@type/common';
 import {AdminData, AdminResult} from './interfaces';
 import AdminModel from '@/database/models/admin';
@@ -9,7 +9,7 @@ import {Document} from 'mongoose';
 
 interface AdminService {
   addProduct(data: ProductData): AsyncSafeResult<ProductResult>;
-  deleteProduct(id: string): void;
+  removeProduct(id: string): void;
   editProduct(id: string, data: Partial<ProductData>): AsyncSafeResult<ProductData>;
 
   banUser(id: string): void;
@@ -55,7 +55,9 @@ export class Admin implements AdminService {
     }
   }
 
-  deleteProduct(_: string): void {}
+  async removeProduct(id: string): Promise<Error | null> {
+    return removeProduct(id);
+  }
 
   banUser(_: string): void {}
 

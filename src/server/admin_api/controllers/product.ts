@@ -5,8 +5,8 @@ import {Request, Response} from 'express';
 import {CreateProductSchema, createProductSchema} from '../valid';
 import RequestError from '@server/utils/errors';
 import {HttpStatus} from '@server/utils/status';
-import {wrappResponse} from '@server/utils/response';
 import {AdminRole} from '@/core/admin';
+import {NotFoundError} from '@/core/errors';
 @Controller()
 class ProductController {
   @Validate(createProductSchema)
@@ -25,7 +25,20 @@ class ProductController {
     if (product.error) {
       throw RequestError._500();
     }
-    res.status(HttpStatus.Created).json(wrappResponse(product.result, HttpStatus.Created));
+    res.JSON(HttpStatus.Created, product.result);
+  }
+  @Guard(AdminRole.ADMIN)
+  async remove(req: Request, res: Response) {
+    const admin = req.admin as Admin;
+    const id = req.params['id'] as string;
+    const error = await admin.removeProduct(id);
+    console.log(error);
+    if (error) {
+      if (error instanceof NotFoundError)
+        throw new RequestError(error.message, HttpStatus.NotFound);
+      throw RequestError._500();
+    }
+    res.sendStatus(HttpStatus.NoContent);
   }
 }
 export default new ProductController();

@@ -1,11 +1,10 @@
-import { Controller, Validate } from '@server/decorator';
-import { LoginSchema, loginSchema } from '../valid';
+import {Controller, Validate} from '@server/decorator';
+import {LoginSchema, loginSchema} from '../valid';
 import RequestError from '@server/utils/errors';
-import { HttpStatus } from '@server/utils/status';
-import { wrappResponse } from '@server/utils/response';
-import { Request, Response } from 'express';
-import { login } from '@/core/admin';
-import { InvalidCredentialsError } from '@/core/errors';
+import {HttpStatus} from '@server/utils/status';
+import {Request, Response} from 'express';
+import {login} from '@/core/admin';
+import {InvalidCredentialsError} from '@/core/errors';
 
 @Controller()
 class AuthController {
@@ -19,7 +18,7 @@ class AuthController {
       }
       throw RequestError._500();
     }
-    res.status(HttpStatus.Ok).json(wrappResponse(response.result, HttpStatus.Ok));
+    res.JSON(HttpStatus.Ok, response.result);
   }
 }
 

@@ -1,6 +1,5 @@
 import {Controller, Guard, Validate} from '@server/decorator';
 import RequestError from '@server/utils/errors';
-import {wrappResponse} from '@server/utils/response';
 import {HttpStatus} from '@server/utils/status';
 import {Request, Response} from 'express';
 import {AdminBody, adminSchema} from '../valid';
@@ -42,7 +41,7 @@ class AdminController {
       }
       throw RequestError._500();
     }
-    res.status(HttpStatus.Created).json(wrappResponse(newAdmin.result, HttpStatus.Created));
+    res.JSON(HttpStatus.Created, newAdmin.result);
   }
 
   public async removeAdmin(req: Request, res: Response) {
@@ -81,7 +80,7 @@ class AdminController {
     if (adminsList.error) {
       throw RequestError._500();
     }
-    res.status(HttpStatus.Ok).json(wrappResponse(adminsList.result, HttpStatus.Ok));
+    res.JSON(HttpStatus.Ok, adminsList.result);
   }
 
   public async getAllUsers(req: Request, res: Response) {
@@ -93,7 +92,7 @@ class AdminController {
       throw RequestError._500();
     }
     const users = await admin.getAllUsers();
-    res.status(HttpStatus.Ok).json(wrappResponse(users.result, HttpStatus.Ok));
+    res.JSON(HttpStatus.Ok, users.result);
   }
 
   public async getOneUser(req: Request, res: Response) {
@@ -106,7 +105,7 @@ class AdminController {
       throw RequestError._500();
     }
     const user = await admin.getOneUser(id);
-    res.status(HttpStatus.Ok).json(wrappResponse(user.result, HttpStatus.Ok));
+    res.JSON(HttpStatus.Ok, user.result);
   }
 }
 

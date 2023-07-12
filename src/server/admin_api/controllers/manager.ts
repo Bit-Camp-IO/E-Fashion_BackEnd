@@ -4,7 +4,6 @@ import {AdminBody, adminSchema} from '../valid';
 import {createManager} from '@/core/admin/manager';
 import RequestError from '@server/utils/errors';
 import {HttpStatus} from '@server/utils/status';
-import {wrappResponse} from '@server/utils/response';
 import {DuplicateUserError, ManagerExistError, UnauthorizedError} from '@/core/errors';
 import {AdminRole, getAdminServices} from '@/core/admin';
 
@@ -25,7 +24,7 @@ class ManagerController {
       }
       throw RequestError._500();
     }
-    res.status(HttpStatus.Created).json(wrappResponse(manager.result, HttpStatus.Created));
+    res.JSON(HttpStatus.Created, manager.result);
   }
 
   @Validate(adminSchema)
@@ -51,7 +50,7 @@ class ManagerController {
       }
       throw RequestError._500();
     }
-    res.status(HttpStatus.Created).json(wrappResponse(superAdmin.result, HttpStatus.Created));
+    res.JSON(HttpStatus.Created, superAdmin.result);
   }
 }
 

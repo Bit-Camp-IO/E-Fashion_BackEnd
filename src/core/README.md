@@ -224,6 +224,108 @@ enum AdminRole {
 }
 ```
 
+## Product Module
+
+### Function
+
+- createProduct
+  create new Product
+
+```ts
+createProduct(data: ProductData, adminId: string): CreateProductReturn
+```
+
+- \_getProduct
+  get Product from database will return product documnet
+
+```ts
+_getProduct(id: string)
+```
+
+- getProductForAdmin
+  return all document to admin
+
+```ts
+getProductForAdmin(id: string): AsyncSafeResult<unknown>
+```
+
+- getProductForUser
+  format documnet for user
+
+```ts
+getProductForUser(id: string): AsyncSafeResult<ProductResult>
+```
+
+- getProductsList
+  return list of products
+
+```ts
+getProductsList(): AsyncSafeResult<ProductItemApi[]>
+```
+
+- removeProduct
+  remove product from database
+
+```ts
+removeProduct(id: string): Promise<Error | null>
+```
+
+- \_formatProduct
+  format document to response object
+
+```ts
+_formatProduct(pDoc: ProductDoc): ProductItemApi
+```
+
+### Interfaces
+
+- ProductItemApi
+
+```ts
+  id: string;
+  title: string;
+  description: string;
+  oldPrice: number;
+  price: number;
+  discount: number;
+  colors: { name: string; hex: string }[];
+  sizes: string[];
+  imagesUrl: string[];
+  brand: string;
+  isNew: boolean;
+  rate: number;
+  available: boolean;
+```
+
+- ProductData
+
+```ts
+  title: string;
+  description: string;
+  price: number;
+  colors: { name: string; hex: string }[];
+  sizes: string[];
+```
+
+- ProductResult
+
+```ts
+  title: string;
+  description: string;
+  price: number;
+  colors: { name: string; hex: string }[];
+  sizes: string[];
+  id: string;
+```
+
+### Type
+
+- CreateProductReturn
+
+```ts
+type CreateProductReturn = AsyncSafeResult<ProductResult>;
+```
+
 ## Errors Module
 
 #### InvalidTokenError
