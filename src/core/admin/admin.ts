@@ -1,4 +1,4 @@
-import {ProductData, ProductResult, createProduct, removeProduct} from '../product';
+import {ProductData, ProductItemApi, ProductResult, createProduct, getProductsList, removeProduct} from '../product';
 import {AsyncSafeResult} from '@type/common';
 import {AdminData, AdminResult} from './interfaces';
 import AdminModel from '@/database/models/admin';
@@ -57,6 +57,15 @@ export class Admin implements AdminService {
 
   async removeProduct(id: string): Promise<Error | null> {
     return removeProduct(id);
+  }
+
+  async getAllProducts(): AsyncSafeResult<ProductItemApi[]> {
+    try {
+      const products = await getProductsList();
+      return products;
+    } catch (err) {
+      return { error: err, result: null };
+    }
   }
 
   banUser(_: string): void {}

@@ -40,5 +40,14 @@ class ProductController {
     }
     res.sendStatus(HttpStatus.NoContent);
   }
+  @Guard(AdminRole.ADMIN)
+  async getAllProductsForAdmin(req: Request, res: Response) {
+    const admin = req.admin as Admin;
+    const products = await admin.getAllProducts();
+    if (products.error) {
+      throw RequestError._500(); 
+    }
+    res.JSON(HttpStatus.Ok, products.result);
+  }
 }
 export default new ProductController();
