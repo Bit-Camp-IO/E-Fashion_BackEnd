@@ -23,8 +23,8 @@ router.get('/user/list', isAuth, adminController.getAllUsers); // *
 
 router.get('/user/:id', isAuth, adminController.getOneUser); // *
 
-router.post('/user/:id/ban');
-router.post('/user/:id/unban');
+router.post('/user/:id/ban', isAuth, adminController.banUser);
+router.post('/user/:id/unban', isAuth, adminController.unBanUser);
 
 router.post('/product/create', isAuth, productController.create);
 router.delete('/product/:id/remove', isAuth, productController.remove);

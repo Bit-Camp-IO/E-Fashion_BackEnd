@@ -5,7 +5,7 @@ import {Request, Response} from 'express';
 import {AdminBody, adminSchema} from '../valid';
 import {AdminRole, getAdminServices} from '@/core/admin';
 import {DuplicateUserError, PermissionError, UnauthorizedError} from '@/core/errors';
-import {SuperAdmin} from '@/core/admin/admin';
+import {Admin, SuperAdmin} from '@/core/admin/admin';
 
 @Controller()
 class AdminController {
@@ -106,6 +106,28 @@ class AdminController {
     }
     const user = await admin.getOneUser(id);
     res.JSON(HttpStatus.Ok, user.result);
+  }
+
+  @Guard(AdminRole.ADMIN)
+  public async banUser(req: Request, res: Response) {
+    const { id } = req.params;
+    const admin = req.admin as Admin;
+    const result = await admin.banUser(id);
+    if (result instanceof Error) {
+      throw new RequestError(result.message, HttpStatus.BadRequest);
+    }
+    res.JSON(HttpStatus.Ok, result);
+  }
+
+  @Guard(AdminRole.ADMIN)
+  public async unBanUser(req: Request, res: Response) {
+    const { id } = req.params;
+    const admin = req.admin as Admin;
+    const result = await admin.unBanUser(id);
+    if (result instanceof Error) {
+      throw new RequestError(result.message, HttpStatus.BadRequest);
+    }
+    res.JSON(HttpStatus.Ok, result);
   }
 }
 

@@ -61,16 +61,45 @@ export class Admin implements AdminService {
 
   async getAllProducts(): AsyncSafeResult<ProductItemApi[]> {
     try {
-      const products = await getProductsList();
-      return products;
+      return getProductsList();
     } catch (err) {
       return { error: err, result: null };
     }
   }
 
-  banUser(_: string): void {}
+  async banUser(id: string): Promise<Error | null> {
+    try {
+      const user = await UserModel.findById({_id: id});
+      if (!user) {
+        throw new NotFoundError('User With id ' + id);
+      }
+      if (user.banned) {
+        throw new Error('User is already banned');
+      }
+      user.banned = true;
+      await user.save();
+      return null;
+    } catch (err) {
+      return err;
+    }
+  }
 
-  unBanUser(_: string): void {}
+  async unBanUser(id: string): Promise<Error | null> {
+    try {
+      const user = await UserModel.findById({_id: id});
+      if (!user) {
+        throw new NotFoundError('User With id ' + id);
+      }
+      if (!user.banned) {
+        throw new Error("User is not banned");
+      }
+      user.banned = false;
+      await user.save();
+      return null;
+    } catch (err) {
+      return err;
+    }
+  }
 }
 
 interface SuperAdminService {
