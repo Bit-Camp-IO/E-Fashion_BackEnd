@@ -27,6 +27,7 @@ router.post('/user/:id/ban', isAuth, adminController.banUser);
 router.post('/user/:id/unban', isAuth, adminController.unBanUser);
 
 router.post('/product/create', isAuth, productController.create);
+router.put('/product/:id/edit', isAuth, productController.editProduct);
 router.delete('/product/:id/remove', isAuth, productController.remove);
 router.get('/product', isAuth, productController.getAllProductsForAdmin);
 

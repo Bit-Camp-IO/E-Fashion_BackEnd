@@ -1,4 +1,4 @@
-import {ProductData, ProductItemApi, ProductResult, createProduct, getProductsList, removeProduct} from '../product';
+import {ProductData, ProductItemApi, ProductResult, createProduct, getProductsList, removeProduct, updateProduct} from '../product';
 import {AsyncSafeResult} from '@type/common';
 import {AdminData, AdminResult} from './interfaces';
 import AdminModel from '@/database/models/admin';
@@ -26,9 +26,9 @@ export class Admin implements AdminService {
     }
   }
   // TODO: Admin Services
-  async editProduct(_: string, __: Partial<ProductData>): AsyncSafeResult<ProductData> {
+  async editProduct(id: string, productData: Partial<ProductData>): AsyncSafeResult<ProductData> {
     try {
-      throw new Error('not implemented');
+      return await updateProduct(id, productData);
     } catch (err) {
       return {error: err, result: null};
     }

@@ -61,6 +61,16 @@ export async function getProductsList(): AsyncSafeResult<ProductItemApi[]> {
   }
 }
 
+export async function updateProduct(id: string, productData: Partial<ProductData>): AsyncSafeResult<ProductData> {
+  try {
+    const product = await ProductModel.findByIdAndUpdate(id, { $set: productData }, { new: true });
+    if (!product) throw new NotFoundError('Product with' + id);
+    return { result: _formatProduct(product), error: null };
+  } catch (err) {
+    return { error: err, result: null }
+  } 
+}
+
 export async function removeProduct(id: string): Promise<Error | null> {
   try {
     const product = await ProductModel.findById(id);

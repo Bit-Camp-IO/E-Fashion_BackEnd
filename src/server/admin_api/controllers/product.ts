@@ -7,6 +7,7 @@ import RequestError from '@server/utils/errors';
 import {HttpStatus} from '@server/utils/status';
 import {AdminRole} from '@/core/admin';
 import {NotFoundError} from '@/core/errors';
+import { UpdateProductSchema, updateProductSchema } from '@server/api/product/product.valid';
 @Controller()
 class ProductController {
   @Validate(createProductSchema)
@@ -48,6 +49,26 @@ class ProductController {
       throw RequestError._500(); 
     }
     res.JSON(HttpStatus.Ok, products.result);
+  }
+  @Validate(updateProductSchema)
+  @Guard(AdminRole.ADMIN)
+  async editProduct(req: Request, res: Response) {
+    const admin = req.admin as Admin;
+    const { id } = req.params;
+    const body: UpdateProductSchema = req.body;
+    const productData: UpdateProductSchema = {
+      colors: body.colors,
+      description: body.description,
+      price: body.price,
+      sizes: body.sizes,
+      title: body.title,
+    }
+    const product = await admin.editProduct(id, productData);
+    if (product.error) {
+      console.log(product.error.message)
+      throw RequestError._500();
+    }
+    res.JSON(HttpStatus.Ok, product.result)
   }
 }
 export default new ProductController();
