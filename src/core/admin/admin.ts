@@ -6,6 +6,8 @@ import bcrypt from 'bcrypt';
 import {DuplicateUserError, NotFoundError, PermissionError} from '../errors';
 import UserModel, {UserDB} from '@/database/models/user';
 import {Document} from 'mongoose';
+import { CategoryData, CategoryResult } from '../category/interfaces';
+import { createCategory } from '../category';
 
 interface AdminService {
   addProduct(data: ProductData): AsyncSafeResult<ProductResult>;
@@ -64,6 +66,14 @@ export class Admin implements AdminService {
       return getProductsList();
     } catch (err) {
       return { error: err, result: null };
+    }
+  }
+
+  async addCategory(data: CategoryData): AsyncSafeResult<CategoryResult> {
+    try {
+      return createCategory(data, this._id);
+    } catch (err) {
+      return { error: err, result: null }
     }
   }
 
