@@ -81,9 +81,6 @@ export async function removeCategory(id: string): Promise<Error | null> {
     }
   }
   
-
-
-
 function _formatCategory(cDoc: CategoryDoc): CategoryResult {
     return {
       id: cDoc.id.toString(),
