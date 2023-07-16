@@ -34,5 +34,8 @@ router.get('/product', isAuth, productController.getAllProductsForAdmin);
 
 router.post('/category', isAuth, categoryController.create)
 router.post('/category/:id/add-sub', isAuth, categoryController.createSub)
+router.put('/category/:id/edit', isAuth, categoryController.editCategory)
+router.delete('/category/:id/remove', isAuth, categoryController.remove)
+router.get('/category/', isAuth, categoryController.getAllCategoriesForAdmin)
 
 export default router;

@@ -59,6 +59,18 @@ export async function updateCategory(id: string, cData: Partial<CategoryData>): 
     }
 }
 
+export async function removeCategory(id: string): Promise<Error | null> {
+    try {
+      const category = await CategoryModel.findById(id);
+      if (!category) return new NotFoundError('Category with ' + id);
+      await CategoryModel.findByIdAndRemove(id);
+      return null;
+    } catch (err) {
+      return err;
+    }
+  }
+  
+
 interface CategoryDoc extends Document, CategorieDB {};
 
 function _formatCategory(cDoc: CategoryDoc): CategoryResult {
