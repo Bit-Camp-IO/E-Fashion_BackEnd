@@ -15,7 +15,7 @@ import {DuplicateUserError, NotFoundError, PermissionError} from '../errors';
 import UserModel, {UserDB} from '@/database/models/user';
 import {Document} from 'mongoose';
 import {CategoryData, CategoryResult} from '../category/interfaces';
-import {createCategory} from '../category';
+import {addSubCategory, createCategory} from '../category';
 
 interface AdminService {
   addProduct(data: ProductData): AsyncSafeResult<ProductResult>;
@@ -80,6 +80,14 @@ export class Admin implements AdminService {
   async addCategory(data: CategoryData): AsyncSafeResult<CategoryResult> {
     try {
       return createCategory(data, this._id);
+    } catch (err) {
+      return {error: err, result: null};
+    }
+  }
+
+  async addSub(data: CategoryData, id: string): AsyncSafeResult<CategoryResult> {
+    try {
+      return addSubCategory(data, id, this._id);
     } catch (err) {
       return {error: err, result: null};
     }
