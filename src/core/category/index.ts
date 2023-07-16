@@ -1,8 +1,7 @@
-import CategoryModel, { CategorieDB } from "@/database/models/categorie"
-import { CategoryData, CategoryResult } from "./interfaces"
+import CategoryModel from "@/database/models/categorie"
+import { CategoryData, CategoryDoc, CategoryResult } from "./interfaces"
 import { AsyncSafeResult } from "@type/common"
 import { NotFoundError } from "../errors";
-import { Document } from "mongoose";
 
 export async function createCategory(data: CategoryData, adminId: string): AsyncSafeResult<CategoryResult> {
     try {
@@ -50,13 +49,14 @@ export async function addSubCategory(data: CategoryData, id: string, adminId: st
 
 export async function getAllCategories(): AsyncSafeResult<CategoryResult[]> {
     try {
-      const categories = await CategoryModel.find({});
-      const result: CategoryResult[] = categories.map(category => _formatCategory(category));
-      return { result, error: null };
+      const categories = await CategoryModel.find({isMain: true}).populate('subCategories');
+      const result = categories.map(category => _formatCategory(category));
+      return { result: result, error: null };
     } catch (err) {
       return { error: err, result: null };
     }
   }
+
 
 export async function updateCategory(id: string, cData: Partial<CategoryData>): AsyncSafeResult<CategoryResult> {
     try {
@@ -82,7 +82,7 @@ export async function removeCategory(id: string): Promise<Error | null> {
   }
   
 
-interface CategoryDoc extends Document, CategorieDB {};
+
 
 function _formatCategory(cDoc: CategoryDoc): CategoryResult {
     return {
@@ -91,6 +91,7 @@ function _formatCategory(cDoc: CategoryDoc): CategoryResult {
       description: cDoc.description || '',
       imagesURL: cDoc.imagesURL || '',
       isMain: cDoc.isMain || false,
-      subCategories: cDoc.subCategories.map(subCategory => subCategory?.toString() || ''),
+      subCategories: cDoc.subCategories ? cDoc.subCategories.map(category => category.name) : [],
+      addedBy: cDoc.addedBy?._id?.toString() || '',
     };
   }
