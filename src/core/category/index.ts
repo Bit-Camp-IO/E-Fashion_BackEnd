@@ -18,6 +18,17 @@ export async function createCategory(data: CategoryData, adminId: string): Async
     }
 }
 
+export async function getCategoryForUser(id: string): AsyncSafeResult<CategoryResult> {
+    try {
+      const category = await CategoryModel.findById(id);
+      if (!category) {
+        throw new NotFoundError("Category with id"+ id);
+      }
+      return { result: _formatCategory(category), error: null };
+    } catch (err) {
+      return { error: err, result: null };
+    }
+  }
 export async function addSubCategory(data: CategoryData, id: string, adminId: string): AsyncSafeResult<CategoryResult> {
     try {
         const subCategory = await CategoryModel.create({
