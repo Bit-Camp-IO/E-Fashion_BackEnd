@@ -1,4 +1,4 @@
-import { AsyncSafeResult } from '@type/common';
+import {AsyncSafeResult} from '@type/common';
 
 export interface ProductItemApi {
   id: string;
@@ -7,7 +7,7 @@ export interface ProductItemApi {
   oldPrice: number;
   price: number;
   discount: number;
-  colors: { name: string; hex: string }[];
+  colors: {name: string; hex: string}[];
   sizes: string[];
   imagesUrl: string[];
   brand: string;
@@ -16,11 +16,17 @@ export interface ProductItemApi {
   available: boolean;
 }
 
+export interface ProductItemsApiList {
+  products: ProductItemApi[];
+  page: number;
+  count: number;
+}
+
 export interface ProductData {
   title: string;
   description: string;
   price: number;
-  colors: { name: string; hex: string }[];
+  colors: {name: string; hex: string}[];
   sizes: string[];
 }
 
@@ -28,8 +34,22 @@ export interface ProductResult {
   title: string;
   description: string;
   price: number;
-  colors: { name: string; hex: string }[];
+  colors: {name: string; hex: string}[];
   sizes: string[];
   id: string;
 }
 export type CreateProductReturn = AsyncSafeResult<ProductResult>;
+
+export interface ProductOptions {
+  page: number;
+  limit: number;
+  sort: ProductSortOptions;
+}
+
+type Sort = 'asc' | 'desc';
+
+export interface ProductSortOptions {
+  price?: Sort;
+  popularity?: Sort;
+  newness?: Sort;
+}

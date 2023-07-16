@@ -1,8 +1,16 @@
-import ProductModel, { ProductDB } from '@/database/models/product';
-import { AsyncSafeResult } from '@type/common';
-import { NotFoundError } from '../errors';
-import { Document } from 'mongoose';
-import { CreateProductReturn, ProductData, ProductItemApi, ProductResult } from './interfaces';
+import ProductModel, {ProductDB} from '@/database/models/product';
+import {AsyncSafeResult} from '@type/common';
+import {NotFoundError} from '../errors';
+import {Document} from 'mongoose';
+import {
+  CreateProductReturn,
+  ProductData,
+  ProductItemApi,
+  ProductItemsApiList,
+  ProductOptions,
+  ProductResult,
+  ProductSortOptions,
+} from './interfaces';
 export * from './interfaces';
 
 export async function createProduct(data: ProductData, adminId: string): CreateProductReturn {
@@ -16,9 +24,9 @@ export async function createProduct(data: ProductData, adminId: string): CreateP
       colors: data.colors,
     });
     const result: ProductResult = _formatProduct(product);
-    return { result, error: null };
+    return {result, error: null};
   } catch (err) {
-    return { error: err, result: null };
+    return {error: err, result: null};
   }
 }
 
@@ -35,9 +43,9 @@ export async function getProductForAdmin(id: string): AsyncSafeResult<unknown> {
       ...product,
       id: product._id.toString(),
     };
-    return { result: productResult, error: null };
+    return {result: productResult, error: null};
   } catch (err) {
-    return { error: err, result: null };
+    return {error: err, result: null};
   }
 }
 
@@ -45,30 +53,55 @@ export async function getProductForUser(id: string): AsyncSafeResult<ProductResu
   try {
     const product = await _getProduct(id);
     const result: ProductResult = _formatProduct(product);
-    return { result, error: null };
+    return {result, error: null};
   } catch (err) {
-    return { error: err, result: null };
+    return {error: err, result: null};
   }
 }
 
-export async function getProductsList(): AsyncSafeResult<ProductItemApi[]> {
+const DefaultOptions: ProductOptions = {
+  limit: 20,
+  page: 1,
+  sort: {
+    newness: 'asc',
+    price: 'asc',
+  },
+};
+
+export async function getProductsList(
+  options?: ProductOptions,
+): AsyncSafeResult<ProductItemsApiList> {
+  options = options || DefaultOptions;
+
   try {
-    const products = await ProductModel.find({});
-    const result: ProductItemApi[] = products.map(p => _formatProduct(p));
-    return { result, error: null };
+    const page = options.page || 1;
+    const limit = options.limit || 20;
+    const skipDocsNumber = (page - 1) * limit;
+    const productsQuery = ProductModel.find({});
+    _sort(productsQuery, options.sort);
+    const products = await productsQuery.skip(skipDocsNumber).limit(limit).exec();
+    const result: ProductItemsApiList = {
+      products: products.map(p => _formatProduct(p)),
+      page: page,
+      count: limit,
+    };
+    return {result, error: null};
   } catch (error) {
-    return { result: null, error };
+    return {result: null, error};
   }
 }
 
-export async function updateProduct(id: string, productData: Partial<ProductData>): AsyncSafeResult<ProductData> {
+export async function updateProduct(
+  id: string,
+  productData: Partial<ProductData>,
+): AsyncSafeResult<ProductData> {
   try {
-    const product = await ProductModel.findByIdAndUpdate(id, { $set: productData }, { new: true });
+    const product = await ProductModel.findByIdAndUpdate(id, {$set: productData}, {new: true});
     if (!product) throw new NotFoundError('Product with' + id);
-    return { result: _formatProduct(product), error: null };
+    return {result: _formatProduct(product), error: null};
   } catch (err) {
-    return { error: err, result: null }
-  } 
+    return {error: err, result: null};
+  }
 }
 
 export async function removeProduct(id: string): Promise<Error | null> {
@@ -101,4 +134,10 @@ function _formatProduct(pDoc: ProductDoc): ProductItemApi {
     colors: pDoc.colors || [],
     sizes: pDoc.sizes || [],
   };
+}
+
+function _sort(q: any, options?: ProductSortOptions) {
+  if (!options) return;
+  if (options.price) q.sort({price: options.price});
+  if (options.newness) q.sort({createdAt: options.newness});
 }

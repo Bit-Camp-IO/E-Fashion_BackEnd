@@ -5,14 +5,44 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Test OAuth2</title>
+  <style>
+    body {
+      background-color: #2c2c2c;
+      color: white
+    }
+
+    a {
+      color: white;
+      font-size: 20px;
+      display: block;
+      font-weight: bold;
+    }
+
+    .error {
+      color: red;
+    }
+
+    .title {
+      color: yellow;
+    }
+
+    #page {
+      color: aqua;
+    }
+  </style>
 </head>
 
 <body>
   <h1>OAuth2</h1>
   <button onclick="version()">version</button>
   <button onclick="google()">Google</button>
+  <button onclick="listProduct()">Products</button>
   <a href="http://localhost:8080/api/auth/google">Google</a>
+  <h1 id="page"></h1>
+  <div id="main"></div>
   <script>
+    const main = document.getElementById('main')
+    const page = document.getElementById('page')
     function google() {
       fetch("http://localhost:8080/api/auth/r")
     }
@@ -21,6 +51,23 @@
         .then(d => d.json())
         .then(console.log)
         .catch(console.log)
+    }
+    function listProduct() {
+      main.innerHTML = ''
+      page.innerHTML = ''
+      fetch("http://localhost:8080/api/product/list")
+        .then(d => d.json())
+        .then(p => {
+          if (p.status !== 'success') {
+            main.innerHTML = '<h1 class="error">' + p.message + '<h1>'
+            return
+          }
+          page.innerHTML = p.data.page
+          p.data.products.forEach((p, i) => {
+            main.innerHTML += `<h2 class="title">${i + 1} - ${p.title}<h2>\n<p>${p.description}</p>\n<p>Price: ${p.price}</p>`
+          })
+        })
+        .catch(err => main.innerHTML = '<h1 class="error">' + err.message + '<h1>')
     }
   </script>
 </body>

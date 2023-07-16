@@ -1,4 +1,12 @@
-import {ProductData, ProductItemApi, ProductResult, createProduct, getProductsList, removeProduct, updateProduct} from '../product';
+import {
+  ProductData,
+  ProductItemsApiList,
+  ProductResult,
+  createProduct,
+  getProductsList,
+  removeProduct,
+  updateProduct,
+} from '../product';
 import {AsyncSafeResult} from '@type/common';
 import {AdminData, AdminResult} from './interfaces';
 import AdminModel from '@/database/models/admin';
@@ -6,8 +14,8 @@ import bcrypt from 'bcrypt';
 import {DuplicateUserError, NotFoundError, PermissionError} from '../errors';
 import UserModel, {UserDB} from '@/database/models/user';
 import {Document} from 'mongoose';
-import { CategoryData, CategoryResult } from '../category/interfaces';
-import { createCategory } from '../category';
+import {CategoryData, CategoryResult} from '../category/interfaces';
+import {createCategory} from '../category';
 
 interface AdminService {
   addProduct(data: ProductData): AsyncSafeResult<ProductResult>;
@@ -61,11 +69,11 @@ export class Admin implements AdminService {
     return removeProduct(id);
   }
 
-  async getAllProducts(): AsyncSafeResult<ProductItemApi[]> {
+  async getAllProducts(): AsyncSafeResult<ProductItemsApiList> {
     try {
       return getProductsList();
     } catch (err) {
-      return { error: err, result: null };
+      return {error: err, result: null};
     }
   }
 
@@ -73,7 +81,7 @@ export class Admin implements AdminService {
     try {
       return createCategory(data, this._id);
     } catch (err) {
-      return { error: err, result: null }
+      return {error: err, result: null};
     }
   }
 
@@ -101,7 +109,7 @@ export class Admin implements AdminService {
         throw new NotFoundError('User With id ' + id);
       }
       if (!user.banned) {
-        throw new Error("User is not banned");
+        throw new Error('User is not banned');
       }
       user.banned = false;
       await user.save();

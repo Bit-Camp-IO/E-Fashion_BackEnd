@@ -1,0 +1,1962 @@
+[
+  {
+    "title": "Women's Striped T-Shirt",
+    "description": "This classic striped t-shirt is a wardrobe essential. It features a crew neckline and short sleeves, and is made from soft cotton. Available in multiple colors.",
+    "price": 29.99,
+    "colors": [
+      {
+        "name": "Black/White",
+        "hex": "#000000,#FFFFFF"
+      },
+      {
+        "name": "Navy/White",
+        "hex": "#000080,#FFFFFF"
+      }
+    ],
+    "sizes": ["S", "M", "L"]
+  },
+  {
+    "title": "Men's Slim-Fit Jeans",
+    "description": "These slim-fit jeans are perfect for a casual day out. They feature a classic five-pocket design and are made from stretch denim for added comfort. Available in multiple washes.",
+    "price": 59.99,
+    "colors": [
+      {
+        "name": "Blue",
+        "hex": "#0000FF"
+      },
+      {
+        "name": "Black",
+        "hex": "#000000"
+      }
+    ],
+    "sizes": ["29/30", "30/30", "31/30", "32/30", "33/30", "34/30"]
+  },
+  {
+    "title": "Women's Maxi Dress",
+    "description": "This flowy maxi dress is perfect for a summer day. It features a v-neckline, adjustable spaghetti straps, and a tiered skirt. Available in multiple prints.",
+    "price": 49.99,
+    "colors": [
+      {
+        "name": "Floral",
+        "hex": "#FF1493,#FFFF00,#00FF00"
+      },
+      {
+        "name": "Striped",
+        "hex": "#FFFFFF,#0000FF"
+      }
+    ],
+    "sizes": ["XS", "S", "M", "L"]
+  },
+  {
+    "title": "Men's Oxford Shirt",
+    "description": "This classic oxford shirt is a versatile piece for any wardrobe. It features a button-down collar and chest pocket, and is made from soft cotton. Available in multiple colors.",
+    "price": 39.99,
+    "colors": [
+      {
+        "name": "White",
+        "hex": "#FFFFFF"
+      },
+      {
+        "name": "Blue",
+        "hex": "#0000FF"
+      }
+    ],
+    "sizes": ["S", "M", "L", "XL"]
+  },
+  {
+    "title": "Women's High-Waisted Leggings",
+    "description": "These high-waisted leggings are perfect for a workout or a casual day. They feature a wide waistband for added support and are made from moisture-wicking fabric. Available in multiple colors.",
+    "price": 34.99,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Gray",
+        "hex": "#808080"
+      }
+    ],
+    "sizes": ["XS", "S", "M", "L", "XL"]
+  },
+  {
+    "title": "Men's Crewneck Sweater",
+    "description": "This classic crewneck sweater is a cozy addition to any wardrobe. It features ribbed cuffs and hem and is made from soft wool. Available in multiple colors.",
+    "price": 79.99,
+    "colors": [
+      {
+        "name": "Navy",
+        "hex": "#000080"
+      },
+      {
+        "name": "Gray",
+        "hex": "#808080"
+      }
+    ],
+    "sizes": ["S", "M", "L", "XL"]
+  },
+  {
+    "title": "Women's Denim Jacket",
+    "description": "This denim jacket is a versatile piece for any season. It features a button-front closure and chest pockets, and is made from durable denim. Available in multiple washes.",
+    "price": 69.99,
+    "colors": [
+      {
+        "name": "Light Wash",
+        "hex": "#ADD8E6"
+      },
+      {
+        "name": "Dark Wash",
+        "hex": "#000080"
+      }
+    ],
+    "sizes": ["XS", "S", "M", "L"]
+  },
+  {
+    "title": "Men's Polo Shirt",
+    "description": "This classic polo shirt is a wardrobe staple. It features a button-front placket and ribbed collar and cuffs, and is made from soft cotton. Available in multiple colors.",
+    "price": 49.99,
+    "colors": [
+      {
+        "name": "Red",
+        "hex": "#FF0000"
+      },
+      {
+        "name": "Navy",
+        "hex": "#000080"
+      }
+    ],
+    "sizes": ["S", "M", "L", "XL"]
+  },
+  {
+    "title": "Women's Sneakers",
+    "description": "These sneakers are a stylish and comfortable choice for everyday wear. They feature a lace-up closure and cushioned sole, and are made from synthetic leather. Available in multiple colors.",
+    "price": 54.99,
+    "colors": [
+      {
+        "name": "White",
+        "hex": "#FFFFFF"
+      },
+      {
+        "name": "Black",
+        "hex": "#000000"
+      }
+    ],
+    "sizes": ["6", "7", "8", "9", "10"]
+  },
+  {
+    "title": "Men's Chino Shorts",
+    "description": "These chino shorts are a classic choice for summer. They feature a zip-fly closure and multiple pockets, and are made from breathable cotton. Available in multiple colors.",
+    "price": 39.99,
+    "colors": [
+      {
+        "name": "Khaki",
+        "hex": "#F0E68C"
+      },
+      {
+        "name": "Navy",
+        "hex": "#000080"
+      }
+    ],
+    "sizes": ["30", "32", "34", "36", "38"]
+  },
+  {
+    "title": "Women's Wrap Dress",
+    "description": "This elegant wrap dress features a flattering v-neckline and a tie waist for a customizable fit. It's made from lightweight fabric with a bold floral print. Available in multiple colors.",
+    "price": 59.99,
+    "colors": [
+      {
+        "name": "Black Floral",
+        "hex": "#000000,#FF1493,#FFFF00"
+      },
+      {
+        "name": "Blue Floral",
+        "hex": "#0000FF,#FF1493,#FFFF00"
+      }
+    ],
+    "sizes": ["XS", "S", "M", "L", "XL"]
+  },
+  {
+    "title": "Men's Dress Shirt",
+    "description": "This classic dress shirt is perfect for any formal occasion. It features a button-front closure and a spread collar, and is made from wrinkle-resistant fabric. Available in multiple colors.",
+    "price": 49.99,
+    "colors": [
+      {
+        "name": "White",
+        "hex": "#FFFFFF"
+      },
+      {
+        "name": "Light Blue",
+        "hex": "#ADD8E6"
+      }
+    ],
+    "sizes": ["S", "M", "L", "XL"]
+  },
+  {
+    "title": "Women's High Heels",
+    "description": "These high heels are a stylish addition to any outfit. They feature a pointed toe and a stiletto heel, and are made from faux suede. Available in multiple colors.",
+    "price": 69.99,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Red",
+        "hex": "#FF0000"
+      }
+    ],
+    "sizes": ["6", "7", "8", "9", "10"]
+  },
+  {
+    "title": "Men's Leather Jacket",
+    "description": "This leather jacket is a timeless piece that will never go out of style. It features a zip-front closure and multiple pockets, and is made from genuine leather. Available in multiple colors.",
+    "price": 249.99,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Brown",
+        "hex": "#8B4513"
+      }
+    ],
+    "sizes": ["S", "M", "L", "XL"]
+  },
+  {
+    "title": "Women's Cropped Jeans",
+    "description": "These cropped jeans are perfect for a casual day out. They feature a relaxed fit and a raw hem, and are made from stretch denim. Available in multiple washes.",
+    "price": 44.99,
+    "colors": [
+      {
+        "name": "Light Wash",
+        "hex": "#ADD8E6"
+      },
+      {
+        "name": "Dark Wash",
+        "hex": "#000080"
+      }
+    ],
+    "sizes": ["24", "25", "26", "27", "28", "29"]
+  },
+  {
+    "title": "Men's Cargo Shorts",
+    "description": "These cargo shorts are a practical choice for summer. They feature multiple pockets and a comfortable fit, and are made from durable cotton. Available in multiple colors.",
+    "price": 34.99,
+    "colors": [
+      {
+        "name": "Olive",
+        "hex": "#808000"
+      },
+      {
+        "name": "Navy",
+        "hex": "#000080"
+      }
+    ],
+    "sizes": ["30", "32", "34", "36", "38"]
+  },
+  {
+    "title": "Women's Sandals",
+    "description": "These sandals are perfect for a beach day or a casual summer outfit. They feature a strappy design and a cushioned sole, and are made from synthetic leather. Available in multiple colors.",
+    "price": 29.99,
+    "colors": [
+      {
+        "name": "White",
+        "hex": "#FFFFFF"
+      },
+      {
+        "name": "Tan",
+        "hex": "#D2B48C"
+      }
+    ],
+    "sizes": ["6", "7", "8", "9", "10"]
+  },
+  {
+    "title": "Men's Graphic T-Shirt",
+    "description": "This graphic t-shirt adds a pop of color to any outfit. It features a bold print on the front and is made from soft cotton. Available in multiple colors.",
+    "price": 24.99,
+    "colors": [
+      {
+        "name": "Yellow",
+        "hex": "#FFFF00"
+      },
+      {
+        "name": "Red",
+        "hex": "#FF0000"
+      }
+    ],
+    "sizes": ["S", "M", "L", "XL"]
+  },
+  {
+    "title": "Women's Denim Shorts",
+    "description": "These denim shorts are a summer essential. They feature a high-waisted design and a distressed hem, and are made from stretch denim. Available in multiple washes.",
+    "price": 39.99,
+    "colors": [
+      {
+        "name": "Light Wash",
+        "hex": "#ADD8E6"
+      },
+      {
+        "name": "Dark Wash",
+        "hex": "#000080"
+      }
+    ],
+    "sizes": ["24", "25", "26", "27", "28", "29"]
+  },
+  {
+    "title": "Men's Hoodie",
+    "description": "This cozy hoodie is perfect for a casual day. It features a drawstring hood and a kangaroo pocket, and is made from soft cotton. Available in multiple colors.",
+    "price": 49.99,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Gray",
+        "hex": "#808080"
+      }
+    ],
+    "sizes": ["S", "M", "L", "XL"]
+  },
+  {
+    "title": "Women's Maxi Dress",
+    "description": "This beautiful maxi dress is perfect for any special occasion. It features a flattering v-neckline, a flowy skirt, and a tie waist for a customizable fit. Available in multiple colors.",
+    "price": 99.99,
+    "colors": [
+      {
+        "name": "Navy",
+        "hex": "#000080"
+      },
+      {
+        "name": "Burgundy",
+        "hex": "#800000"
+      }
+    ],
+    "sizes": ["XS", "S", "M", "L", "XL"]
+  },
+  {
+    "title": "Men's Polo Shirt",
+    "description": "This classic polo shirt is a wardrobe staple. It features a button-front closure and a ribbed collar and cuffs, and is made from soft cotton. Available in multiple colors.",
+    "price": 29.99,
+    "colors": [
+      {
+        "name": "White",
+        "hex": "#FFFFFF"
+      },
+      {
+        "name": "Navy",
+        "hex": "#000080"
+      }
+    ],
+    "sizes": ["S", "M", "L", "XL"]
+  },
+  {
+    "title": "Women's Leather Jacket",
+    "description": "This leather jacket is a must-have for any fashion-forward woman. It features a zip-front closure, multiple pockets, and a belted waist for a stylish look. Available in multiple colors.",
+    "price": 199.99,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Brown",
+        "hex": "#8B4513"
+      }
+    ],
+    "sizes": ["XS", "S", "M", "L", "XL"]
+  },
+  {
+    "title": "Men's Chino Pants",
+    "description": "These chino pants are a versatile addition to any wardrobe. They feature a slim fit and a flat-front design, and are made from comfortable cotton. Available in multiple colors.",
+    "price": 49.99,
+    "colors": [
+      {
+        "name": "Khaki",
+        "hex": "#F0E68C"
+      },
+      {
+        "name": "Navy",
+        "hex": "#000080"
+      }
+    ],
+    "sizes": ["30", "32", "34", "36", "38"]
+  },
+  {
+    "title": "Women's Ankle Boots",
+    "description": "These ankle boots are a stylish and comfortable choice for any outfit. They feature a chunky heel and a zip closure, and are made from faux leather. Available in multiple colors.",
+    "price": 79.99,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Brown",
+        "hex": "#8B4513"
+      }
+    ],
+    "sizes": ["6", "7", "8", "9", "10"]
+  },
+  {
+    "title": "Men's Denim Jacket",
+    "description": "This denim jacket is a classic piece that never goes out of style. It features a button-front closure, multiple pockets, and a distressed finish for a vintage look. Available in multiple washes.",
+    "price": 89.99,
+    "colors": [
+      {
+        "name": "Light Wash",
+        "hex": "#ADD8E6"
+      },
+      {
+        "name": "Dark Wash",
+        "hex": "#000080"
+      }
+    ],
+    "sizes": ["S", "M", "L", "XL"]
+  },
+  {
+    "title": "Women's Wide-Leg Pants",
+    "description": "These wide-leg pants are a comfortable and stylish choice for any occasion. They feature a high-waisted design and a flowy fit, and are made from lightweight fabric. Available in multiple colors.",
+    "price": 59.99,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Navy",
+        "hex": "#000080"
+      }
+    ],
+    "sizes": ["XS", "S", "M", "L", "XL"]
+  },
+  {
+    "title": "Men's Suede Loafers",
+    "description": "These suede loafers are a sophisticated choice for any outfit. They feature a slip-on design and a cushioned footbed for all-day comfort. Available in multiple colors.",
+    "price": 119.99,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Tan",
+        "hex": "#D2B48C"
+      }
+    ],
+    "sizes": ["7", "8", "9", "10", "11"]
+  },
+  {
+    "title": "Women's Denim Skirt",
+    "description": "This denim skirt is a versatile piece that can be dressed up or down. It features a high-waisted design and a button-front closure, and is made from soft denim. Available in multiple washes.",
+    "price": 49.99,
+    "colors": [
+      {
+        "name": "Light Wash",
+        "hex": "#ADD8E6"
+      },
+      {
+        "name": "Dark Wash",
+        "hex": "#000080"
+      }
+    ],
+    "sizes": ["XS", "S", "M", "L", "XL"]
+  },
+  {
+    "title": "Men's Leather Belt",
+    "description": "This leather belt is a classic accessory that adds a touch of sophistication to any outfit. It features a silver-tone buckle and is made from durable leather. Available in multiple colors.",
+    "price": 39.99,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Brown",
+        "hex": "#8B4513"
+      }
+    ],
+    "sizes": ["30", "32", "34", "36", "38"]
+  },
+  {
+    "title": "Classic Leather Jacket",
+    "description": "A timeless leather jacket that will never go out of style.",
+    "price": 250,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Brown",
+        "hex": "#8B4513"
+      }
+    ],
+    "sizes": ["XS", "S", "M", "L", "XL"]
+  },
+  {
+    "title": "Striped T-Shirt",
+    "description": "A casual t-shirt with a classic stripe pattern.",
+    "price": 30,
+    "colors": [
+      {
+        "name": "Navy",
+        "hex": "#000080"
+      },
+      {
+        "name": "Red",
+        "hex": "#FF0000"
+      }
+    ],
+    "sizes": ["S", "M", "L"]
+  },
+  {
+    "title": "High-Waisted Jeans",
+    "description": "Flattering high-waisted jeans with a classic fit.",
+    "price": 80,
+    "colors": [
+      {
+        "name": "Blue",
+        "hex": "#0000FF"
+      }
+    ],
+    "sizes": ["24", "25", "26", "27", "28", "29", "30"]
+  },
+  {
+    "title": "Knit Sweater",
+    "description": "A cozy knit sweater for chilly days.",
+    "price": 60,
+    "colors": [
+      {
+        "name": "Gray",
+        "hex": "#808080"
+      },
+      {
+        "name": "Cream",
+        "hex": "#FFFFCC"
+      }
+    ],
+    "sizes": ["S", "M", "L"]
+  },
+  {
+    "title": "Pleated Midi Skirt",
+    "description": "A flowy midi skirt with pleats for added movement.",
+    "price": 70,
+    "colors": [
+      {
+        "name": "Green",
+        "hex": "#008000"
+      },
+      {
+        "name": "Black",
+        "hex": "#000000"
+      }
+    ],
+    "sizes": ["XS", "S", "M", "L"]
+  },
+  {
+    "title": "Printed Blouse",
+    "description": "A lightweight blouse with a fun print.",
+    "price": 50,
+    "colors": [
+      {
+        "name": "Blue",
+        "hex": "#0000FF"
+      },
+      {
+        "name": "Pink",
+        "hex": "#FFC0CB"
+      }
+    ],
+    "sizes": ["S", "M", "L"]
+  },
+  {
+    "title": "Suede Ankle Boots",
+    "description": "Stylish ankle boots made from soft suede.",
+    "price": 120,
+    "colors": [
+      {
+        "name": "Tan",
+        "hex": "#D2B48C"
+      },
+      {
+        "name": "Black",
+        "hex": "#000000"
+      }
+    ],
+    "sizes": ["6", "7", "8", "9", "10"]
+  },
+  {
+    "title": "Flowy Maxi Dress",
+    "description": "A flowy maxi dress that's perfect for summer.",
+    "price": 90,
+    "colors": [
+      {
+        "name": "Orange",
+        "hex": "#FFA500"
+      },
+      {
+        "name": "Blue",
+        "hex": "#0000FF"
+      }
+    ],
+    "sizes": ["XS", "S", "M", "L"]
+  },
+  {
+    "title": "Wool Coat",
+    "description": "A classic wool coat to keep you warm and stylish.",
+    "price": 200,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Gray",
+        "hex": "#808080"
+      }
+    ],
+    "sizes": ["S", "M", "L"]
+  },
+  {
+    "title": "Leather Crossbody Bag",
+    "description": "A versatile crossbody bag made from high-quality leather.",
+    "price": 100,
+    "colors": [
+      {
+        "name": "Brown",
+        "hex": "#8B4513"
+      },
+      {
+        "name": "Black",
+        "hex": "#000000"
+      }
+    ],
+    "sizes": []
+  },
+  {
+    "title": "Turtleneck Sweater",
+    "description": "A cozy turtleneck sweater to keep you warm all winter long.",
+    "price": 80,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Gray",
+        "hex": "#808080"
+      },
+      {
+        "name": "Cream",
+        "hex": "#FFFFCC"
+      }
+    ],
+    "sizes": ["S", "M", "L"]
+  },
+  {
+    "title": "Faux Leather Leggings",
+    "description": "Stylish and comfortable leggings made from faux leather.",
+    "price": 50,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Burgundy",
+        "hex": "#800000"
+      }
+    ],
+    "sizes": ["XS", "S", "M", "L", "XL"]
+  },
+  {
+    "title": "Cashmere Scarf",
+    "description": "A luxurious cashmere scarf to keep you warm and stylish.",
+    "price": 120,
+    "colors": [
+      {
+        "name": "Navy",
+        "hex": "#000080"
+      },
+      {
+        "name": "Gray",
+        "hex": "#808080"
+      },
+      {
+        "name": "Cream",
+        "hex": "#FFFFCC"
+      }
+    ],
+    "sizes": []
+  },
+  {
+    "title": "Lace-Up Boots",
+    "description": "Stylish lace-up boots with a chunky heel.",
+    "price": 100,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Brown",
+        "hex": "#8B4513"
+      }
+    ],
+    "sizes": ["6", "7", "8", "9", "10"]
+  },
+  {
+    "title": "Wool Beret",
+    "description": "A classic wool beret to add a touch of French style to your look.",
+    "price": 40,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Red",
+        "hex": "#FF0000"
+      },
+      {
+        "name": "Navy",
+        "hex": "#000080"
+      }
+    ],
+    "sizes": []
+  },
+  {
+    "title": "Midi Dress",
+    "description": "A versatile midi dress that can be dressed up or down.",
+    "price": 70,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Burgundy",
+        "hex": "#800000"
+      },
+      {
+        "name": "Navy",
+        "hex": "#000080"
+      }
+    ],
+    "sizes": ["XS", "S", "M", "L"]
+  },
+  {
+    "title": "Puffer Jacket",
+    "description": "A warm and stylish puffer jacket for cold winter days.",
+    "price": 150,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Green",
+        "hex": "#008000"
+      }
+    ],
+    "sizes": ["S", "M", "L"]
+  },
+  {
+    "title": "Wool Sweater Dress",
+    "description": "A cozy sweater dress made from warm wool.",
+    "price": 90,
+    "colors": [
+      {
+        "name": "Gray",
+        "hex": "#808080"
+      },
+      {
+        "name": "Cream",
+        "hex": "#FFFFCC"
+      }
+    ],
+    "sizes": ["S", "M", "L"]
+  },
+  {
+    "title": "Leather Belt",
+    "description": "A classic leather belt to add a finishing touch to any outfit.",
+    "price": 40,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Brown",
+        "hex": "#8B4513"
+      }
+    ],
+    "sizes": ["S", "M", "L"]
+  },
+  {
+    "title": "Slip-On Sneakers",
+    "description": "Comfortable and stylish slip-on sneakers for everyday wear.",
+    "price": 60,
+    "colors": [
+      {
+        "name": "White",
+        "hex": "#FFFFFF"
+      },
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Gray",
+        "hex": "#808080"
+      }
+    ],
+    "sizes": ["6", "7", "8", "9", "10"]
+  },
+  {
+    "title": "Cropped Wide-Leg Pants",
+    "description": "Trendy cropped pants with a relaxed fit.",
+    "price": 50,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Navy",
+        "hex": "#000080"
+      },
+      {
+        "name": "Khaki",
+        "hex": "#F0E68C"
+      }
+    ],
+    "sizes": ["XS", "S", "M", "L"]
+  },
+  {
+    "title": "Moto Jacket",
+    "description": "A stylish moto jacket with a sleek design.",
+    "price": 120,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Brown",
+        "hex": "#8B4513"
+      }
+    ],
+    "sizes": ["S", "M", "L"]
+  },
+  {
+    "title": "Silk Blouse",
+    "description": "A luxurious silk blouse in a classic design.",
+    "price": 100,
+    "colors": [
+      {
+        "name": "White",
+        "hex": "#FFFFFF"
+      },
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Navy",
+        "hex": "#000080"
+      }
+    ],
+    "sizes": ["S", "M", "L"]
+  },
+  {
+    "title": "Suede Jacket",
+    "description": "A stylish suede jacket with a soft and comfortable texture.",
+    "price": 180,
+    "colors": [
+      {
+        "name": "Tan",
+        "hex": "#D2B48C"
+      },
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Brown",
+        "hex": "#8B4513"
+      }
+    ],
+    "sizes": ["S", "M", "L"]
+  },
+  {
+    "title": "Tweed Skirt",
+    "description": "A classic tweed skirt with a timeless design.",
+    "price": 60,
+    "colors": [
+      {
+        "name": "Gray",
+        "hex": "#808080"
+      },
+      {
+        "name": "Brown",
+        "hex": "#8B4513"
+      }
+    ],
+    "sizes": ["XS", "S", "M", "L"]
+  },
+  {
+    "title": "Cashmere Cardigan",
+    "description": "A luxurious cashmere cardigan for a cozy and stylish look.",
+    "price": 150,
+    "colors": [
+      {
+        "name": "Gray",
+        "hex": "#808080"
+      },
+      {
+        "name": "Cream",
+        "hex": "#FFFFCC"
+      }
+    ],
+    "sizes": ["S", "M", "L"]
+  },
+  {
+    "title": "Linen T-Shirt",
+    "description": "A comfortable and breathable linen t-shirt for a relaxed look.",
+    "price": 40,
+    "colors": [
+      {
+        "name": "White",
+        "hex": "#FFFFFF"
+      },
+      {
+        "name": "Navy",
+        "hex": "#000080"
+      },
+      {
+        "name": "Gray",
+        "hex": "#808080"
+      }
+    ],
+    "sizes": ["S", "M", "L"]
+  },
+  {
+    "title": "Wool Fedora",
+    "description": "A classic wool fedora to add a touch of sophistication to any outfit.",
+    "price": 50,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Brown",
+        "hex": "#8B4513"
+      },
+      {
+        "name": "Gray",
+        "hex": "#808080"
+      }
+    ],
+    "sizes": []
+  },
+  {
+    "title": "Denim Jacket",
+    "description": "A classic denim jacket with a timeless design.",
+    "price": 80,
+    "colors": [
+      {
+        "name": "Blue",
+        "hex": "#0000FF"
+      }
+    ],
+    "sizes": ["S", "M", "L"]
+  },
+  {
+    "title": "Cropped Hoodie",
+    "description": "A cozy and stylish cropped hoodie for a casual look.",
+    "price": 50,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Gray",
+        "hex": "#808080"
+      },
+      {
+        "name": "Pink",
+        "hex": "#FFC0CB"
+      }
+    ],
+    "sizes": ["S", "M", "L"]
+  },
+  {
+    "title": "Leather Jacket",
+    "description": "A stylish and edgy leather jacket for a bold look.",
+    "price": 200,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Brown",
+        "hex": "#8B4513"
+      }
+    ],
+    "sizes": ["S", "M", "L"]
+  },
+  {
+    "title": "Silk Scarf",
+    "description": "A luxurious silk scarf with a beautiful print.",
+    "price": 80,
+    "colors": [
+      {
+        "name": "Red",
+        "hex": "#FF0000"
+      },
+      {
+        "name": "Blue",
+        "hex": "#0000FF"
+      },
+      {
+        "name": "Green",
+        "hex": "#008000"
+      }
+    ],
+    "sizes": []
+  },
+  {
+    "title": "High-Waisted Jeans",
+    "description": "Flattering high-waisted jeans with a comfortable fit.",
+    "price": 60,
+    "colors": [
+      {
+        "name": "Blue",
+        "hex": "#0000FF"
+      },
+      {
+        "name": "Black",
+        "hex": "#000000"
+      }
+    ],
+    "sizes": ["25", "26", "27", "28", "29", "30"]
+  },
+  {
+    "title": "Cashmere Beanie",
+    "description": "A soft and warm cashmere beanie for a cozy winter look.",
+    "price": 50,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Gray",
+        "hex": "#808080"
+      },
+      {
+        "name": "Cream",
+        "hex": "#FFFFCC"
+      }
+    ],
+    "sizes": []
+  },
+  {
+    "title": "Ankle Boots",
+    "description": "Stylish ankle boots with a versatile design.",
+    "price": 90,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Brown",
+        "hex": "#8B4513"
+      }
+    ],
+    "sizes": ["6", "7", "8", "9", "10"]
+  },
+  {
+    "title": "Wool Coat",
+    "description": "A classic wool coat with a timeless design.",
+    "price": 180,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Gray",
+        "hex": "#808080"
+      },
+      {
+        "name": "Camel",
+        "hex": "#D2B48C"
+      }
+    ],
+    "sizes": ["S", "M", "L"]
+  },
+  {
+    "title": "Satin Slip Dress",
+    "description": "A luxurious satin slip dress for a glamorous look.",
+    "price": 100,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Red",
+        "hex": "#FF0000"
+      },
+      {
+        "name": "Champagne",
+        "hex": "#F7E7CE"
+      }
+    ],
+    "sizes": ["XS", "S", "M", "L"]
+  },
+  {
+    "title": "Pleated Midi Skirt",
+    "description": "A chic pleated midi skirt with a flowy design.",
+    "price": 70,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Green",
+        "hex": "#008000"
+      },
+      {
+        "name": "Pink",
+        "hex": "#FFC0CB"
+      }
+    ],
+    "sizes": ["S", "M", "L"]
+  },
+  {
+    "title": "Oversized Sweater",
+    "description": "A comfortable and cozy oversized sweater for a relaxed look.",
+    "price": 60,
+    "colors": [
+      {
+        "name": "Gray",
+        "hex": "#808080"
+      },
+      {
+        "name": "Beige",
+        "hex": "#F5F5DC"
+      },
+      {
+        "name": "Pink",
+        "hex": "#FFC0CB"
+      }
+    ],
+    "sizes": ["S", "M", "L"]
+  },
+  {
+    "title": "Trench Coat",
+    "description": "A classic trench coat with a sophisticated design.",
+    "price": 150,
+    "colors": [
+      {
+        "name": "Beige",
+        "hex": "#F5F5DC"
+      },
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Navy",
+        "hex": "#000080"
+      }
+    ],
+    "sizes": ["S", "M", "L"]
+  },
+  {
+    "title": "Leather Belt",
+    "description": "A stylish leather belt to complete any outfit.",
+    "price": 40,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Brown",
+        "hex": "#8B4513"
+      }
+    ],
+    "sizes": ["S", "M", "L"]
+  },
+  {
+    "title": "Chunky Sneakers",
+    "description": "Trendy chunky sneakers for a sporty and edgy look.",
+    "price": 100,
+    "colors": [
+      {
+        "name": "White",
+        "hex": "#FFFFFF"
+      },
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Pink",
+        "hex": "#FFC0CB"
+      }
+    ],
+    "sizes": ["6", "7", "8", "9", "10"]
+  },
+  {
+    "title": "Knit Cardigan",
+    "description": "A cozy and stylish knit cardigan for a comfortable look.",
+    "price": 70,
+    "colors": [
+      {
+        "name": "Gray",
+        "hex": "#808080"
+      },
+      {
+        "name": "Beige",
+        "hex": "#F5F5DC"
+      },
+      {
+        "name": "Pink",
+        "hex": "#FFC0CB"
+      }
+    ],
+    "sizes": ["S", "M", "L"]
+  },
+  {
+    "title": "Midi Dress",
+    "description": "A versatile and elegant midi dress for any occasion.",
+    "price": 90,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Red",
+        "hex": "#FF0000"
+      },
+      {
+        "name": "Green",
+        "hex": "#008000"
+      }
+    ],
+    "sizes": ["XS", "S", "M", "L"]
+  },
+  {
+    "title": "Wide-Leg Pants",
+    "description": "Comfortable and chic wide-leg pants with a modern design.",
+    "price": 80,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Beige",
+        "hex": "#F5F5DC"
+      },
+      {
+        "name": "Navy",
+        "hex": "#000080"
+      }
+    ],
+    "sizes": ["S", "M", "L"]
+  },
+  {
+    "title": "Suede Skirt",
+    "description": "A stylish suede skirt with a vintage-inspired design.",
+    "price": 60,
+    "colors": [
+      {
+        "name": "Brown",
+        "hex": "#8B4513"
+      },
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Green",
+        "hex": "#008000"
+      }
+    ],
+    "sizes": ["S", "M", "L"]
+  },
+  {
+    "title": "Faux Leather Leggings",
+    "description": "A sleek and stylish pair of faux leather leggings for a bold look.",
+    "price": 50,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Burgundy",
+        "hex": "#800020"
+      }
+    ],
+    "sizes": ["XS", "S", "M", "L"]
+  },
+  {
+    "title": "Satin Blouse",
+    "description": "A luxurious satin blouse for a sophisticated look.",
+    "price": 60,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Navy",
+        "hex": "#000080"
+      },
+      {
+        "name": "White",
+        "hex": "#FFFFFF"
+      }
+    ],
+    "sizes": ["XS", "S", "M", "L"]
+  },
+  {
+    "title": "Wool Beret",
+    "description": "A chic and stylish wool beret for a French-inspired look.",
+    "price": 30,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Red",
+        "hex": "#FF0000"
+      },
+      {
+        "name": "Gray",
+        "hex": "#808080"
+      }
+    ],
+    "sizes": []
+  },
+  {
+    "title": "Cropped Wide-Leg Jeans",
+    "description": "A trendy pair of cropped wide-leg jeans for a modern look.",
+    "price": 70,
+    "colors": [
+      {
+        "name": "Blue",
+        "hex": "#0000FF"
+      },
+      {
+        "name": "White",
+        "hex": "#FFFFFF"
+      }
+    ],
+    "sizes": ["25", "26", "27", "28", "29", "30"]
+  },
+  {
+    "title": "Puffer Jacket",
+    "description": "A warm and stylish puffer jacket for a cold winter day.",
+    "price": 120,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Red",
+        "hex": "#FF0000"
+      },
+      {
+        "name": "Navy",
+        "hex": "#000080"
+      }
+    ],
+    "sizes": ["S", "M", "L"]
+  },
+  {
+    "title": "Bohemian Maxi Dress",
+    "description": "A flowy and colorful bohemian maxi dress for a summery look.",
+    "price": 80,
+    "colors": [
+      {
+        "name": "Multi-Color",
+        "hex": "#FFC0CB"
+      }
+    ],
+    "sizes": ["XS", "S", "M", "L"]
+  },
+  {
+    "title": "Velvet Blazer",
+    "description": "A luxurious velvet blazer for a sophisticated and elegant look.",
+    "price": 150,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Burgundy",
+        "hex": "#800020"
+      },
+      {
+        "name": "Navy",
+        "hex": "#000080"
+      }
+    ],
+    "sizes": ["S", "M", "L"]
+  },
+  {
+    "title": "Printed Tote Bag",
+    "description": "A stylish and practical printed tote bag for everyday use.",
+    "price": 40,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "White",
+        "hex": "#FFFFFF"
+      },
+      {
+        "name": "Multi-Color",
+        "hex": "#FFC0CB"
+      }
+    ],
+    "sizes": []
+  },
+  {
+    "title": "Tie-Dye Sweatshirt",
+    "description": "A fun and trendy tie-dye sweatshirt for a colorful look.",
+    "price": 50,
+    "colors": [
+      {
+        "name": "Multi-Color",
+        "hex": "#FFC0CB"
+      }
+    ],
+    "sizes": ["S", "M", "L"]
+  },
+  {
+    "title": "Wool Scarf",
+    "description": "A warm and cozy wool scarf for a winter outfit.",
+    "price": 40,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Gray",
+        "hex": "#808080"
+      },
+      {
+        "name": "Navy",
+        "hex": "#000080"
+      }
+    ],
+    "sizes": []
+  },
+  {
+    "title": "Denim Jacket",
+    "description": "A timeless and versatile denim jacket for a casual look.",
+    "price": 90,
+    "colors": [
+      {
+        "name": "Blue",
+        "hex": "#0000FF"
+      }
+    ],
+    "sizes": ["S", "M", "L"]
+  },
+  {
+    "title": "Leather Crossbody Bag",
+    "description": "A chic and practical leather crossbody bag for everyday use.",
+    "price": 80,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Brown",
+        "hex": "#8B4513"
+      }
+    ],
+    "sizes": []
+  },
+  {
+    "title": "Cropped Hoodie",
+    "description": "A cute and comfy cropped hoodie for a casual and trendy look.",
+    "price": 40,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Gray",
+        "hex": "#808080"
+      },
+      {
+        "name": "Pink",
+        "hex": "#FFC0CB"
+      }
+    ],
+    "sizes": ["S", "M", "L"]
+  },
+  {
+    "title": "Ankle Boots",
+    "description": "A stylish and versatile pair of ankle boots for any occasion.",
+    "price": 100,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Brown",
+        "hex": "#8B4513"
+      },
+      {
+        "name": "Gray",
+        "hex": "#808080"
+      }
+    ],
+    "sizes": ["6", "7", "8", "9", "10"]
+  },
+  {
+    "title": "Cashmere Sweater",
+    "description": "A soft and luxurious cashmere sweater for a cozy and chic look.",
+    "price": 180,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Gray",
+        "hex": "#808080"
+      },
+      {
+        "name": "Navy",
+        "hex": "#000080"
+      }
+    ],
+    "sizes": ["S", "M", "L"]
+  },
+  {
+    "title": "Suede Skirt",
+    "description": "A stylish and trendy suede skirt for a bohemian-inspired look.",
+    "price": 60,
+    "colors": [
+      {
+        "name": "Tan",
+        "hex": "#D2B48C"
+      },
+      {
+        "name": "Black",
+        "hex": "#000000"
+      }
+    ],
+    "sizes": ["XS", "S", "M", "L"]
+  },
+  {
+    "title": "Striped Shirt",
+    "description": "A classic and timeless striped shirt for a preppy look.",
+    "price": 50,
+    "colors": [
+      {
+        "name": "Blue",
+        "hex": "#0000FF"
+      },
+      {
+        "name": "Red",
+        "hex": "#FF0000"
+      }
+    ],
+    "sizes": ["XS", "S", "M", "L"]
+  },
+  {
+    "title": "Statement Earrings",
+    "description": "A bold and eye-catching pair of statement earrings for a glamorous look.",
+    "price": 30,
+    "colors": [
+      {
+        "name": "Gold",
+        "hex": "#FFD700"
+      },
+      {
+        "name": "Silver",
+        "hex": "#C0C0C0"
+      }
+    ],
+    "sizes": []
+  },
+  {
+    "title": "Faux Fur Coat",
+    "description": "A luxurious and warm faux fur coat for a glamorous and cozy look.",
+    "price": 200,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "White",
+        "hex": "#FFFFFF"
+      },
+      {
+        "name": "Brown",
+        "hex": "#8B4513"
+      }
+    ],
+    "sizes": ["S", "M", "L"]
+  },
+  {
+    "title": "Midi Skirt",
+    "description": "A versatile and stylish midi skirt for any occasion.",
+    "price": 60,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Navy",
+        "hex": "#000080"
+      },
+      {
+        "name": "Burgundy",
+        "hex": "#800020"
+      }
+    ],
+    "sizes": ["XS", "S", "M", "L"]
+  },
+  {
+    "title": "Printed Scarf",
+    "description": "A colorful and stylish printed scarf for a pop of color.",
+    "price": 30,
+    "colors": [
+      {
+        "name": "Multi-Color",
+        "hex": "#FFC0CB"
+      }
+    ],
+    "sizes": []
+  },
+  {
+    "title": "Leather Moto Jacket",
+    "description": "A cool and edgy leather moto jacket for a rebellious look.",
+    "price": 150,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Brown",
+        "hex": "#8B4513"
+      }
+    ],
+    "sizes": ["S", "M", "L"]
+  },
+  {
+    "title": "Chiffon Blouse",
+    "description": "A flowy and feminine chiffon blouse for a romantic look.",
+    "price": 50,
+    "colors": [
+      {
+        "name": "White",
+        "hex": "#FFFFFF"
+      },
+      {
+        "name": "Pink",
+        "hex": "#FFC0CB"
+      },
+      {
+        "name": "Navy",
+        "hex": "#000080"
+      }
+    ],
+    "sizes": ["XS", "S", "M", "L"]
+  },
+  {
+    "title": "Turtleneck Sweater",
+    "description": "A cozy and classic turtleneck sweater for a winter outfit.",
+    "price": 70,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Gray",
+        "hex": "#808080"
+      },
+      {
+        "name": "White",
+        "hex": "#FFFFFF"
+      }
+    ],
+    "sizes": ["S", "M", "L"]
+  },
+  {
+    "title": "High-Waisted Shorts",
+    "description": "A trendy and versatile pair of high-waisted shorts for a summer look.",
+    "price": 40,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "White",
+        "hex": "#FFFFFF"
+      },
+      {
+        "name": "Denim",
+        "hex": "#000080"
+      }
+    ],
+    "sizes": ["XS", "S", "M", "L"]
+  },
+  {
+    "title": "Cashmere Scarf",
+    "description": "A soft and luxurious cashmere scarf for a winter outfit.",
+    "price": 80,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Gray",
+        "hex": "#808080"
+      },
+      {
+        "name": "Navy",
+        "hex": "#000080"
+      }
+    ],
+    "sizes": []
+  },
+  {
+    "title": "Pleated Skirt",
+    "description": "A girly and playful pleated skirt for a cute look.",
+    "price": 50,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Pink",
+        "hex": "#FFC0CB"
+      },
+      {
+        "name": "Green",
+        "hex": "#008000"
+      }
+    ],
+    "sizes": ["XS", "S", "M", "L"]
+  },
+  {
+    "title": "Oversized Sweater",
+    "description": "A cozy and comfortable oversized sweater for a casual look.",
+    "price": 60,
+    "colors": [
+      {
+        "name": "Gray",
+        "hex": "#808080"
+      },
+      {
+        "name": "Beige",
+        "hex": "#F5DEB3"
+      },
+      {
+        "name": "Black",
+        "hex": "#000000"
+      }
+    ],
+    "sizes": ["S", "M", "L"]
+  },
+  {
+    "title": "Thong Sandals",
+    "description": "A stylish and comfortable pair of t-strap sandals for a summer outfit.",
+    "price": 45,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Brown",
+        "hex": "#8B4513"
+      },
+      {
+        "name": "Gold",
+        "hex": "#FFD700"
+      }
+    ],
+    "sizes": ["6", "7", "8", "9", "10"]
+  },
+  {
+    "title": "Denim Jacket",
+    "description": "A classic and versatile denim jacket for any season.",
+    "price": 80,
+    "colors": [
+      {
+        "name": "Blue",
+        "hex": "#0000FF"
+      }
+    ],
+    "sizes": ["S", "M", "L"]
+  },
+  {
+    "title": "Strappy Heels",
+    "description": "A pair of stylish and sexy strappy heels for a night out.",
+    "price": 70,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Red",
+        "hex": "#FF0000"
+      },
+      {
+        "name": "Silver",
+        "hex": "#C0C0C0"
+      }
+    ],
+    "sizes": ["6", "7", "8", "9", "10"]
+  },
+  {
+    "title": "Faux Leather Leggings",
+    "description": "A chic and edgy pair of faux leather leggings for a night out.",
+    "price": 50,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Brown",
+        "hex": "#8B4513"
+      }
+    ],
+    "sizes": ["XS", "S", "M", "L"]
+  },
+  {
+    "title": "Off-Shoulder Top",
+    "description": "A flirty and feminine off-shoulder top for a summer look.",
+    "price": 40,
+    "colors": [
+      {
+        "name": "White",
+        "hex": "#FFFFFF"
+      },
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Pink",
+        "hex": "#FFC0CB"
+      }
+    ],
+    "sizes": ["XS", "S", "M", "L"]
+  },
+  {
+    "title": "Printed Maxi Dress",
+    "description": "A colorful and bohemian printed maxi dress for a summer look.",
+    "price": 90,
+    "colors": [
+      {
+        "name": "Multi-Color",
+        "hex": "#FFC0CB"
+      }
+    ],
+    "sizes": ["XS", "S", "M", "L"]
+  },
+  {
+    "title": "Biker Shorts",
+    "description": "A sporty and trendy pair of biker shorts for a workout outfit.",
+    "price": 35,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Gray",
+        "hex": "#808080"
+      },
+      {
+        "name": "Navy",
+        "hex": "#000080"
+      }
+    ],
+    "sizes": ["XS", "S", "M", "L"]
+  },
+  {
+    "title": "Wool Coat",
+    "description": "A warm and stylish wool coat for a winter outfit.",
+    "price": 120,
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "Gray",
+        "hex": "#808080"
+      },
+      {
+        "name": "Navy",
+        "hex": "#000080"
+      }
+    ],
+    "sizes": ["S", "M", "L"]
+  },
+  {
+    "title": "Floral Dress",
+    "description": "A pretty and feminine floral dress for a spring outfit.",
+    "price": 60,
+    "colors": [
+      {
+        "name": "Pink",
+        "hex": "#FFC0CB"
+      },
+      {
+        "name": "Blue",
+        "hex": "#0000FF"
+      },
+      {
+        "name": "Yellow",
+        "hex": "#FFFF00"
+      }
+    ],
+    "sizes": ["XS", "S", "M", "L"]
+  }
+]

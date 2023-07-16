@@ -1,6 +1,8 @@
 import './config/init';
-import { initDB } from './database/init';
-
+import {initDB} from './database/init';
+// import ProductModel from './database/models/product';
+// @ts-ignore
+// import products from '../DUMMY_DATA.json';
 // import cluster from 'cluster';
 // import path from 'path';
 
@@ -8,6 +10,9 @@ import { initDB } from './database/init';
 async function main() {
   await initDB();
   import('./server/index');
+  // for (const p of products) {
+  //   await ProductModel.create(p);
+  // }
   // Don't work with mongoose
   // cluster.setupPrimary({
   //   exec: path.join(__dirname, 'server', 'index.ts'),
