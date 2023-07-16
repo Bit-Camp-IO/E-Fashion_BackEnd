@@ -93,6 +93,14 @@ export class Admin implements AdminService {
     }
   }
 
+  async addSub(data: CategoryData, id: string): AsyncSafeResult<CategoryResult> {
+    try {
+      return addSubCategory(data, id, this._id);
+    } catch (err) {
+      return {error: err, result: null};
+    }
+  }
+
   async banUser(id: string): Promise<Error | null> {
     try {
       const user = await UserModel.findById({_id: id});

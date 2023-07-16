@@ -1,7 +1,8 @@
 export interface CategoryData{
+    addedBy?: string;
     name: string;
     description: string;
-    isMain: boolean;
+    isMain?: boolean;
 }
 
 export interface CategoryResult {
