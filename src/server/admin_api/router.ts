@@ -33,5 +33,6 @@ router.delete('/product/:id/remove', isAuth, productController.remove);
 router.get('/product', isAuth, productController.getAllProductsForAdmin);
 
 router.post('/category', isAuth, categoryController.create)
+router.post('/category/:id/add-sub', isAuth, categoryController.createSub)
 
 export default router;

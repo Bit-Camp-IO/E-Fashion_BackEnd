@@ -26,6 +26,24 @@ class CategoryController {
         }
         res.JSON(HttpStatus.Created, category.result);
     }
+
+    @Validate(createCategorySchema)
+    @Guard(AdminRole.ADMIN)
+    public async createSub(req: Request, res: Response) {
+        const admin = req.admin as Admin;
+        const { id } = req.params;
+        const body: CreateCategorySchema = req.body;
+        const categoryData: CategoryData = {
+            name: body.name,
+            description: body.description,
+        } 
+        const category = await admin.addSub(categoryData, id);
+        if (category.error) {
+            console.log(category.error.message)
+            throw RequestError._500();
+        }
+        res.JSON(HttpStatus.Created, category.result);
+    }
 }
 
 export default new CategoryController();
