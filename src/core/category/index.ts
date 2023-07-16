@@ -55,3 +55,20 @@ export async function addSubCategory(data: CategoryData, id: string, adminId: st
         return { error: err, result: null }
     }
 }
+
+export async function getAllCategories(): AsyncSafeResult<CategoryResult[]> {
+    try {
+      const categories = await CategoryModel.find({});
+      const result: CategoryResult[] = categories.map(category => ({
+        id: category._id.toString(),
+        name: category.name,
+        description: category.description || '',
+        imagesURL: category.imagesURL,
+        isMain: category.isMain,
+        subCategories: category.subCategories.map(subCategory => subCategory?.toString() || '')
+      }));
+      return { result, error: null };
+    } catch (err) {
+      return { error: err, result: null };
+    }
+  }
