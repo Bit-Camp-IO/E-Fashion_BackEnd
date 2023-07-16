@@ -14,11 +14,9 @@ class CategoryController {
     public async create(req: Request, res: Response) {
         const admin = req.admin as Admin;
         const body: CreateCategorySchema= req.body;
-        //TODO: Handle adding subcategories field
         const categoryData: CategoryData = {
             name: body.name,
             description: body.description,
-            isMain: body.isMain,
         }
         const category = await admin.addCategory(categoryData);
         if (category.error) {

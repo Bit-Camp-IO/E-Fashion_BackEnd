@@ -1,8 +1,9 @@
 export interface CategoryData{
-    addedBy?: string;
     name: string;
     description: string;
     isMain?: boolean;
+    imagesURL?: string[];
+    subCategories?: string[];
 }
 
 export interface CategoryResult {
