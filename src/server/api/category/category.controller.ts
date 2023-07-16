@@ -1,4 +1,4 @@
-import { getCategoryForUser } from "@/core/category";
+import { getAllCategories, getCategoryForUser } from "@/core/category";
 import { Controller } from "@server/decorator";
 import RequestError from "@server/utils/errors";
 import { HttpStatus } from "@server/utils/status";
@@ -9,6 +9,14 @@ class CategoryController {
     public async getOne(req: Request, res: Response) {
         const { id } = req.params;
         const category = await getCategoryForUser(id);
+        if (category.error) {
+          throw RequestError._500();
+        }
+        res.JSON(HttpStatus.Ok, category.result);
+    }
+
+    public async getList(_req: Request, res: Response) {
+        const category = await getAllCategories();
         if (category.error) {
           throw RequestError._500();
         }
