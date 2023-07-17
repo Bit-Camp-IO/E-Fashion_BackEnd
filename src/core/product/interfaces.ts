@@ -20,6 +20,8 @@ export interface ProductItemsApiList {
   products: ProductItemApi[];
   page: number;
   count: number;
+  totalItems: number;
+  totalPages: number;
 }
 
 export interface ProductData {
@@ -44,6 +46,7 @@ export interface ProductOptions {
   page: number;
   limit: number;
   sort: ProductSortOptions;
+  filter: ProductFilterOptions;
 }
 
 type Sort = 'asc' | 'desc';
@@ -52,4 +55,14 @@ export interface ProductSortOptions {
   price?: Sort;
   popularity?: Sort;
   newness?: Sort;
+}
+
+export interface ProductFilterOptions {
+  maxPrice?: number;
+  minPrice?: number;
+}
+
+export interface ProductsInfo {
+  maxPrice: number;
+  minPrice: number;
 }

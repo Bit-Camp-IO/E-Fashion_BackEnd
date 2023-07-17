@@ -1,10 +1,10 @@
-import {Router} from 'express';
+import { Router } from 'express';
 import managerController from './controllers/manager';
 import authController from './controllers/auth';
 import adminController from './controllers/admin';
-import {isAuth} from '@server/middleware/isAuth';
+import { isAuth } from '@server/middleware/isAuth';
 import productController from './controllers/product';
-import categoryController from './controllers/category'
+import categoryController from './controllers/category';
 
 const router = Router();
 
@@ -30,12 +30,10 @@ router.post('/user/:id/unban', isAuth, adminController.unBanUser);
 router.post('/product/create', isAuth, productController.create);
 router.put('/product/:id/edit', isAuth, productController.editProduct);
 router.delete('/product/:id/remove', isAuth, productController.remove);
-router.get('/product', isAuth, productController.getAllProductsForAdmin);
 
-router.post('/category', isAuth, categoryController.create)
-router.post('/category/:id/add-sub', isAuth, categoryController.createSub)
-router.put('/category/:id/edit', isAuth, categoryController.editCategory)
-router.delete('/category/:id/remove', isAuth, categoryController.remove)
-router.get('/category/', isAuth, categoryController.getAllCategoriesForAdmin)
-
+router.post('/category', isAuth, categoryController.create);
+router.post('/category/:id/add-sub', isAuth, categoryController.createSub);
+router.put('/category/:id/edit', isAuth, categoryController.editCategory);
+router.delete('/category/:id/remove', isAuth, categoryController.remove);
+router.get('/category/', isAuth, categoryController.getAllCategoriesForAdmin);
 export default router;

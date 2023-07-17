@@ -1,12 +1,4 @@
-import {
-  ProductData,
-  ProductItemsApiList,
-  ProductResult,
-  createProduct,
-  getProductsList,
-  removeProduct,
-  updateProduct,
-} from '../product';
+import {ProductData, ProductResult, createProduct, removeProduct, updateProduct} from '../product';
 import {AsyncSafeResult} from '@type/common';
 import {AdminData, AdminResult} from './interfaces';
 import AdminModel from '@/database/models/admin';
@@ -15,9 +7,13 @@ import {DuplicateUserError, NotFoundError, PermissionError} from '../errors';
 import UserModel, {UserDB} from '@/database/models/user';
 import {Document} from 'mongoose';
 import { CategoryData, CategoryResult } from '../category/interfaces';
-import { addSubCategory, createCategory, getAllCategories, removeCategory, updateCategory } from '../category';
-
-
+import {
+  addSubCategory,
+  createCategory,
+  getAllCategories,
+  removeCategory,
+  updateCategory,
+} from '../category';
 interface AdminService {
   addProduct(data: ProductData): AsyncSafeResult<ProductResult>;
   removeProduct(id: string): void;
@@ -70,14 +66,6 @@ export class Admin implements AdminService {
     return removeProduct(id);
   }
 
-  async getAllProducts(): AsyncSafeResult<ProductItemsApiList> {
-    try {
-      return getProductsList();
-    } catch (err) {
-      return {error: err, result: null};
-    }
-  }
-
   async addCategory(data: CategoryData): AsyncSafeResult<CategoryResult> {
     try {
       return createCategory(data, this._id);
@@ -86,7 +74,7 @@ export class Admin implements AdminService {
     }
   }
 
-  async addSub(data: CategoryData, id: string): AsyncSafeResult<CategoryResult> {
+  async addSubCategory(data: CategoryData, id: string): AsyncSafeResult<CategoryResult> {
     try {
       return addSubCategory(data, id, this._id);
     } catch (err) {
@@ -98,7 +86,7 @@ export class Admin implements AdminService {
     try {
       return updateCategory(id, data);
     } catch (err) {
-      return { error: err, result: null }
+      return {error: err, result: null};
     }
   }
 
@@ -110,7 +98,7 @@ export class Admin implements AdminService {
     try {
       return getAllCategories();
     } catch (err) {
-      return { error: err, result: null };
+      return {error: err, result: null};
     }
   }
 

@@ -36,7 +36,7 @@ class CategoryController {
             name: body.name,
             description: body.description,
         } 
-        const category = await admin.addSub(categoryData, id);
+        const category = await admin.addSubCategory(categoryData, id);
         if (category.error) {
             console.log(category.error.message)
             throw RequestError._500();
