@@ -67,6 +67,10 @@ export const createProductSchema = Joi.object({
 export const createCategorySchema = Joi.object({
   name: Joi.string().required(),
   description: Joi.string().allow('').optional(),
-  isMain: Joi.boolean().required(),
-  subCategories: Joi.array().items(Joi.string()).optional(),
 });
+
+export const updateCategorySchema = Joi.object({
+  name: Joi.string(),
+  description: Joi.string().allow(''),
+});
+

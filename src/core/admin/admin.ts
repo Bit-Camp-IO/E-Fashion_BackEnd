@@ -14,8 +14,9 @@ import bcrypt from 'bcrypt';
 import {DuplicateUserError, NotFoundError, PermissionError} from '../errors';
 import UserModel, {UserDB} from '@/database/models/user';
 import {Document} from 'mongoose';
-import {CategoryData, CategoryResult} from '../category/interfaces';
-import {addSubCategory, createCategory} from '../category';
+import { CategoryData, CategoryResult } from '../category/interfaces';
+import { addSubCategory, createCategory, getAllCategories, removeCategory, updateCategory } from '../category';
+
 
 interface AdminService {
   addProduct(data: ProductData): AsyncSafeResult<ProductResult>;
@@ -90,6 +91,26 @@ export class Admin implements AdminService {
       return addSubCategory(data, id, this._id);
     } catch (err) {
       return {error: err, result: null};
+    }
+  }
+
+  async editCategory(data: Partial<CategoryData>, id: string): AsyncSafeResult<CategoryResult> {
+    try {
+      return updateCategory(id, data);
+    } catch (err) {
+      return { error: err, result: null }
+    }
+  }
+
+  async removeCategory(id: string): Promise<Error | null> {
+    return removeCategory(id);
+  }
+
+  async getAllCategoriesForAdmin(): AsyncSafeResult<CategoryResult[]> {
+    try {
+      return getAllCategories();
+    } catch (err) {
+      return { error: err, result: null };
     }
   }
 
