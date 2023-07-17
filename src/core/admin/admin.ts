@@ -1,12 +1,4 @@
-import {
-  ProductData,
-  ProductItemsApiList,
-  ProductResult,
-  createProduct,
-  getProductsList,
-  removeProduct,
-  updateProduct,
-} from '../product';
+import {ProductData, ProductResult, createProduct, removeProduct, updateProduct} from '../product';
 import {AsyncSafeResult} from '@type/common';
 import {AdminData, AdminResult} from './interfaces';
 import AdminModel from '@/database/models/admin';
@@ -69,14 +61,6 @@ export class Admin implements AdminService {
     return removeProduct(id);
   }
 
-  async getAllProducts(): AsyncSafeResult<ProductItemsApiList> {
-    try {
-      return getProductsList();
-    } catch (err) {
-      return {error: err, result: null};
-    }
-  }
-
   async addCategory(data: CategoryData): AsyncSafeResult<CategoryResult> {
     try {
       return createCategory(data, this._id);
@@ -85,15 +69,7 @@ export class Admin implements AdminService {
     }
   }
 
-  async addSub(data: CategoryData, id: string): AsyncSafeResult<CategoryResult> {
-    try {
-      return addSubCategory(data, id, this._id);
-    } catch (err) {
-      return {error: err, result: null};
-    }
-  }
-
-  async addSub(data: CategoryData, id: string): AsyncSafeResult<CategoryResult> {
+  async addSubCategory(data: CategoryData, id: string): AsyncSafeResult<CategoryResult> {
     try {
       return addSubCategory(data, id, this._id);
     } catch (err) {

@@ -5,11 +5,13 @@ import {Document} from 'mongoose';
 import {
   CreateProductReturn,
   ProductData,
+  ProductFilterOptions,
   ProductItemApi,
   ProductItemsApiList,
   ProductOptions,
   ProductResult,
   ProductSortOptions,
+  ProductsInfo,
 } from './interfaces';
 export * from './interfaces';
 
@@ -59,31 +61,23 @@ export async function getProductForUser(id: string): AsyncSafeResult<ProductResu
   }
 }
 
-const DefaultOptions: ProductOptions = {
-  limit: 20,
-  page: 1,
-  sort: {
-    newness: 'asc',
-    price: 'asc',
-  },
-};
-
 export async function getProductsList(
-  options?: ProductOptions,
+  options: ProductOptions,
 ): AsyncSafeResult<ProductItemsApiList> {
-  options = options || DefaultOptions;
-
   try {
     const page = options.page || 1;
     const limit = options.limit || 20;
     const skipDocsNumber = (page - 1) * limit;
-    const productsQuery = ProductModel.find({});
+    const productsQuery = ProductModel.find(_filter(options.filter));
     _sort(productsQuery, options.sort);
     const products = await productsQuery.skip(skipDocsNumber).limit(limit).exec();
+    const count = await ProductModel.count(_filter(options.filter));
     const result: ProductItemsApiList = {
       products: products.map(p => _formatProduct(p)),
+      count: products.length,
       page: page,
-      count: limit,
+      totalItems: count,
+      totalPages: Math.ceil(count / limit),
     };
     return {result, error: null};
   } catch (error) {
@@ -116,6 +110,19 @@ export async function removeProduct(id: string): Promise<Error | null> {
   }
 }
 
+export async function productsInfo(): AsyncSafeResult<ProductsInfo> {
+  try {
+    const productsInfo = await ProductModel.aggregate([
+      {$group: {_id: null, maxPrice: {$max: '$price'}, minPrice: {$min: '$price'}}},
+    ]);
+    const info = productsInfo[0];
+    delete info._id;
+    return {result: info, error: null};
+  } catch (err) {
+    return {error: err, result: null};
+  }
+}
+
 interface ProductDoc extends Document, ProductDB {}
 
 function _formatProduct(pDoc: ProductDoc): ProductItemApi {
@@ -140,4 +147,13 @@ function _sort(q: any, options?: ProductSortOptions) {
   if (!options) return;
   if (options.price) q.sort({price: options.price});
   if (options.newness) q.sort({createdAt: options.newness});
+  if (options.popularity) q.sort({rate: options.popularity});
+}
+
+function _filter(options?: ProductFilterOptions) {
+  const filter: any = {};
+  if (!options) return filter;
+  if (options.maxPrice) filter.price = {$lte: options.maxPrice};
+  if (options.minPrice) filter.price = {...filter.price, $gte: options.minPrice};
+  return filter;
 }

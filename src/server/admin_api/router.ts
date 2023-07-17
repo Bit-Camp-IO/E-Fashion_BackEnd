@@ -4,7 +4,7 @@ import authController from './controllers/auth';
 import adminController from './controllers/admin';
 import {isAuth} from '@server/middleware/isAuth';
 import productController from './controllers/product';
-import categoryController from './controllers/category'
+import categoryController from './controllers/category';
 
 const router = Router();
 
@@ -30,9 +30,8 @@ router.post('/user/:id/unban', isAuth, adminController.unBanUser);
 router.post('/product/create', isAuth, productController.create);
 router.put('/product/:id/edit', isAuth, productController.editProduct);
 router.delete('/product/:id/remove', isAuth, productController.remove);
-router.get('/product', isAuth, productController.getAllProductsForAdmin);
 
-router.post('/category', isAuth, categoryController.create)
-router.post('/category/:id/add-sub', isAuth, categoryController.createSub)
+router.post('/category', isAuth, categoryController.create);
+router.post('/category/:id/add-sub', isAuth, categoryController.createSub);
 
 export default router;
