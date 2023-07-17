@@ -1,11 +1,11 @@
-import {AdminRole} from '@/core/admin';
-import {Controller, Guard, Validate} from '@server/decorator';
-import {CreateCategorySchema, createCategorySchema} from '../valid';
-import {Request, Response} from 'express';
-import {Admin} from '@/core/admin/admin';
-import {CategoryData} from '@/core/category/interfaces';
+import { AdminRole } from '@/core/admin';
+import { Controller, Guard, Validate } from '@server/decorator';
+import { CreateCategorySchema, createCategorySchema } from '../valid';
+import { Request, Response } from 'express';
+import { Admin } from '@/core/admin/admin';
+import { CategoryData } from '@/core/category/interfaces';
 import RequestError from '@server/utils/errors';
-import {HttpStatus} from '@server/utils/status';
+import { HttpStatus } from '@server/utils/status';
 
 @Controller()
 class CategoryController {
@@ -31,7 +31,7 @@ class CategoryController {
   @Guard(AdminRole.ADMIN)
   public async createSub(req: Request, res: Response) {
     const admin = req.admin as Admin;
-    const {id} = req.params;
+    const { id } = req.params;
     const body: CreateCategorySchema = req.body;
     const categoryData: CategoryData = {
       name: body.name,

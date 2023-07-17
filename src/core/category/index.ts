@@ -1,5 +1,5 @@
 import CategoryModel from "@/database/models/categorie"
-import { CategoryData, CategoryResult } from "./interfaces"
+import { CategoryData, CategoryDoc, CategoryResult } from "./interfaces"
 import { AsyncSafeResult } from "@type/common"
 import { NotFoundError } from "../errors";
 
@@ -8,26 +8,26 @@ export async function createCategory(data: CategoryData, adminId: string): Async
         const category = await CategoryModel.create({
             addedBy: adminId,
             description: data.description,
-            isMain: data.isMain,
+            isMain: false,
             name: data.name,
         })
-
-        //TODO: edit subCategories as an arr of string || []
-        const result: CategoryResult = {
-            id: category._id.toString(),
-            name: category.name,
-            description: category.description || '',
-            imagesURL: category.imagesURL,
-            isMain: category.isMain,
-            subCategories: category.subCategories.map(subCategory => subCategory?.toString() || ''),
-          }; 
-
-        return { result, error: null }
+        return { result: _formatCategory(category), error: null }
     } catch (err) {
         return { error: err, result: null }
     }
 }
 
+export async function getCategoryForUser(id: string): AsyncSafeResult<CategoryResult> {
+    try {
+      const category = await CategoryModel.findById(id);
+      if (!category) {
+        throw new NotFoundError("Category with id"+ id);
+      }
+      return { result: _formatCategory(category), error: null };
+    } catch (err) {
+      return { error: err, result: null };
+    }
+  }
 export async function addSubCategory(data: CategoryData, id: string, adminId: string): AsyncSafeResult<CategoryResult> {
     try {
         const subCategory = await CategoryModel.create({
@@ -40,18 +40,55 @@ export async function addSubCategory(data: CategoryData, id: string, adminId: st
         if (!category) {
             throw new NotFoundError("Category with id" + id);
         }
-        await category.save();
-        //TODO: edit subCategories as an arr of string || []
-        const result: CategoryResult = {
-            id: category._id.toString(),
-            name: category.name,
-            description: category.description || '',
-            imagesURL: category.imagesURL,
-            isMain: category.isMain, 
-            subCategories: category.subCategories.map(subCategory => subCategory?.toString() || '')
-          }; 
-        return { result, error: null };
+        
+        return { result: _formatCategory(category), error: null };
     } catch (err) {
         return { error: err, result: null }
     }
 }
+
+export async function getAllCategories(): AsyncSafeResult<CategoryResult[]> {
+    try {
+      const categories = await CategoryModel.find({isMain: true}).populate('subCategories');
+      const result = categories.map(category => _formatCategory(category));
+      return { result: result, error: null };
+    } catch (err) {
+      return { error: err, result: null };
+    }
+  }
+
+
+export async function updateCategory(id: string, cData: Partial<CategoryData>): AsyncSafeResult<CategoryResult> {
+    try {
+        const category = await CategoryModel.findByIdAndUpdate(id, { $set: cData }, { new: true });
+        if (!category) {
+            throw new NotFoundError("Category with id" + id);
+        }
+        return { result: _formatCategory(category), error: null }
+    } catch (err) {
+        return { error: err, result: null };
+    }
+}
+
+export async function removeCategory(id: string): Promise<Error | null> {
+    try {
+      const category = await CategoryModel.findById(id);
+      if (!category) return new NotFoundError('Category with ' + id);
+      await CategoryModel.findByIdAndRemove(id);
+      return null;
+    } catch (err) {
+      return err;
+    }
+  }
+  
+function _formatCategory(cDoc: CategoryDoc): CategoryResult {
+    return {
+      id: cDoc.id.toString(),
+      name: cDoc.name,
+      description: cDoc.description || '',
+      imagesURL: cDoc.imagesURL || '',
+      isMain: cDoc.isMain || false,
+      subCategories: cDoc.subCategories ? cDoc.subCategories.map(category => category.name) : [],
+      addedBy: cDoc.addedBy?._id?.toString() || '',
+    };
+  }
