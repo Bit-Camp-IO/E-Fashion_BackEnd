@@ -1,22 +1,22 @@
 import mongoose, { Schema } from 'mongoose';
-import { ProductDB } from './product';
-import { ObjectId, RelationList } from '@type/database';
 
 export interface BrandDB {
   name: string;
   description: string;
   logo: string;
-  products: RelationList<ProductDB>;
+  link: string;
 }
 
 const brandSchema = new Schema<BrandDB>(
   {
-    name: { type: String, required: true },
+    name: { type: String, required: true, unique: true },
     logo: String,
     description: { type: String, required: true },
-    products: [{ type: ObjectId, ref: 'Product' }],
+    link: String,
   },
   { timestamps: true },
 );
 
 const BrandModel = mongoose.model('Brand', brandSchema);
+
+export default BrandModel;

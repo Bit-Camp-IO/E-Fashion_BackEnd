@@ -1,11 +1,11 @@
-import {Controller, Validate} from '@server/decorator';
-import {Request, Response} from 'express';
-import {AdminBody, adminSchema} from '../valid';
-import {createManager} from '@/core/admin/manager';
+import { Controller, Validate } from '@server/decorator';
+import { Request, Response } from 'express';
+import { AdminBody, adminSchema } from '../valid';
+import { createManager } from '@/core/admin/manager';
 import RequestError from '@server/utils/errors';
-import {HttpStatus} from '@server/utils/status';
-import {DuplicateUserError, ManagerExistError, UnauthorizedError} from '@/core/errors';
-import {AdminRole, getAdminServices} from '@/core/admin';
+import { HttpStatus } from '@server/utils/status';
+import { DuplicateError, ManagerExistError, UnauthorizedError } from '@/core/errors';
+import { AdminRole, getAdminServices } from '@/core/admin';
 
 @Controller()
 class ManagerController {
@@ -30,7 +30,7 @@ class ManagerController {
   @Validate(adminSchema)
   async createSuper(req: Request, res: Response) {
     const body: AdminBody = req.body;
-    const {result: manager, error} = await getAdminServices(req.userId!, AdminRole.MANAGER);
+    const { result: manager, error } = await getAdminServices(req.userId!, AdminRole.MANAGER);
     if (error) {
       console.log('1: ', error);
       if (error instanceof UnauthorizedError) {
@@ -45,7 +45,7 @@ class ManagerController {
       phone: body.phone,
     });
     if (superAdmin.error) {
-      if (superAdmin.error instanceof DuplicateUserError) {
+      if (superAdmin.error instanceof DuplicateError) {
         throw new RequestError(superAdmin.error.message, HttpStatus.BadRequest);
       }
       throw RequestError._500();

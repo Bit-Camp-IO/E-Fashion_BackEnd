@@ -39,14 +39,8 @@ export interface CreateProductSchema {
   title: string;
   description: string;
   price: number;
-  colors: {name: string; hex: string}[];
+  colors: { name: string; hex: string }[];
   sizes: string[];
-}
-
-export interface CreateCategorySchema {
-  name: string;
-  description: string;
-  isMain: boolean;
 }
 
 const colorItem = Joi.object({
@@ -64,6 +58,12 @@ export const createProductSchema = Joi.object({
   sizes: Joi.array().items(Joi.string()).default([]),
 });
 
+export interface CreateCategorySchema {
+  name: string;
+  description: string;
+  isMain: boolean;
+}
+
 export const createCategorySchema = Joi.object({
   name: Joi.string().required(),
   description: Joi.string().allow('').optional(),
@@ -74,3 +74,23 @@ export const updateCategorySchema = Joi.object({
   description: Joi.string().allow(''),
 });
 
+export interface CreateBrandSchema {
+  name: string;
+  description: string;
+  link: string;
+  logo: string;
+}
+
+export const createBrandSchema = Joi.object({
+  name: Joi.string().required(),
+  description: Joi.string().default('').optional(),
+  link: Joi.string().uri().default(''),
+  logo: Joi.string().uri().default(''),
+});
+
+export const updateBrandSchema = Joi.object({
+  name: Joi.string(),
+  description: Joi.string().allow(''),
+  link: Joi.string().uri(),
+  logo: Joi.string().uri(),
+});

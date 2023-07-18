@@ -1,0 +1,122 @@
+[
+  {
+    "name": "Nike",
+    "description": "American multinational corporation that designs, develops, and sells athletic footwear, apparel, equipment, and accessories.",
+    "logo": "https://example.com/nike-logo.png",
+    "link": "https://www.nike.com/"
+  },
+  {
+    "name": "Adidas",
+    "description": "German multinational corporation that designs and manufactures shoes, clothing and accessories.",
+    "logo": "https://example.com/adidas-logo.png",
+    "link": "https://www.adidas.com/"
+  },
+  {
+    "name": "Gucci",
+    "description": "Italian luxury brand of fashion and leather goods, part of the Gucci Group, which is owned by the French holding company Kering.",
+    "logo": "https://example.com/gucci-logo.png",
+    "link": "https://www.gucci.com/"
+  },
+  {
+    "name": "Prada",
+    "description": "Italian luxury fashion house specializing in leather handbags, travel accessories, shoes, ready-to-wear, perfumes and other fashion accessories.",
+    "logo": "https://example.com/prada-logo.png",
+    "link": "https://www.prada.com/"
+  },
+  {
+    "name": "Chanel",
+    "description": "French luxury fashion house that specializes in haute couture, ready-to-wear, handbags, perfumery, and cosmetics.",
+    "logo": "https://example.com/chanel-logo.png",
+    "link": "https://www.chanel.com/"
+  },
+  {
+    "name": "Louis Vuitton",
+    "description": "French fashion house and luxury goods company that produces a wide range of products, including leather goods, handbags, trunks, shoes, watches, jewelry, and accessories.",
+    "logo": "https://example.com/louis-vuitton-logo.png",
+    "link": "https://www.louisvuitton.com/"
+  },
+  {
+    "name": "Hermes",
+    "description": "French luxury goods manufacturer that specializes in leather, lifestyle accessories, home furnishings, perfumery, jewelry, watches and ready-to-wear.",
+    "logo": "https://example.com/hermes-logo.png",
+    "link": "https://www.hermes.com/"
+  },
+  {
+    "name": "Burberry",
+    "description": "British luxury fashion house that designs and manufactures ready-to-wear outerwear, fashion accessories, fragrances, sunglasses, and cosmetics.",
+    "logo": "https://example.com/burberry-logo.png",
+    "link": "https://www.burberry.com/"
+  },
+  {
+    "name": "Tom Ford",
+    "description": "American fashion designer who previously served as the creative director of Gucci and Yves Saint Laurent.",
+    "logo": "https://example.com/tom-ford-logo.png",
+    "link": "https://www.tomford.com/"
+  },
+  {
+    "name": "Yves Saint Laurent",
+    "description": "French luxury fashion house that designs and produces a wide range of luxury goods, including ready-to-wear, leather goods, shoes, and accessories.",
+    "logo": "https://example.com/yves-saint-laurent-logo.png",
+    "link": "https://www.ysl.com/"
+  },
+  {
+    "name": "Versace",
+    "description": "Italian luxury fashion house that produces ready-to-wear, accessories, fragrances, and home furnishings.",
+    "logo": "https://example.com/versace-logo.png",
+    "link": "https://www.versace.com/"
+  },
+  {
+    "name": "Dior",
+    "description": "French luxury goods company that designs and manufactures fashion apparel, jewelry, watches, fragrances, and skin care products.",
+    "logo": "https://example.com/dior-logo.png",
+    "link": "https://www.dior.com/"
+  },
+  {
+    "name": "Alexander McQueen",
+    "description": "British luxury fashion house that designs and produces ready-to-wear, accessories, and fragrances.",
+    "logo": "https://example.com/alexander-mcqueen-logo.png",
+    "link": "https://www.alexandermcqueen.com/"
+  },
+  {
+    "name": "Givenchy",
+    "description": "French luxury fashion and perfume house that produces clothing, accessories, and perfumes.",
+    "logo": "https://example.com/givenchy-logo.png",
+    "link": "https://www.givenchy.com/"
+  },
+  {
+    "name": "Balenciaga",
+    "description": "Spanish luxury fashion house that designs and produces ready-to-wear clothing, handbags, shoes, and accessories.",
+    "logo": "https://example.com/balenciaga-logo.png",
+    "link": "https://www.balenciaga.com/"
+  },
+  {
+    "name": "Fendi",
+    "description": "Italian luxury fashion house that produces ready-to-wear, leather goods, shoes, fragrances, eyewear, timepieces, and accessories.",
+    "logo": "https://example.com/fendi-logo.png",
+    "link": "https://www.fendi.com/"
+  },
+  {
+    "name": "Ralph Lauren",
+    "description": "American fashion designer, philanthropist, and business executive, known for his Polo Ralph Lauren clothing brand.",
+    "logo": "https://example.com/ralph-lauren-logo.png",
+    "link": "https://www.ralphlauren.com/"
+  },
+  {
+    "name": "Calvin Klein",
+    "description": "American fashion designer who founded the Calvin Klein clothing brand.",
+    "logo": "https://example.com/calvin-klein-logo.png",
+    "link": "https://www.calvinklein.com/"
+  },
+  {
+    "name": "GAP",
+    "description": "American worldwide clothing and accessories retailer that sells casual clothing, accessories, and personal care products for men, women, and children.",
+    "logo": "https://example.com/gap-logo.png",
+    "link": "https://www.gap.com/"
+  },
+  {
+    "name": "Levi's",
+    "description": "American clothing company known worldwide for its Levi's brand of denim jeans.",
+    "logo": "https://example.com/levis-logo.png",
+    "link": "https://www.levi.com/"
+  }
+]

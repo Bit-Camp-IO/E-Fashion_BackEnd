@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import { createToken, verifyToken } from './token';
 import Config from '@/config';
 import { AsyncSafeResult, SafeResult } from '@type/common';
-import { DuplicateUserError, InvalidCredentialsError } from '../errors';
+import { DuplicateError, InvalidCredentialsError } from '../errors';
 
 interface UserRegistrationData {
   email: string;
@@ -52,7 +52,7 @@ export class JWTAuthService {
       return { result, error: null };
     } catch (err) {
       if (err.code === 11000) {
-        err = new DuplicateUserError();
+        err = new DuplicateError('User');
       }
       return { error: err, result: null };
     }

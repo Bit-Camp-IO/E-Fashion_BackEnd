@@ -1,9 +1,9 @@
 import AdminModel from '@/database/models/admin';
-import {DuplicateUserError, ManagerExistError} from '../errors';
-import {AsyncSafeResult} from '@type/common';
-import {AdminData, AdminResult} from './interfaces';
+import { DuplicateError, ManagerExistError } from '../errors';
+import { AsyncSafeResult } from '@type/common';
+import { AdminData, AdminResult } from './interfaces';
 import bcrypt from 'bcrypt';
-import {SuperAdmin} from './admin';
+import { SuperAdmin } from './admin';
 
 class Manager extends SuperAdmin {
   constructor(id: string, role: string) {
@@ -11,7 +11,7 @@ class Manager extends SuperAdmin {
   }
 
   static async managerExist(): Promise<boolean> {
-    const managerExist = await AdminModel.findOne({role: 'manager'}).select({_id: 1});
+    const managerExist = await AdminModel.findOne({ role: 'manager' }).select({ _id: 1 });
     return !!managerExist;
   }
 
@@ -33,12 +33,12 @@ class Manager extends SuperAdmin {
         role: superAdmin.role,
       };
 
-      return {result, error: null};
+      return { result, error: null };
     } catch (err) {
       if (err.code === 11000) {
-        err = new DuplicateUserError('Super Admin already exists');
+        err = new DuplicateError('Super Admin');
       }
-      return {error: err, result: null};
+      return { error: err, result: null };
     }
   }
 }
@@ -61,9 +61,9 @@ export async function createManager(managerData: AdminData): AsyncSafeResult<Adm
       name: manager.name,
       role: manager.role,
     };
-    return {result, error: null};
+    return { result, error: null };
   } catch (err) {
-    return {error: err, result: null};
+    return { error: err, result: null };
   }
 }
 

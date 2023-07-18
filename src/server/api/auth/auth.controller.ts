@@ -1,11 +1,11 @@
-import {Request, RequestHandler, Response} from 'express';
-import {Controller} from '@server/decorator/controller';
-import {Validate} from '@server/decorator/validate';
-import {LoginSchema, RegisterSchema, loginSchema, registerSchema} from './auth.valid';
-import {HttpStatus} from '@server/utils/status';
-import {JWTAuthService, OAuthAuthService} from '@/core/auth';
+import { Request, RequestHandler, Response } from 'express';
+import { Controller } from '@server/decorator/controller';
+import { Validate } from '@server/decorator/validate';
+import { LoginSchema, RegisterSchema, loginSchema, registerSchema } from './auth.valid';
+import { HttpStatus } from '@server/utils/status';
+import { JWTAuthService, OAuthAuthService } from '@/core/auth';
 import {
-  DuplicateUserError,
+  DuplicateError,
   InvalidCredentialsError,
   InvalidTokenError,
   UnauthorizedGoogleError,
@@ -42,7 +42,7 @@ class AuthController implements IAuth {
       phone: body.phone,
     });
     if (response.error) {
-      if (response.error instanceof DuplicateUserError) {
+      if (response.error instanceof DuplicateError) {
         throw new RequestError(response.error.message, HttpStatus.BadRequest);
       }
       throw RequestError._500();
@@ -61,7 +61,7 @@ class AuthController implements IAuth {
       }
       throw RequestError._500();
     }
-    res.JSON(HttpStatus.Created, {accessToken: newAccessToken.result});
+    res.JSON(HttpStatus.Created, { accessToken: newAccessToken.result });
   }
   public google(_: Request, res: Response) {
     const url = OAuthAuthService.loginGooglePageUrl();

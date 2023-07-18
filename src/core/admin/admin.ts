@@ -1,19 +1,21 @@
-import {ProductData, ProductResult, createProduct, removeProduct, updateProduct} from '../product';
-import {AsyncSafeResult} from '@type/common';
-import {AdminData, AdminResult} from './interfaces';
+import {
+  ProductData,
+  ProductResult,
+  createProduct,
+  removeProduct,
+  updateProduct,
+} from '../product';
+import { AsyncSafeResult } from '@type/common';
+import { AdminData, AdminResult } from './interfaces';
 import AdminModel from '@/database/models/admin';
 import bcrypt from 'bcrypt';
-import {DuplicateUserError, NotFoundError, PermissionError} from '../errors';
-import UserModel, {UserDB} from '@/database/models/user';
-import {Document} from 'mongoose';
+import { DuplicateError, NotFoundError, PermissionError } from '../errors';
+import UserModel, { UserDB } from '@/database/models/user';
+import { Document } from 'mongoose';
 import { CategoryData, CategoryResult } from '../category/interfaces';
-import {
-  addSubCategory,
-  createCategory,
-  getAllCategories,
-  removeCategory,
-  updateCategory,
-} from '../category';
+import { addSubCategory, createCategory, removeCategory, updateCategory } from '../category';
+import { BrandData, BrandResult } from '../brand/interfaces';
+import { createBrand, removeBrand, updateBrand } from '../brand';
 interface AdminService {
   addProduct(data: ProductData): AsyncSafeResult<ProductResult>;
   removeProduct(id: string): void;
@@ -29,7 +31,7 @@ export class Admin implements AdminService {
     try {
       return await createProduct(data, this._id);
     } catch (err) {
-      return {error: err, result: null};
+      return { error: err, result: null };
     }
   }
   // TODO: Admin Services
@@ -37,28 +39,28 @@ export class Admin implements AdminService {
     try {
       return await updateProduct(id, productData);
     } catch (err) {
-      return {error: err, result: null};
+      return { error: err, result: null };
     }
   }
 
   async getAllUsers(): AsyncSafeResult<Document<UserDB>[]> {
     try {
       const users = await UserModel.find({});
-      return {result: users, error: null};
+      return { result: users, error: null };
     } catch (err) {
-      return {error: err, result: null};
+      return { error: err, result: null };
     }
   }
 
   async getOneUser(id: string): AsyncSafeResult<Document<UserDB>> {
     try {
-      const user = await UserModel.findById({_id: id});
+      const user = await UserModel.findById({ _id: id });
       if (!user) {
         throw new NotFoundError('User With id ' + id);
       }
-      return {result: user, error: null};
+      return { result: user, error: null };
     } catch (err) {
-      return {error: err, result: null};
+      return { error: err, result: null };
     }
   }
 
@@ -70,7 +72,7 @@ export class Admin implements AdminService {
     try {
       return createCategory(data, this._id);
     } catch (err) {
-      return {error: err, result: null};
+      return { error: err, result: null };
     }
   }
 
@@ -78,7 +80,7 @@ export class Admin implements AdminService {
     try {
       return addSubCategory(data, id, this._id);
     } catch (err) {
-      return {error: err, result: null};
+      return { error: err, result: null };
     }
   }
 
@@ -86,7 +88,7 @@ export class Admin implements AdminService {
     try {
       return updateCategory(id, data);
     } catch (err) {
-      return {error: err, result: null};
+      return { error: err, result: null };
     }
   }
 
@@ -94,17 +96,9 @@ export class Admin implements AdminService {
     return removeCategory(id);
   }
 
-  async getAllCategoriesForAdmin(): AsyncSafeResult<CategoryResult[]> {
-    try {
-      return getAllCategories();
-    } catch (err) {
-      return {error: err, result: null};
-    }
-  }
-
   async banUser(id: string): Promise<Error | null> {
     try {
-      const user = await UserModel.findById({_id: id});
+      const user = await UserModel.findById({ _id: id });
       if (!user) {
         throw new NotFoundError('User With id ' + id);
       }
@@ -121,7 +115,7 @@ export class Admin implements AdminService {
 
   async unBanUser(id: string): Promise<Error | null> {
     try {
-      const user = await UserModel.findById({_id: id});
+      const user = await UserModel.findById({ _id: id });
       if (!user) {
         throw new NotFoundError('User With id ' + id);
       }
@@ -134,6 +128,26 @@ export class Admin implements AdminService {
     } catch (err) {
       return err;
     }
+  }
+
+  async addBrand(data: BrandData): AsyncSafeResult<BrandResult> {
+    try {
+      return createBrand(data);
+    } catch (err) {
+      return { error: err, result: null };
+    }
+  }
+
+  async editBrand(data: Partial<BrandData>, id: string): AsyncSafeResult<BrandResult> {
+    try {
+      return updateBrand(id, data);
+    } catch (err) {
+      return { error: err, result: null };
+    }
+  }
+
+  async removeBrand(id: string): Promise<Error | null> {
+    return removeBrand(id);
   }
 }
 
@@ -167,12 +181,12 @@ export class SuperAdmin extends Admin implements SuperAdminService {
         role: admin.role,
         createdAt: admin.createdAt,
       };
-      return {error: null, result};
+      return { error: null, result };
     } catch (err) {
       if (err.code === 11000) {
-        err = new DuplicateUserError('Admin already exists');
+        err = new DuplicateError('Admin');
       }
-      return {error: err, result: null};
+      return { error: err, result: null };
     }
   }
 
@@ -189,7 +203,7 @@ export class SuperAdmin extends Admin implements SuperAdminService {
         return new PermissionError();
       }
 
-      await AdminModel.deleteOne({_id: id});
+      await AdminModel.deleteOne({ _id: id });
       return null;
     } catch (err) {
       return err;
@@ -197,19 +211,19 @@ export class SuperAdmin extends Admin implements SuperAdminService {
   }
   async getAdminsList(role: string): AsyncSafeResult<AdminResult[]> {
     try {
-      let query: {role?: string} = {};
+      let query: { role?: string } = {};
       if (role === 'admin') query.role = 'admin';
       if (role === 'super') query.role = 'superadmin';
-      let adminsList = await AdminModel.find({$and: [query, {role: {$ne: 'manager'}}]});
+      let adminsList = await AdminModel.find({ $and: [query, { role: { $ne: 'manager' } }] });
       const result: AdminResult[] = adminsList.map(a => ({
         createdAt: a.createdAt,
         id: a._id.toString(),
         name: a.name,
         role: a.role,
       }));
-      return {result, error: null};
+      return { result, error: null };
     } catch (err) {
-      return {error: err, result: null};
+      return { error: err, result: null };
     }
   }
 }

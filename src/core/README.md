@@ -330,7 +330,7 @@ type CreateProductReturn = AsyncSafeResult<ProductResult>;
 
 #### InvalidTokenError
 
-#### DuplicateUserError
+#### DuplicateError
 
 #### InvalidCredentialsError
 

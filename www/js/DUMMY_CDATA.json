@@ -1,0 +1,442 @@
+[
+  {
+    "name": "Women's Clothing",
+    "description": "Clothing designed specifically for women.",
+    "subcategories": [
+      {
+        "name": "Tops",
+        "description": "Shirts, blouses, and other upper-body garments.",
+        "subcategories": [
+          {
+            "name": "T-Shirts",
+            "description": "Casual, short-sleeved shirts typically made of cotton or a cotton blend."
+          },
+          {
+            "name": "Blouses",
+            "description": "Dressy or formal shirts typically made of silk, chiffon, or other lightweight materials."
+          },
+          {
+            "name": "Sweaters",
+            "description": "Warm, knitted garments typically made of wool or a wool blend."
+          }
+        ]
+      },
+      {
+        "name": "Dresses",
+        "description": "One-piece garments that cover the entire body from the neck to the hemline.",
+        "subcategories": [
+          {
+            "name": "Cocktail Dresses",
+            "description": "Semi-formal dresses typically worn to parties or evening events."
+          },
+          {
+            "name": "Maxi Dresses",
+            "description": "Long, flowing dresses that typically reach the ankles or floor."
+          },
+          {
+            "name": "Summer Dresses",
+            "description": "Lightweight, casual dresses typically worn during the summer months."
+          }
+        ]
+      },
+      {
+        "name": "Bottoms",
+        "description": "Garments worn on the lower half of the body.",
+        "subcategories": [
+          {
+            "name": "Jeans",
+            "description": "Casual pants made of denim or a denim blend."
+          },
+          {
+            "name": "Skirts",
+            "description": "Garments worn on the lower half of the body that extend from the waist to the knees or lower."
+          },
+          {
+            "name": "Shorts",
+            "description": "Casual, knee-length or shorter pants typically worn during the summer months."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Men's Clothing",
+    "description": "Clothing designed specifically for men.",
+    "subcategories": [
+      {
+        "name": "Tops",
+        "description": "Shirts, t-shirts, and other upper-body garments.",
+        "subcategories": [
+          {
+            "name": "Dress Shirts",
+            "description": "Formal shirts typically worn with a suit or dress pants."
+          },
+          {
+            "name": "T-Shirts",
+            "description": "Casual, short-sleeved shirts typically made of cotton or a cotton blend."
+          },
+          {
+            "name": "Sweaters",
+            "description": "Warm, knitted garments typically made of wool or a wool blend."
+          }
+        ]
+      },
+      {
+        "name": "Bottoms",
+        "description": "Garments worn on the lower half of the body.",
+        "subcategories": [
+          {
+            "name": "Jeans",
+            "description": "Casual pants made of denim or a denim blend."
+          },
+          {
+            "name": "Dress Pants",
+            "description": "Formal pants typically worn with a suit or dress shirt."
+          },
+          {
+            "name": "Shorts",
+            "description": "Casual, knee-length or shorter pants typically worn during the summer months."
+          }
+        ]
+      },
+      {
+        "name": "Suits",
+        "description": "Matching sets of formal jackets and pants typically worn for business or formal occasions.",
+        "subcategories": [
+          {
+            "name": "Two-Piece Suits",
+            "description": "Suits consisting of a jacket and pants."
+          },
+          {
+            "name": "Three-Piece Suits",
+            "description": "Suits consisting of a jacket, pants, and vest."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Children's Clothing",
+    "description": "Clothing designed specifically for children.",
+    "subcategories": [
+      {
+        "name": "Infant Clothing",
+        "description": "Clothing designed specifically for babies and infants.",
+        "subcategories": [
+          {
+            "name": "Onesies",
+            "description": "One-piece garments that cover the entire body from the neck to the feet."
+          },
+          {
+            "name": "Sleepers",
+            "description": "One-piece garments that cover the entire body from the neck to the feet, typically worn for sleeping."
+          },
+          {
+            "name": "Bibs",
+            "description": "Garments worn around the neck to protect clothingfrom food or drool."
+          }
+        ]
+      },
+      {
+        "name": "Toddler Clothing",
+        "description": "Clothing designed for children aged 1-3 years.",
+        "subcategories": [
+          {
+            "name": "Tops",
+            "description": "Shirts, t-shirts, and other upper-body garments.",
+            "subcategories": [
+              {
+                "name": "T-Shirts",
+                "description": "Casual, short-sleeved shirts typically made of cotton or a cotton blend."
+              },
+              {
+                "name": "Sweaters",
+                "description": "Warm, knitted garments typically made of wool or a wool blend."
+              },
+              {
+                "name": "Hoodies",
+                "description": "Casual, pullover or zip-up jackets with a hood."
+              }
+            ]
+          },
+          {
+            "name": "Bottoms",
+            "description": "Garments worn on the lower half of the body.",
+            "subcategories": [
+              {
+                "name": "Jeans",
+                "description": "Casual pants made of denim or a denim blend."
+              },
+              {
+                "name": "Leggings",
+                "description": "Tight-fitting pants typically worn by girls."
+              },
+              {
+                "name": "Shorts",
+                "description": "Casual, knee-length or shorter pants typically worn during the summer months."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Kids' Clothing",
+        "description": "Clothing designed for children aged 4-12 years.",
+        "subcategories": [
+          {
+            "name": "Tops",
+            "description": "Shirts, t-shirts, and other upper-body garments.",
+            "subcategories": [
+              {
+                "name": "T-Shirts",
+                "description": "Casual, short-sleeved shirts typically made of cotton or a cotton blend."
+              },
+              {
+                "name": "Sweaters",
+                "description": "Warm, knitted garments typically made of wool or a wool blend."
+              },
+              {
+                "name": "Hoodies",
+                "description": "Casual, pullover or zip-up jackets with a hood."
+              }
+            ]
+          },
+          {
+            "name": "Bottoms",
+            "description": "Garments worn on the lower half of the body.",
+            "subcategories": [
+              {
+                "name": "Jeans",
+                "description": "Casual pants made of denim or a denim blend."
+              },
+              {
+                "name": "Leggings",
+                "description": "Tight-fitting pants typically worn by girls."
+              },
+              {
+                "name": "Shorts",
+                "description": "Casual, knee-length or shorter pants typically worn during the summer months."
+              }
+            ]
+          },
+          {
+            "name": "Dresses",
+            "description": "One-piece garments that cover the entire body from the neck to the hemline.",
+            "subcategories": [
+              {
+                "name": "Party Dresses",
+                "description": "Dressy dresses typically worn to parties or formal events."
+              },
+              {
+                "name": "Casual Dresses",
+                "description": "Comfortable, casual dresses typically worn during the summer months."
+              },
+              {
+                "name": "School Uniforms",
+                "description": "Standardized clothing typically worn by students in schools."
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Accessories",
+    "description": "Items that complement or add to an outfit.",
+    "subcategories": [
+      {
+        "name": "Jewelry",
+        "description": "Items made of precious metals, gemstones, or other materials worn for decoration.",
+        "subcategories": [
+          {
+            "name": "Necklaces",
+            "description": "Jewelry worn around the neck."
+          },
+          {
+            "name": "Bracelets",
+            "description": "Jewelry worn around the wrist."
+          },
+          {
+            "name": "Earrings",
+            "description": "Jewelry worn in the ears."
+          }
+        ]
+      },
+      {
+        "name": "Bags",
+        "description": "Containers used for carrying personal items.",
+        "subcategories": [
+          {
+            "name": "Handbags",
+            "description": "Bags carried by hand or over the shoulder."
+          },
+          {
+            "name": "Backpacks",
+            "description": "Bags worn on the back with two straps."
+          },
+          {
+            "name": "Totes",
+            "description": "Large, open bags with two handles."
+          }
+        ]
+      },
+      {
+        "name": "Hats",
+        "description": "Headwear worn for protection from the sun or for fashion.",
+        "subcategories": [
+          {
+            "name": "Baseball Caps",
+            "description": "Soft caps with a rounded crown and a stiff bill, typically worn for casual occasions."
+          },
+          {
+            "name": "Beanies",
+            "description": "Soft, close-fitting caps typically made of wool or acrylic, worn to cover the head and ears in cold weather."
+          },
+          {
+            "name": "Sun Hats",
+            "description": "Wide-brimmed hats typically made of straw or other lightweight materials, worn for protection from the sun."
+          }
+        ]
+      },
+      {
+        "name": "Belts",
+        "description": "Strips of leather, fabric, or other materials worn around the waist to hold up pants or skirts.",
+        "subcategories": [
+          {
+            "name": "Leather Belts",
+            "description": "Belts made of leather or faux leather."
+          },
+          {
+            "name": "Fabric Belts",
+            "description": "Belts made of fabric or other materials."
+          },
+          {
+            "name": "Chain Belts",
+            "description": "Belts made of metal chains or other decorative materials."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Shoes",
+    "description": "Footwear worn for protection and fashion.",
+    "subcategories": [
+      {
+        "name": "Women's Shoes",
+        "description": "Footwear designed specifically for women.",
+        "subcategories": [
+          {
+            "name": "High Heels",
+            "description": "Women's shoes with a tall, thin heel."
+          },
+          {
+            "name": "Flats",
+            "description": "Women's shoes with a low or no heel."
+          },
+          {
+            "name": "Sneakers",
+            "description": "Casual, athletic shoes typically made of canvas or synthetic materials."
+          }
+        ]
+      },
+      {
+        "name": "Men's Shoes",
+        "description": "Footwear designed specifically for men.",
+        "subcategories": [
+          {
+            "name": "Dress Shoes",
+            "description": "Men's shoes designed to be worn with formal attire."
+          },
+          {
+            "name": "Athletic Shoes",
+            "description": "Casual, athletic shoes typically made of canvas or synthetic materials."
+          },
+          {
+            "name": "Boots",
+            "description": "Footwear that covers the ankle or higher."
+          }
+        ]
+      },
+      {
+        "name": "Children's Shoes",
+        "description": "Footwear designed specifically for children.",
+        "subcategories": [
+          {
+            "name": "Infant Shoes",
+            "description": "Footwear designed specifically for babies and infants."
+          },
+          {
+            "name": "Toddler Shoes",
+            "description": "Footwear designed for children aged 1-3 years."
+          },
+          {
+            "name": "Kids' Shoes",
+            "description": "Footwear designed for children aged 4-12 years."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Outerwear",
+    "description": "Clothing worn over other garments for protection against the elements.",
+    "subcategories": [
+      {
+        "name": "Coats",
+        "description": "Heavy, long-sleeved garments worn over other clothing for warmth.",
+        "subcategories": [
+          {
+            "name": "Trench Coats",
+            "description": "Long, belted coats typically made of a waterproof material."
+          },
+          {
+            "name": "Pea Coats",
+            "description": "Short, double-breasted coats typically made of wool or a wool blend."
+          },
+          {
+            "name": "Puffer Coats",
+            "description": "Short, quilted coats typically filled with down or synthetic insulation."
+          }
+        ]
+      },
+      {
+        "name": "Jackets",
+        "description": "Lighter-weight garments worn over other clothing for warmth or style.",
+        "subcategories": [
+          {
+            "name": "Denim Jackets",
+            "description": "Casual jackets made of denim or a denim blend."
+          },
+          {
+            "name": "Bomber Jackets",
+            "description": "Short, zip-up jackets typically made of leather or nylon."
+          },
+          {
+            "name": "Windbreakers",
+            "description": "Thin, lightweight jackets made of a wind-resistant material."
+          }
+        ]
+      },
+      {
+        "name": "Vests",
+        "description": "Sleeveless garments worn over other clothing for warmth or style.",
+        "subcategories": [
+          {
+            "name": "Puffer Vests",
+            "description": "Sleeveless, quilted jackets typically filled with down or synthetic insulation."
+          },
+          {
+            "name": "SweaterVests",
+            "description": "Sleeveless, knit or woven vests typically made of wool or other warm materials."
+          },
+          {
+            "name": "Utility Vests",
+            "description": "Sleeveless, multi-pocketed vests typically made of a durable material."
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,11 +1,11 @@
-import {Controller, Guard, Validate} from '@server/decorator';
+import { Controller, Guard, Validate } from '@server/decorator';
 import RequestError from '@server/utils/errors';
-import {HttpStatus} from '@server/utils/status';
-import {Request, Response} from 'express';
-import {AdminBody, adminSchema} from '../valid';
-import {AdminRole, getAdminServices} from '@/core/admin';
-import {DuplicateUserError, PermissionError, UnauthorizedError} from '@/core/errors';
-import {Admin, SuperAdmin} from '@/core/admin/admin';
+import { HttpStatus } from '@server/utils/status';
+import { Request, Response } from 'express';
+import { AdminBody, adminSchema } from '../valid';
+import { AdminRole, getAdminServices } from '@/core/admin';
+import { DuplicateError, PermissionError, UnauthorizedError } from '@/core/errors';
+import { Admin, SuperAdmin } from '@/core/admin/admin';
 
 @Controller()
 class AdminController {
@@ -36,7 +36,7 @@ class AdminController {
       address: body.address,
     });
     if (newAdmin.error) {
-      if (newAdmin.error instanceof DuplicateUserError) {
+      if (newAdmin.error instanceof DuplicateError) {
         throw new RequestError(newAdmin.error.message, HttpStatus.BadRequest);
       }
       throw RequestError._500();
@@ -45,11 +45,14 @@ class AdminController {
   }
 
   public async removeAdmin(req: Request, res: Response) {
-    const {id} = req.body;
+    const { id } = req.body;
     if (!id) {
       throw new RequestError('Require admin id to remove', HttpStatus.BadRequest);
     }
-    const {result: superAdmin, error} = await getAdminServices(req.userId!, AdminRole.SUPER_ADMIN);
+    const { result: superAdmin, error } = await getAdminServices(
+      req.userId!,
+      AdminRole.SUPER_ADMIN,
+    );
     if (error) {
       if (error instanceof UnauthorizedError) {
         throw new RequestError(error.message, HttpStatus.Unauthorized);
@@ -68,7 +71,10 @@ class AdminController {
   public async getAllAdmins(req: Request, res: Response) {
     let role = (req.query['role'] as string) || 'all';
     if (!['super', 'admin'].includes(role)) role = 'all';
-    const {result: superAdmin, error} = await getAdminServices(req.userId!, AdminRole.SUPER_ADMIN);
+    const { result: superAdmin, error } = await getAdminServices(
+      req.userId!,
+      AdminRole.SUPER_ADMIN,
+    );
     if (error) {
       if (error instanceof UnauthorizedError) {
         throw new RequestError(error.message, HttpStatus.Unauthorized);
@@ -84,7 +90,7 @@ class AdminController {
   }
 
   public async getAllUsers(req: Request, res: Response) {
-    const {result: admin, error} = await getAdminServices(req.userId!, AdminRole.ADMIN);
+    const { result: admin, error } = await getAdminServices(req.userId!, AdminRole.ADMIN);
     if (error) {
       if (error instanceof UnauthorizedError) {
         throw new RequestError(error.message, HttpStatus.Unauthorized);
@@ -96,8 +102,8 @@ class AdminController {
   }
 
   public async getOneUser(req: Request, res: Response) {
-    const {id} = req.params;
-    const {result: admin, error} = await getAdminServices(req.userId!, AdminRole.ADMIN);
+    const { id } = req.params;
+    const { result: admin, error } = await getAdminServices(req.userId!, AdminRole.ADMIN);
     if (error) {
       if (error instanceof UnauthorizedError) {
         throw new RequestError(error.message, HttpStatus.Unauthorized);

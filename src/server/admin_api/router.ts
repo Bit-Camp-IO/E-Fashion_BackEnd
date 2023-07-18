@@ -5,6 +5,7 @@ import adminController from './controllers/admin';
 import { isAuth } from '@server/middleware/isAuth';
 import productController from './controllers/product';
 import categoryController from './controllers/category';
+import brandController from './controllers/brand';
 
 const router = Router();
 
@@ -31,9 +32,13 @@ router.post('/product/create', isAuth, productController.create);
 router.put('/product/:id/edit', isAuth, productController.editProduct);
 router.delete('/product/:id/remove', isAuth, productController.remove);
 
-router.post('/category', isAuth, categoryController.create);
+router.post('/category/create', isAuth, categoryController.create);
 router.post('/category/:id/add-sub', isAuth, categoryController.createSub);
 router.put('/category/:id/edit', isAuth, categoryController.editCategory);
 router.delete('/category/:id/remove', isAuth, categoryController.remove);
-router.get('/category/', isAuth, categoryController.getAllCategoriesForAdmin);
+
+router.post('/brand/create', isAuth, brandController.create);
+router.put('/brand/:id/edit', isAuth, brandController.editBrand);
+router.delete('/brand/:id/remove', isAuth, brandController.remove);
+
 export default router;

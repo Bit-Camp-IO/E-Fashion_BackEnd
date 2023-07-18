@@ -4,9 +4,9 @@ export class InvalidTokenError extends Error {
   }
 }
 
-export class DuplicateUserError extends Error {
-  constructor(message: string = 'User already exists') {
-    super(message);
+export class DuplicateError extends Error {
+  constructor(pre?: string) {
+    super(pre + ' already exists');
   }
 }
 
