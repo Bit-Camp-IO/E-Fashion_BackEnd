@@ -5,12 +5,14 @@ import initProduct from './product';
 import { HttpStatus } from '@server/utils/status';
 import initCategory from './category';
 import initBrand from './brand';
+import initUser from './user';
 
 const initApi: InitRouterFunc = app => {
   const router = Router();
   router.get('/version', (_, res) => res.JSON(HttpStatus.Ok, { version: '0,0,1' }));
   // TODO: set up routers
   initAuth(router);
+  initUser(router);
   initProduct(router);
   initCategory(router);
   initBrand(router);

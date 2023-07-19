@@ -3,6 +3,7 @@ import { AddressDB } from './address';
 import { CartDB } from './cart';
 import { PaymentDB } from './payment';
 import { ObjectId, Relation, RelationList } from '@type/database';
+import { ProductDB } from './product';
 
 export type AuthProvider = 'LOCAL' | 'GOOGLE';
 
@@ -18,6 +19,7 @@ export interface UserDB extends mongoose.Document {
   addresses: RelationList<AddressDB>;
   cart: Relation<CartDB>;
   payments: RelationList<PaymentDB>;
+  favorites: RelationList<ProductDB>;
 }
 
 interface SettingsDB {
@@ -76,6 +78,7 @@ const userSchema = new Schema<UserDB>(
       type: Boolean,
       default: false,
     },
+    favorites: [{ type: ObjectId, ref: 'Product', default: [] }],
   },
   { timestamps: true },
 );

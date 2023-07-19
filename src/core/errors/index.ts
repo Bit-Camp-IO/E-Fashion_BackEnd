@@ -47,3 +47,9 @@ export class NotFoundError extends Error {
     super(`${pre} Not Found!`);
   }
 }
+
+export class InvalidDataError extends Error {
+  constructor(message?: string) {
+    super(message || 'Invalid Data!');
+  }
+}

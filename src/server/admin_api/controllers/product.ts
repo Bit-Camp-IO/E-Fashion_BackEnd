@@ -1,13 +1,17 @@
-import {Admin} from '@/core/admin/admin';
-import {ProductData} from '@/core/product';
-import {Controller, Validate, Guard} from '@server/decorator';
-import {Request, Response} from 'express';
-import {CreateProductSchema, createProductSchema} from '../valid';
+import { Admin } from '@/core/admin/admin';
+import { ProductData } from '@/core/product';
+import { Controller, Validate, Guard } from '@server/decorator';
+import { Request, Response } from 'express';
+import {
+  CreateProductSchema,
+  UpdateProductSchema,
+  createProductSchema,
+  updateProductSchema,
+} from '../valid';
 import RequestError from '@server/utils/errors';
-import {HttpStatus} from '@server/utils/status';
-import {AdminRole} from '@/core/admin';
-import {NotFoundError} from '@/core/errors';
-import {UpdateProductSchema, updateProductSchema} from '@server/api/product/product.valid';
+import { HttpStatus } from '@server/utils/status';
+import { AdminRole } from '@/core/admin';
+import { NotFoundError } from '@/core/errors';
 @Controller()
 class ProductController {
   @Validate(createProductSchema)
@@ -46,7 +50,7 @@ class ProductController {
   @Guard(AdminRole.ADMIN)
   async editProduct(req: Request, res: Response) {
     const admin = req.admin as Admin;
-    const {id} = req.params;
+    const { id } = req.params;
     const body: UpdateProductSchema = req.body;
     const productData: UpdateProductSchema = {
       colors: body.colors,
@@ -57,7 +61,6 @@ class ProductController {
     };
     const product = await admin.editProduct(id, productData);
     if (product.error) {
-      console.log(product.error.message);
       throw RequestError._500();
     }
     res.JSON(HttpStatus.Ok, product.result);

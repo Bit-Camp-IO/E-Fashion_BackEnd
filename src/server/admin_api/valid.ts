@@ -94,3 +94,19 @@ export const updateBrandSchema = Joi.object({
   link: Joi.string().uri(),
   logo: Joi.string().uri(),
 });
+
+export interface UpdateProductSchema {
+  title?: string;
+  description?: string;
+  price?: number;
+  colors?: { name: string; hex: string }[];
+  sizes?: string[];
+}
+
+export const updateProductSchema = Joi.object({
+  title: Joi.string(),
+  description: Joi.string(),
+  price: Joi.number(),
+  //  colors: colorSchema,
+  sizes: Joi.array().items(Joi.string()),
+});

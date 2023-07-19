@@ -1,13 +1,13 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Document, Schema } from 'mongoose';
 import { ProductDB } from './product';
 import { ObjectId, Relation } from '@type/database';
 
-export interface CartDB {
+export interface CartDB extends Document {
   totalPrice: number;
   totalQuantity: number;
   items: {
     product: Relation<ProductDB>;
-    name: string;
+    title: string;
     price: number;
     quantity: number;
     size: string;
@@ -37,3 +37,5 @@ const cartSchema = new Schema<CartDB>({
 });
 
 const CartModel = mongoose.model('Cart', cartSchema);
+
+export default CartModel;
