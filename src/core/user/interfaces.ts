@@ -1,3 +1,6 @@
+import { RelationList } from "@type/database";
+import { AddressData } from "../address/interfaces";
+
 export interface FavItem {
   title: string;
   price: number;
@@ -32,4 +35,5 @@ export interface UserResult {
   isVerified: boolean;
   settings: any;
   profile?: string;
+  addresses: RelationList<AddressData>
 }

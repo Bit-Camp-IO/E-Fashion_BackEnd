@@ -1,10 +1,11 @@
 import { NotFoundError } from '@/core/errors';
 import { User } from '@/core/user';
 import { validateId } from '@/core/utils';
-import { Controller } from '@server/decorator';
+import { Controller, Validate } from '@server/decorator';
 import RequestError from '@server/utils/errors';
 import { HttpStatus } from '@server/utils/status';
 import { Request, Response } from 'express';
+import { addressSchema } from './user.valid';
 
 @Controller()
 class UserController {
@@ -55,6 +56,16 @@ class UserController {
       throw RequestError._500();
     }
     res.JSON(HttpStatus.Accepted, image.result);
+  }
+  @Validate(addressSchema)
+  async addAddress(req: Request, res: Response) {
+    const user = new User(req.userId!);
+    const body = req.body;
+    const userAdress = await user.addNewAddress(body);
+    if (userAdress.error) {
+      throw new RequestError(userAdress.error.message, HttpStatus.BadRequest);
+    }
+    res.JSON(HttpStatus.Created, userAdress.result);
   }
 }
 

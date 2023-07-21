@@ -11,3 +11,11 @@ export const editItemCartSchema = Joi.object({
   id: Joi.string().required(),
   quantity: Joi.number().min(1).required(),
 });
+
+export const addressSchema = Joi.object({
+  city: Joi.string().required(),
+  state: Joi.string().required(),
+  phone: Joi.string().required(),
+  postalCode: Joi.number().integer().required(),
+  isPrimary: Joi.boolean().required(),
+})

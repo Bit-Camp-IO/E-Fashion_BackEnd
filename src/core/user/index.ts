@@ -6,6 +6,8 @@ import { FavItem, UserResult } from './interfaces';
 import { Cart } from './cart';
 import { CartDB } from '@/database/models/cart';
 import { removeFile } from '../utils';
+import { AddressData } from '../address/interfaces';
+import { addAdress } from '../address';
 interface UserServices {
   // addToCart(id: string): Promise<Error | null>;
   addToFav(prId: string): AsyncSafeResult<FavItem[]>;
@@ -91,7 +93,8 @@ export class User implements UserServices {
         'provider',
         'settings',
         'profileImage',
-      ]);
+        'addresses'
+      ]).populate('addresses');
       if (!user) return { error: new NotFoundError('User with id ' + this._id), result: null };
       const result: UserResult = {
         email: user.email,
@@ -100,6 +103,7 @@ export class User implements UserServices {
         provider: user.provider,
         settings: user.settings,
         profile: user.profileImage,
+        addresses: user.addresses
       };
       return { result, error: null };
     } catch (err) {
@@ -116,6 +120,14 @@ export class User implements UserServices {
       return { error: null, result: { path: path } };
     } catch (err) {
       return { error: err, result: null };
+    }
+  }
+  async addNewAddress(addressData: AddressData): AsyncSafeResult<any> {
+    try {
+      const result = await addAdress(this._id, addressData);
+      return { result, error: null };
+    } catch (err) {
+      return { error: err, result: null }
     }
   }
 }
