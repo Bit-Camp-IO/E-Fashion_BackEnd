@@ -29,7 +29,7 @@ export async function addAdress(id: string, addressData: AddressData): AsyncSafe
 
 export async function removeAddress(id: string, addressId: string) {
     try {
-        const user = await UserModel.findByIdAndUpdate(id, { $pull: { _id: addressId } }, { new: true });
+        const user = await UserModel.findByIdAndUpdate(id, { $pull: { addresses: addressId } });
         if (!user) {
             throw new NotFoundError("User with id" + id);
         }

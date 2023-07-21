@@ -67,6 +67,14 @@ class UserController {
     }
     res.JSON(HttpStatus.Created, userAdress.result);
   }
+  async removeAddress(req: Request, res: Response) {
+    const id = req.body['id'];
+    if (!validateId(id)) throw new RequestError(`id '${id}' is not valid`, HttpStatus.BadRequest);
+    const user = new User(req.userId!);
+    const error = await user.removeAddress(id);
+    if (error) throw RequestError._500();
+    res.sendStatus(HttpStatus.NoContent);
+  }
 }
 
 export default new UserController();

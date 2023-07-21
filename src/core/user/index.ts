@@ -7,7 +7,7 @@ import { Cart } from './cart';
 import { CartDB } from '@/database/models/cart';
 import { removeFile } from '../utils';
 import { AddressData } from '../address/interfaces';
-import { addAdress } from '../address';
+import { addAdress, removeAddress } from '../address';
 interface UserServices {
   // addToCart(id: string): Promise<Error | null>;
   addToFav(prId: string): AsyncSafeResult<FavItem[]>;
@@ -128,6 +128,14 @@ export class User implements UserServices {
       return { result, error: null };
     } catch (err) {
       return { error: err, result: null }
+    }
+  }
+  async removeAddress(addressId: string): Promise < Error | null > {
+    try {
+      await removeAddress(this._id, addressId);
+      return null;
+    } catch (err) {
+      return err;
     }
   }
 }

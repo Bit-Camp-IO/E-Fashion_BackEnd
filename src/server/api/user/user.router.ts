@@ -20,5 +20,6 @@ router.get('/cart', isAuth, cartController.getMyCart);
 router.patch('/cart', isAuth, cartController.editItemQ);
 
 router.post('/address', isAuth, userController.addAddress)
+router.delete('/address', isAuth, controller.removeAddress);
 
 export default router;
