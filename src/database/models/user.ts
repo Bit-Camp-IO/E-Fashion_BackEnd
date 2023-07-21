@@ -10,22 +10,28 @@ export type AuthProvider = 'LOCAL' | 'GOOGLE';
 export interface UserDB extends mongoose.Document {
   email: string;
   password: string;
+  fullName: string;
   phoneNumber: string;
   provider: AuthProvider;
   settings: SettingsDB;
-  fullName: string;
   banned: boolean;
   isVerified: boolean;
   addresses: RelationList<AddressDB>;
   cart: Relation<CartDB>;
   payments: RelationList<PaymentDB>;
   favorites: RelationList<ProductDB>;
+  profileImage: string;
 }
 
 interface SettingsDB {
   darkmode: 'dark' | 'light' | 'system';
   language: 'en' | 'ar';
 }
+
+const defaultSetting: SettingsDB = {
+  darkmode: 'system',
+  language: 'en',
+};
 
 const userSchema = new Schema<UserDB>(
   {
@@ -67,9 +73,11 @@ const userSchema = new Schema<UserDB>(
         language: {
           type: String,
           enum: ['en', 'ar'],
-          default: 'ar',
+          default: 'en',
         },
       },
+      _id: false,
+      default: defaultSetting,
     },
     addresses: [{ type: ObjectId, ref: 'Address' }],
     cart: { type: ObjectId, ref: 'Cart' },
@@ -79,6 +87,7 @@ const userSchema = new Schema<UserDB>(
       default: false,
     },
     favorites: [{ type: ObjectId, ref: 'Product', default: [] }],
+    profileImage: String,
   },
   { timestamps: true },
 );

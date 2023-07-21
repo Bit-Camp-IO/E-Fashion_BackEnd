@@ -2,12 +2,17 @@ import UserModel from '@/database/models/user';
 import { AsyncSafeResult } from '@type/common';
 import { NotFoundError } from '../errors';
 import ProductModel, { ProductDB } from '@/database/models/product';
-import { FavItem } from './interfaces';
+import { FavItem, UserResult } from './interfaces';
 import { Cart } from './cart';
 import { CartDB } from '@/database/models/cart';
+import { removeFile } from '../utils';
 interface UserServices {
   // addToCart(id: string): Promise<Error | null>;
   addToFav(prId: string): AsyncSafeResult<FavItem[]>;
+}
+
+interface ProfileImageResult {
+  path: string;
 }
 
 export class User implements UserServices {
@@ -73,6 +78,42 @@ export class User implements UserServices {
         await user.save();
       }
       return { result: new Cart(cart), error: null };
+    } catch (err) {
+      return { error: err, result: null };
+    }
+  }
+  async me(): AsyncSafeResult<UserResult> {
+    try {
+      const user = await UserModel.findById(this._id).select([
+        'email',
+        'fullName',
+        'isVerified',
+        'provider',
+        'settings',
+        'profileImage',
+      ]);
+      if (!user) return { error: new NotFoundError('User with id ' + this._id), result: null };
+      const result: UserResult = {
+        email: user.email,
+        fullName: user.fullName,
+        isVerified: user.isVerified,
+        provider: user.provider,
+        settings: user.settings,
+        profile: user.profileImage,
+      };
+      return { result, error: null };
+    } catch (err) {
+      return { error: err, result: null };
+    }
+  }
+  async updateProfileImage(path: string): AsyncSafeResult<ProfileImageResult> {
+    try {
+      const user = await UserModel.findByIdAndUpdate(this._id, { $set: { profileImage: path } });
+      if (!user) {
+        throw new NotFoundError('User With id ' + this._id);
+      }
+      await removeFile(user.profileImage);
+      return { error: null, result: { path: path } };
     } catch (err) {
       return { error: err, result: null };
     }

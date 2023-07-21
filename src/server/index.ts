@@ -5,7 +5,8 @@ import errorMiddleware from './middleware/error';
 import Config from '@/config';
 import _404Middleware from './middleware/404';
 import cors from './middleware/cors';
-import {JSONMiddleware} from './middleware/JSON';
+import { JSONMiddleware } from './middleware/JSON';
+import { join } from 'path';
 
 function createServer(): express.Express {
   const app = express();
@@ -23,6 +24,7 @@ function createServer(): express.Express {
 
 function initMiddleware(app: express.Express) {
   cors(app);
+  app.use('/u', express.static(join(__dirname, '..', '..', 'uploads')));
   app.use(express.json());
   app.use(JSONMiddleware());
 }

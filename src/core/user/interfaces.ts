@@ -24,3 +24,12 @@ export interface CartResult {
   total: number;
   totalQuantity: number;
 }
+
+export interface UserResult {
+  email: string;
+  fullName: string;
+  provider: string;
+  isVerified: boolean;
+  settings: any;
+  profile?: string;
+}

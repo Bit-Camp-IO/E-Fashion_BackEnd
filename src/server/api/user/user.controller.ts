@@ -8,8 +8,14 @@ import { Request, Response } from 'express';
 
 @Controller()
 class UserController {
-  // TODO:
-  getMe(_: Request, __: Response) {}
+  async getMe(req: Request, res: Response) {
+    const user = new User(req.userId!);
+    const userResult = await user.me();
+    if (userResult.error) {
+      throw RequestError._500();
+    }
+    res.JSON(HttpStatus.Ok, userResult.result);
+  }
 
   async getMyFav(req: Request, res: Response) {
     const user = new User(req.userId!);
@@ -38,6 +44,17 @@ class UserController {
     const error = await user.removeFav(id);
     if (error) throw RequestError._500();
     res.sendStatus(HttpStatus.NoContent);
+  }
+  async updateProfile(req: Request, res: Response) {
+    const user = new User(req.userId!);
+    const image = await user.updateProfileImage(req.file!);
+    if (image.error) {
+      if (image.error instanceof NotFoundError) {
+        throw new RequestError(image.error.message, HttpStatus.BadRequest);
+      }
+      throw RequestError._500();
+    }
+    res.JSON(HttpStatus.Accepted, image.result);
   }
 }
 
