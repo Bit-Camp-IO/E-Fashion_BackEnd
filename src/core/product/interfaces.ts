@@ -61,6 +61,9 @@ export interface ProductSortOptions {
 export interface ProductFilterOptions {
   maxPrice?: number;
   minPrice?: number;
+  categories?: string[];
+  brands?: string[];
+  brandsName?: string[];
 }
 
 export interface ProductsInfo {

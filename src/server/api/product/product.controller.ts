@@ -1,11 +1,12 @@
 // import Product from '@/core/product';
-import {NotFoundError} from '@/core/errors';
-import {ProductOptions, getProductForUser, getProductsList, productsInfo} from '@/core/product';
-import {Controller} from '@server/decorator';
+import { NotFoundError } from '@/core/errors';
+import { ProductOptions, getProductForUser, getProductsList, productsInfo } from '@/core/product';
+import { validateId } from '@/core/utils';
+import { Controller } from '@server/decorator';
 import RequestError from '@server/utils/errors';
 // import {wrappResponse} from '@server/utils/response';
-import {HttpStatus} from '@server/utils/status';
-import {Request, RequestHandler, Response} from 'express';
+import { HttpStatus } from '@server/utils/status';
+import { Request, RequestHandler, Response } from 'express';
 
 interface ProductHandler {
   getList: RequestHandler;
@@ -17,6 +18,15 @@ function queryToNumber(q?: any): number | null {
   const num = Number(q);
   if (isNaN(num)) return null;
   return num;
+}
+function queryToListId(q?: any): string[] | null {
+  if (!q) return null;
+  const list = q.split(',');
+  const listId = [];
+  for (const b of list) {
+    validateId(b) && listId.push(b);
+  }
+  return listId;
 }
 
 @Controller()
@@ -30,10 +40,17 @@ class ProductController implements ProductHandler {
       filter: {},
       sort: {},
     };
+
     const _maxPrice = queryToNumber(req.query['max-price']);
     if (_maxPrice) options.filter.maxPrice = _maxPrice;
     const _minPrice = queryToNumber(req.query['min-price']);
     if (_minPrice) options.filter.minPrice = _minPrice;
+    const categories = queryToListId(req.query['categories']);
+    if (categories && categories.length > 0) options.filter.categories = categories;
+    const brands = queryToListId(req.query['brands']);
+    if (brands && brands.length > 0) options.filter.brands = brands;
+    const brandsName = queryToListId(req.query['brandsName']);
+    if (brandsName && brandsName.length > 0) options.filter.brandsName = brandsName;
 
     const products = await getProductsList(options);
     if (products.error) {

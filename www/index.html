@@ -96,7 +96,7 @@
       $page.innerHTML = ''
       const limit = $limit.value
       const page = $pageNumber.value
-      fetch(`http://localhost:8080/api/product/list?limit=${limit}&page=${page}&min-price=100`)
+      fetch(`http://localhost:8080/api/product/list?limit=${limit}&page=${page}&brands=64b5ba55b6d7a2ff7545dace`)
         .then(d => d.json())
         .then(p => {
           console.log(p)

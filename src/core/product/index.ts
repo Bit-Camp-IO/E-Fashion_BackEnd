@@ -85,6 +85,7 @@ export async function getProductsList(
     };
     return { result, error: null };
   } catch (error) {
+    console.log(error);
     return { result: null, error };
   }
 }
@@ -119,10 +120,20 @@ export async function removeProduct(id: string): Promise<Error | null> {
 export async function productsInfo(): AsyncSafeResult<ProductsInfo> {
   try {
     const productsInfo = await ProductModel.aggregate([
-      { $group: { _id: null, maxPrice: { $max: '$price' }, minPrice: { $min: '$price' } } },
+      { $unwind: { path: '$sizes', preserveNullAndEmptyArrays: true } },
+      { $unwind: { path: '$colors', preserveNullAndEmptyArrays: true } },
+      {
+        $group: {
+          _id: null,
+          maxPrice: { $max: '$price' },
+          minPrice: { $min: '$price' },
+          sizes: { $addToSet: '$sizes' },
+          colors: { $addToSet: { name: '$colors.name', hex: '$colors.hex' } },
+        },
+      },
+      { $project: { _id: 0 } },
     ]);
     const info = productsInfo[0];
-    delete info._id;
     return { result: info, error: null };
   } catch (err) {
     return { error: err, result: null };
@@ -161,5 +172,14 @@ function _filter(options?: ProductFilterOptions) {
   if (!options) return filter;
   if (options.maxPrice) filter.price = { $lte: options.maxPrice };
   if (options.minPrice) filter.price = { ...filter.price, $gte: options.minPrice };
+  if (options.categories && options.categories.length > 0) {
+    filter.categories = { $in: options.categories };
+  }
+  if (options.brands && options.brands.length > 0) {
+    filter.brand = { $in: options.brands };
+  }
+  if (options.brandsName && options.brandsName.length > 0) {
+    filter.brand = { $in: options.brands };
+  }
   return filter;
 }
