@@ -32,7 +32,6 @@ class ManagerController {
     const body: AdminBody = req.body;
     const { result: manager, error } = await getAdminServices(req.userId!, AdminRole.MANAGER);
     if (error) {
-      console.log('1: ', error);
       if (error instanceof UnauthorizedError) {
         throw new RequestError(error.message, HttpStatus.Unauthorized);
       }

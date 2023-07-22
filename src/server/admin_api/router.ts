@@ -6,6 +6,7 @@ import { isAuth } from '@server/middleware/isAuth';
 import productController from './controllers/product';
 import categoryController from './controllers/category';
 import brandController from './controllers/brand';
+import { UplaodCategoryPic, UplaodProductsPics } from '@server/middleware/upload';
 
 const router = Router();
 
@@ -28,11 +29,11 @@ router.get('/user/:id', isAuth, adminController.getOneUser); // *
 router.post('/user/:id/ban', isAuth, adminController.banUser);
 router.post('/user/:id/unban', isAuth, adminController.unBanUser);
 
-router.post('/product/create', isAuth, productController.create);
+router.post('/product/create', isAuth, UplaodProductsPics(), productController.create);
 router.put('/product/:id/edit', isAuth, productController.editProduct);
 router.delete('/product/:id/remove', isAuth, productController.remove);
 
-router.post('/category/create', isAuth, categoryController.create);
+router.post('/category/create', isAuth, UplaodCategoryPic(), categoryController.create);
 router.post('/category/:id/add-sub', isAuth, categoryController.createSub);
 router.put('/category/:id/edit', isAuth, categoryController.editCategory);
 router.delete('/category/:id/remove', isAuth, categoryController.remove);

@@ -25,6 +25,7 @@ class ProductController {
       price: body.price,
       sizes: body.sizes,
       title: body.title,
+      imagesUrl: body.imagesPath,
     };
     const product = await admin.addProduct(productData);
     if (product.error) {
@@ -37,7 +38,6 @@ class ProductController {
     const admin = req.admin as Admin;
     const id = req.params['id'] as string;
     const error = await admin.removeProduct(id);
-    console.log(error);
     if (error) {
       if (error instanceof NotFoundError)
         throw new RequestError(error.message, HttpStatus.NotFound);

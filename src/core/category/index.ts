@@ -1,7 +1,10 @@
-import CategoryModel from '@/database/models/categorie';
-import { CategoryData, CategoryDoc, CategoryResult } from './interfaces';
+import CategoryModel, { CategorieDB } from '@/database/models/categorie';
+import { CategoryData, CategoryResult } from './interfaces';
 import { AsyncSafeResult } from '@type/common';
 import { DuplicateError, NotFoundError } from '../errors';
+import { removeFile } from '../utils';
+import { join } from 'path';
+import Config from '@/config';
 
 export async function createCategory(
   data: CategoryData,
@@ -13,6 +16,7 @@ export async function createCategory(
       description: data.description,
       isMain: true,
       name: data.name,
+      imageURL: data.image,
     });
     return { result: _formatCategory(category), error: null };
   } catch (err) {
@@ -46,6 +50,7 @@ export async function addSubCategory(
       description: data.description,
       isMain: false,
       name: data.name,
+      imageURL: data.image,
     });
     const category = await CategoryModel.findByIdAndUpdate(id, {
       $push: { subCategories: subCategory },
@@ -89,6 +94,7 @@ export async function removeCategory(id: string): Promise<Error | null> {
   try {
     const category = await CategoryModel.findById(id);
     if (!category) return new NotFoundError('Category with ' + id);
+    await removeFile(join(Config.CatImagesDir, category.imageURL));
     await CategoryModel.findByIdAndRemove(id);
     return null;
   } catch (err) {
@@ -96,12 +102,12 @@ export async function removeCategory(id: string): Promise<Error | null> {
   }
 }
 
-function _formatCategory(cDoc: CategoryDoc): CategoryResult {
+function _formatCategory(cDoc: CategorieDB): CategoryResult {
   return {
     id: cDoc.id.toString(),
     name: cDoc.name,
     description: cDoc.description || '',
-    imagesURL: cDoc.imagesURL || '',
+    imageURL: cDoc.imageURL,
     subCategories: cDoc.subCategories
       ? cDoc.subCategories.map(category => _formatCategory(category))
       : [],

@@ -47,7 +47,6 @@ export class Cart {
       const item = this.cart.items.find(i => i.product.toString() === id);
       if (!item) return new NotFoundError('Product with id ' + id);
       (this.cart.items as Types.DocumentArray<any>).pull({ product: id });
-      console.log(this.cart.items);
       if (this.cart.items.length === 1) {
         this.cart.totalQuantity = 0;
         this.cart.totalPrice = 0;

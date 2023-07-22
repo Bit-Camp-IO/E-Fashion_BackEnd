@@ -1,19 +1,19 @@
-import {AsyncSafeResult} from '@type/common';
+import { AsyncSafeResult } from '@type/common';
 
 export interface ProductItemApi {
   id: string;
   title: string;
-  description: string;
   oldPrice: number;
   price: number;
   discount: number;
-  colors: {name: string; hex: string}[];
+  colors: { name: string; hex: string }[];
   sizes: string[];
   imagesUrl: string[];
-  brand: string;
   isNew: boolean;
-  rate: number;
   available: boolean;
+  rate: number;
+  brand: string;
+  description: string;
 }
 
 export interface ProductItemsApiList {
@@ -28,15 +28,16 @@ export interface ProductData {
   title: string;
   description: string;
   price: number;
-  colors: {name: string; hex: string}[];
+  colors: { name: string; hex: string }[];
   sizes: string[];
+  imagesUrl: string[];
 }
 
 export interface ProductResult {
   title: string;
   description: string;
   price: number;
-  colors: {name: string; hex: string}[];
+  colors: { name: string; hex: string }[];
   sizes: string[];
   id: string;
 }

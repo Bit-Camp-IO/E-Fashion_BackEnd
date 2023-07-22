@@ -18,6 +18,7 @@ class CategoryController {
     const categoryData: CategoryData = {
       name: body.name,
       description: body.description,
+      image: body.image,
     };
     const category = await admin.addCategory(categoryData);
     if (category.error) {
@@ -37,6 +38,7 @@ class CategoryController {
     const categoryData: CategoryData = {
       name: body.name,
       description: body.description,
+      image: body.image,
     };
     const category = await admin.addSubCategory(categoryData, id);
     if (category.error) {

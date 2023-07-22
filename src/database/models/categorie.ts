@@ -2,10 +2,10 @@ import mongoose, { Schema } from 'mongoose';
 import { AdminDB } from './admin';
 import { ObjectId, Relation, RelationList } from '@type/database';
 
-export interface CategorieDB {
+export interface CategorieDB extends mongoose.Document {
   name: string;
   description?: string;
-  imagesURL: string[];
+  imageURL: string;
   isMain: boolean;
   subCategories: RelationList<CategorieDB>;
   addedBy: Relation<AdminDB>;
@@ -21,8 +21,8 @@ const categorySchema = new Schema<CategorieDB>(
     description: {
       type: String,
     },
-    imagesURL: {
-      type: [String],
+    imageURL: {
+      type: String,
     },
     isMain: {
       type: Boolean,

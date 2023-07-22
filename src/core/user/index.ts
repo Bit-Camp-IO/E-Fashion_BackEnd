@@ -8,6 +8,8 @@ import { CartDB } from '@/database/models/cart';
 import { removeFile } from '../utils';
 import { AddressData } from '../address/interfaces';
 import { addAdress, removeAddress } from '../address';
+import { join } from 'path';
+import Config from '@/config';
 interface UserServices {
   // addToCart(id: string): Promise<Error | null>;
   addToFav(prId: string): AsyncSafeResult<FavItem[]>;
@@ -86,15 +88,17 @@ export class User implements UserServices {
   }
   async me(): AsyncSafeResult<UserResult> {
     try {
-      const user = await UserModel.findById(this._id).select([
-        'email',
-        'fullName',
-        'isVerified',
-        'provider',
-        'settings',
-        'profileImage',
-        'addresses'
-      ]).populate('addresses');
+      const user = await UserModel.findById(this._id)
+        .select([
+          'email',
+          'fullName',
+          'isVerified',
+          'provider',
+          'settings',
+          'profileImage',
+          'addresses',
+        ])
+        .populate('addresses');
       if (!user) return { error: new NotFoundError('User with id ' + this._id), result: null };
       const result: UserResult = {
         email: user.email,
@@ -103,7 +107,7 @@ export class User implements UserServices {
         provider: user.provider,
         settings: user.settings,
         profile: user.profileImage,
-        addresses: user.addresses
+        addresses: user.addresses,
       };
       return { result, error: null };
     } catch (err) {
@@ -116,7 +120,7 @@ export class User implements UserServices {
       if (!user) {
         throw new NotFoundError('User With id ' + this._id);
       }
-      await removeFile(user.profileImage);
+      await removeFile(join(Config.ProfileImagesDir + user.profileImage));
       return { error: null, result: { path: path } };
     } catch (err) {
       return { error: err, result: null };
@@ -127,10 +131,10 @@ export class User implements UserServices {
       const result = await addAdress(this._id, addressData);
       return { result, error: null };
     } catch (err) {
-      return { error: err, result: null }
+      return { error: err, result: null };
     }
   }
-  async removeAddress(addressId: string): Promise < Error | null > {
+  async removeAddress(addressId: string): Promise<Error | null> {
     try {
       await removeAddress(this._id, addressId);
       return null;
@@ -139,14 +143,3 @@ export class User implements UserServices {
     }
   }
 }
-
-// export async function getUser(id: string): AsyncSafeResult<User> {
-//   try {
-//     const userDoc = await UserModel.findById(id);
-//     if (!userDoc) return { error: new NotFoundError('User with id ' + id), result: null };
-//     const user = new User(userDoc);
-//     return { error: null, result: user };
-//   } catch (err) {
-//     return { error: err, result: null };
-//   }
-// }

@@ -24,7 +24,7 @@ function createServer(): express.Express {
 
 function initMiddleware(app: express.Express) {
   cors(app);
-  app.use('/u', express.static(join(__dirname, '..', '..', 'uploads')));
+  app.use('/api/u', express.static(join(__dirname, '..', '..', 'uploads')));
   app.use(express.json());
   app.use(JSONMiddleware());
 }

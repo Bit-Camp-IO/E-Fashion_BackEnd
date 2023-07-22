@@ -1,6 +1,5 @@
 import { isValidObjectId } from 'mongoose';
 import fs from 'fs/promises';
-import { join } from 'path';
 
 export function validateId(id: string): boolean {
   return isValidObjectId(id);
@@ -8,7 +7,7 @@ export function validateId(id: string): boolean {
 
 export async function removeFile(path: string): Promise<void> {
   try {
-    await fs.unlink(join(__dirname, '..', '..', 'uploads' + path));
+    await fs.unlink(path);
   } catch (err) {
     return;
   }
