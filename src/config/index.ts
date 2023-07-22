@@ -10,5 +10,6 @@ const Config = {
   GOOGLE_ID: process.env['GOOGLE_CLIENT_ID']!,
   GOOGLE_SECRET: process.env['GOOGLE_CLIENT_SECRET']!,
   GOOGLE_REDIRECT: 'http://localhost:8080/api/auth/google/redirect',
+  ENCRYPTION_KEY: process.env['ENCRYPTION_KEY']!,
 };
 export default Config;
