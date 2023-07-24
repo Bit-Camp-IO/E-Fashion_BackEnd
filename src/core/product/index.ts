@@ -85,7 +85,6 @@ export async function getProductsList(
     };
     return { result, error: null };
   } catch (error) {
-    console.log(error);
     return { result: null, error };
   }
 }
@@ -174,6 +173,9 @@ function _filter(options?: ProductFilterOptions) {
   if (options.minPrice) filter.price = { ...filter.price, $gte: options.minPrice };
   if (options.categories && options.categories.length > 0) {
     filter.categories = { $in: options.categories };
+  }
+  if (options.search) {
+    filter.$or = [{ $text: { $search: options.search } }];
   }
   if (options.brands && options.brands.length > 0) {
     filter.brand = { $in: options.brands };

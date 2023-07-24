@@ -7,6 +7,7 @@ import { CategoryData } from '@/core/category/interfaces';
 import RequestError from '@server/utils/errors';
 import { HttpStatus } from '@server/utils/status';
 import { DuplicateError, NotFoundError } from '@/core/errors';
+import { validateId } from '@/core/utils';
 
 @Controller()
 class CategoryController {
@@ -75,6 +76,21 @@ class CategoryController {
       throw RequestError._500();
     }
     res.sendStatus(HttpStatus.NoContent);
+  }
+  @Guard(AdminRole.ADMIN)
+  async addProducts(req: Request, res: Response) {
+    const admin = req.admin as Admin;
+    const ids = req.body['productsid'];
+    for (const id of ids) {
+      if (!validateId) throw new RequestError('Invalid id' + id, HttpStatus.BadRequest);
+    }
+    const cat = await admin.addProductsToCategory(req.params['id']!, ids);
+    if (cat.error) {
+      if (cat.error instanceof NotFoundError)
+        throw new RequestError(cat.error.message, HttpStatus.BadRequest);
+      throw RequestError._500();
+    }
+    res.JSON(HttpStatus.Accepted, cat);
   }
 }
 

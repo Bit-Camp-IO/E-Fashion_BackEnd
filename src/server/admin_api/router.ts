@@ -33,10 +33,14 @@ router.post('/product/create', isAuth, UplaodProductsPics(), productController.c
 router.put('/product/:id/edit', isAuth, productController.editProduct);
 router.delete('/product/:id/remove', isAuth, productController.remove);
 
-router.post('/category/create', isAuth, UplaodCategoryPic(), categoryController.create);
-router.post('/category/:id/add-sub', isAuth, categoryController.createSub);
-router.put('/category/:id/edit', isAuth, categoryController.editCategory);
-router.delete('/category/:id/remove', isAuth, categoryController.remove);
+const categoryRouter = Router();
+
+categoryRouter.post('/create', isAuth, UplaodCategoryPic(), categoryController.create);
+categoryRouter.post('/:id/add-sub', isAuth, categoryController.createSub);
+categoryRouter.put('/:id/edit', isAuth, categoryController.editCategory);
+categoryRouter.delete('/:id/remove', isAuth, categoryController.remove);
+categoryRouter.post('/:id/add-products', isAuth, categoryController.addProducts);
+router.use('/category', categoryRouter);
 
 router.post('/brand/create', isAuth, brandController.create);
 router.put('/brand/:id/edit', isAuth, brandController.editBrand);

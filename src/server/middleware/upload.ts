@@ -51,6 +51,10 @@ export function UplaodProductsPics(): RequestHandler {
       imagesPath: [],
     };
     try {
+      if (req.get('Content-type') === 'application/json') {
+        next();
+        return;
+      }
       const bb = busboy({ headers: req.headers, limits: { fileSize: 300000 } });
       bb.on('error', err => {
         next(err);

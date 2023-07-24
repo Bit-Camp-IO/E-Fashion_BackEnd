@@ -13,7 +13,13 @@ import { DuplicateError, NotFoundError, PermissionError } from '../errors';
 import UserModel, { UserDB } from '@/database/models/user';
 import { Document } from 'mongoose';
 import { CategoryData, CategoryResult } from '../category/interfaces';
-import { addSubCategory, createCategory, removeCategory, updateCategory } from '../category';
+import {
+  AddProductToCategory,
+  addSubCategory,
+  createCategory,
+  removeCategory,
+  updateCategory,
+} from '../category';
 import { BrandData, BrandResult } from '../brand/interfaces';
 import { createBrand, removeBrand, updateBrand } from '../brand';
 interface AdminService {
@@ -69,11 +75,11 @@ export class Admin implements AdminService {
   }
 
   async addCategory(data: CategoryData): AsyncSafeResult<CategoryResult> {
-    try {
-      return createCategory(data, this._id);
-    } catch (err) {
-      return { error: err, result: null };
-    }
+    return createCategory(data, this._id);
+  }
+
+  async addProductsToCategory(catId: string, proIds: string[]): AsyncSafeResult<CategoryResult> {
+    return AddProductToCategory(catId, proIds);
   }
 
   async addSubCategory(data: CategoryData, id: string): AsyncSafeResult<CategoryResult> {

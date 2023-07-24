@@ -45,12 +45,14 @@ class ProductController implements ProductHandler {
     if (_maxPrice) options.filter.maxPrice = _maxPrice;
     const _minPrice = queryToNumber(req.query['min-price']);
     if (_minPrice) options.filter.minPrice = _minPrice;
-    const categories = queryToListId(req.query['categories']);
-    if (categories && categories.length > 0) options.filter.categories = categories;
-    const brands = queryToListId(req.query['brands']);
-    if (brands && brands.length > 0) options.filter.brands = brands;
-    const brandsName = queryToListId(req.query['brandsName']);
-    if (brandsName && brandsName.length > 0) options.filter.brandsName = brandsName;
+    const _categories = queryToListId(req.query['categories']);
+    if (_categories && _categories.length > 0) options.filter.categories = _categories;
+    const _brands = queryToListId(req.query['brands']);
+    if (_brands && _brands.length > 0) options.filter.brands = _brands;
+    const _brandsName = queryToListId(req.query['brandsName']);
+    if (_brandsName && _brandsName.length > 0) options.filter.brandsName = _brandsName;
+    const _search = req.query['search'] as string;
+    if (_search) options.filter.search = _search;
 
     const products = await getProductsList(options);
     if (products.error) {

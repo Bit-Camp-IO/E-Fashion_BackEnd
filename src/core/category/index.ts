@@ -5,6 +5,7 @@ import { DuplicateError, NotFoundError } from '../errors';
 import { removeFile } from '../utils';
 import { join } from 'path';
 import Config from '@/config';
+import ProductModel from '@/database/models/product';
 
 export async function createCategory(
   data: CategoryData,
@@ -87,6 +88,21 @@ export async function updateCategory(
     return { result: _formatCategory(category), error: null };
   } catch (err) {
     return { error: err, result: null };
+  }
+}
+
+export async function AddProductToCategory(
+  catId: string,
+  prodIds: string[],
+): AsyncSafeResult<CategoryResult> {
+  try {
+    const cat = await CategoryModel.findById(catId);
+    console.log(cat);
+    if (!cat) return { error: new NotFoundError('Cat with ' + catId), result: null };
+    await ProductModel.updateMany({ _id: { $in: prodIds } }, { $push: { categories: cat._id } });
+    return { result: _formatCategory(cat), error: null };
+  } catch (error) {
+    return { error, result: null };
   }
 }
 

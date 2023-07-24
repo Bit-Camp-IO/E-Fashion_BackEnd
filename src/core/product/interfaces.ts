@@ -64,6 +64,7 @@ export interface ProductFilterOptions {
   categories?: string[];
   brands?: string[];
   brandsName?: string[];
+  search?: string;
 }
 
 export interface ProductsInfo {

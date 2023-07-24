@@ -33,7 +33,7 @@ const productSchema = new Schema<ProductDB>(
     imagesURL: [String],
     colors: [{ type: { name: String, hex: String } }],
     sizes: [String],
-    brandName: String,
+    brandName: { type: String },
     brand: { type: ObjectId, ref: 'Brand' },
     stock: { type: Number, default: 0 },
     rate: { type: Number, default: 0 },
@@ -48,6 +48,8 @@ const productSchema = new Schema<ProductDB>(
   },
   { timestamps: true },
 );
+
+productSchema.index({ title: 'text' });
 
 const ProductModel = mongoose.model('Product', productSchema);
 export default ProductModel;
