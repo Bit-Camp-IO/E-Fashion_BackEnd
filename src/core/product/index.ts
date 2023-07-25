@@ -1,7 +1,6 @@
 import ProductModel, { ProductDB } from '@/database/models/product';
 import { AsyncSafeResult } from '@type/common';
 import { NotFoundError } from '../errors';
-import { Document } from 'mongoose';
 import {
   CreateProductReturn,
   ProductData,
@@ -139,9 +138,7 @@ export async function productsInfo(): AsyncSafeResult<ProductsInfo> {
   }
 }
 
-interface ProductDoc extends Document, ProductDB {}
-
-function _formatProduct(pDoc: ProductDoc): ProductItemApi {
+function _formatProduct(pDoc: ProductDB): ProductItemApi {
   return {
     id: pDoc._id.toString(),
     title: pDoc.title,

@@ -80,7 +80,7 @@ class CategoryController {
   @Guard(AdminRole.ADMIN)
   async addProducts(req: Request, res: Response) {
     const admin = req.admin as Admin;
-    const ids = req.body['productsid'];
+    const ids = req.body['productsId'];
     for (const id of ids) {
       if (!validateId) throw new RequestError('Invalid id' + id, HttpStatus.BadRequest);
     }
@@ -91,6 +91,20 @@ class CategoryController {
       throw RequestError._500();
     }
     res.JSON(HttpStatus.Accepted, cat);
+  }
+
+  @Guard(AdminRole.ADMIN)
+  async removeProducts(req: Request, res: Response) {
+    const admin = req.admin as Admin;
+    const ids = req.body['productsId'];
+    for (const id of ids) {
+      if (!validateId) throw new RequestError('Invalid id' + id, HttpStatus.BadRequest);
+    }
+    const error = await admin.removeProductsFromCategory(req.params['id']!, ids);
+    if (error) {
+      throw RequestError._500();
+    }
+    res.sendStatus(HttpStatus.NoContent);
   }
 }
 

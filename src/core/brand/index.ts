@@ -2,6 +2,7 @@ import BrandModel from '@/database/models/brand';
 import { BrandData, BrandDoc, BrandResult } from './interfaces';
 import { AsyncSafeResult } from '@type/common';
 import { DuplicateError, NotFoundError } from '../errors';
+import ProductModel from '@/database/models/product';
 
 export async function createBrand(data: BrandData): AsyncSafeResult<BrandResult> {
   try {
@@ -44,7 +45,7 @@ export async function updateBrand(
     return { error: err, result: null };
   }
 }
-// TODO: Remove logo from fs
+
 export async function removeBrand(id: string): Promise<Error | null> {
   try {
     const brand = await BrandModel.findById(id);
@@ -53,6 +54,38 @@ export async function removeBrand(id: string): Promise<Error | null> {
     return null;
   } catch (err) {
     return err;
+  }
+}
+
+export async function addProductsToBrand(
+  brandId: string,
+  prodIds: string[],
+): AsyncSafeResult<BrandResult> {
+  try {
+    const brand = await BrandModel.findById(brandId);
+    if (!brand) return { error: new NotFoundError('Brand with ' + brandId), result: null };
+    await ProductModel.updateMany(
+      { _id: { $in: prodIds } },
+      { $set: { brand: brand._id, brandName: brand.name } },
+    );
+    return { result: _formatBrand(brand), error: null };
+  } catch (error) {
+    return { error, result: null };
+  }
+}
+
+export async function removeProductsFromBrand(
+  brandId: string,
+  prodIds: string[],
+): Promise<Error | null> {
+  try {
+    await ProductModel.updateMany(
+      { $and: [{ _id: { $in: prodIds } }, { brand: brandId }] },
+      { $unset: { brand: '', brandName: '' } },
+    );
+    return null;
+  } catch (error) {
+    return error;
   }
 }
 

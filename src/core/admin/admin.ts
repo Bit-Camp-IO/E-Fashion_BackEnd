@@ -1,10 +1,5 @@
-import {
-  ProductData,
-  ProductResult,
-  createProduct,
-  removeProduct,
-  updateProduct,
-} from '../product';
+import * as Product from '../product';
+import { ProductData, ProductResult } from '../product/interfaces';
 import { AsyncSafeResult } from '@type/common';
 import { AdminData, AdminResult } from './interfaces';
 import AdminModel from '@/database/models/admin';
@@ -13,15 +8,15 @@ import { DuplicateError, NotFoundError, PermissionError } from '../errors';
 import UserModel, { UserDB } from '@/database/models/user';
 import { Document } from 'mongoose';
 import { CategoryData, CategoryResult } from '../category/interfaces';
-import {
-  AddProductToCategory,
-  addSubCategory,
-  createCategory,
-  removeCategory,
-  updateCategory,
-} from '../category';
+import * as Category from '../category';
 import { BrandData, BrandResult } from '../brand/interfaces';
-import { createBrand, removeBrand, updateBrand } from '../brand';
+import {
+  addProductsToBrand,
+  createBrand,
+  removeBrand,
+  updateBrand,
+  removeProductsFromBrand,
+} from '../brand';
 interface AdminService {
   addProduct(data: ProductData): AsyncSafeResult<ProductResult>;
   removeProduct(id: string): void;
@@ -34,19 +29,11 @@ interface AdminService {
 export class Admin implements AdminService {
   constructor(protected _id: string, protected _role: string) {}
   async addProduct(data: ProductData): AsyncSafeResult<ProductResult> {
-    try {
-      return await createProduct(data, this._id);
-    } catch (err) {
-      return { error: err, result: null };
-    }
+    return await Product.createProduct(data, this._id);
   }
-  // TODO: Admin Services
+
   async editProduct(id: string, productData: Partial<ProductData>): AsyncSafeResult<ProductData> {
-    try {
-      return await updateProduct(id, productData);
-    } catch (err) {
-      return { error: err, result: null };
-    }
+    return await Product.updateProduct(id, productData);
   }
 
   async getAllUsers(): AsyncSafeResult<Document<UserDB>[]> {
@@ -71,35 +58,31 @@ export class Admin implements AdminService {
   }
 
   async removeProduct(id: string): Promise<Error | null> {
-    return removeProduct(id);
+    return Product.removeProduct(id);
   }
 
   async addCategory(data: CategoryData): AsyncSafeResult<CategoryResult> {
-    return createCategory(data, this._id);
+    return Category.createCategory(data, this._id);
   }
 
   async addProductsToCategory(catId: string, proIds: string[]): AsyncSafeResult<CategoryResult> {
-    return AddProductToCategory(catId, proIds);
+    return Category.AddProductToCategory(catId, proIds);
+  }
+
+  async removeProductsFromCategory(catId: string, proIds: string[]): Promise<Error | null> {
+    return Category.removeProductFromCategory(catId, proIds);
   }
 
   async addSubCategory(data: CategoryData, id: string): AsyncSafeResult<CategoryResult> {
-    try {
-      return addSubCategory(data, id, this._id);
-    } catch (err) {
-      return { error: err, result: null };
-    }
+    return Category.addSubCategory(data, id, this._id);
   }
 
   async editCategory(data: Partial<CategoryData>, id: string): AsyncSafeResult<CategoryResult> {
-    try {
-      return updateCategory(id, data);
-    } catch (err) {
-      return { error: err, result: null };
-    }
+    return Category.updateCategory(id, data);
   }
 
   async removeCategory(id: string): Promise<Error | null> {
-    return removeCategory(id);
+    return Category.removeCategory(id);
   }
 
   async banUser(id: string): Promise<Error | null> {
@@ -137,23 +120,23 @@ export class Admin implements AdminService {
   }
 
   async addBrand(data: BrandData): AsyncSafeResult<BrandResult> {
-    try {
-      return createBrand(data);
-    } catch (err) {
-      return { error: err, result: null };
-    }
+    return createBrand(data);
   }
 
   async editBrand(data: Partial<BrandData>, id: string): AsyncSafeResult<BrandResult> {
-    try {
-      return updateBrand(id, data);
-    } catch (err) {
-      return { error: err, result: null };
-    }
+    return updateBrand(id, data);
   }
 
   async removeBrand(id: string): Promise<Error | null> {
     return removeBrand(id);
+  }
+
+  async addProductsToBrand(brandId: string, prodIds: string[]): AsyncSafeResult<BrandResult> {
+    return addProductsToBrand(brandId, prodIds);
+  }
+
+  async removeProductsFromBrand(brandId: string, prodIds: string[]): Promise<Error | null> {
+    return removeProductsFromBrand(brandId, prodIds);
   }
 }
 

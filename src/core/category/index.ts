@@ -97,12 +97,26 @@ export async function AddProductToCategory(
 ): AsyncSafeResult<CategoryResult> {
   try {
     const cat = await CategoryModel.findById(catId);
-    console.log(cat);
-    if (!cat) return { error: new NotFoundError('Cat with ' + catId), result: null };
-    await ProductModel.updateMany({ _id: { $in: prodIds } }, { $push: { categories: cat._id } });
+    if (!cat) return { error: new NotFoundError('Catergory with ' + catId), result: null };
+    await ProductModel.updateMany(
+      { _id: { $in: prodIds } },
+      { $addToSet: { categories: cat._id } },
+    );
     return { result: _formatCategory(cat), error: null };
   } catch (error) {
     return { error, result: null };
+  }
+}
+
+export async function removeProductFromCategory(
+  catId: string,
+  prodIds: string[],
+): Promise<Error | null> {
+  try {
+    await ProductModel.updateMany({ _id: { $in: prodIds } }, { $pull: { categories: catId } });
+    return null;
+  } catch (error) {
+    return error;
   }
 }
 

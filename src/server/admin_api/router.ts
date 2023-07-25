@@ -34,16 +34,20 @@ router.put('/product/:id/edit', isAuth, productController.editProduct);
 router.delete('/product/:id/remove', isAuth, productController.remove);
 
 const categoryRouter = Router();
-
 categoryRouter.post('/create', isAuth, UplaodCategoryPic(), categoryController.create);
 categoryRouter.post('/:id/add-sub', isAuth, categoryController.createSub);
 categoryRouter.put('/:id/edit', isAuth, categoryController.editCategory);
 categoryRouter.delete('/:id/remove', isAuth, categoryController.remove);
 categoryRouter.post('/:id/add-products', isAuth, categoryController.addProducts);
+categoryRouter.delete('/:id/remove-products', isAuth, categoryController.removeProducts);
 router.use('/category', categoryRouter);
 
-router.post('/brand/create', isAuth, brandController.create);
-router.put('/brand/:id/edit', isAuth, brandController.editBrand);
-router.delete('/brand/:id/remove', isAuth, brandController.remove);
+const brandRouter = Router();
+brandRouter.post('/create', isAuth, brandController.create);
+brandRouter.put('/:id/edit', isAuth, brandController.editBrand);
+brandRouter.delete('/:id/remove', isAuth, brandController.remove);
+brandRouter.post('/:id/add-products', isAuth, brandController.addProducts);
+brandRouter.delete('/:id/remove-products', isAuth, brandController.removeProducts);
+router.use('/brand', brandRouter);
 
 export default router;

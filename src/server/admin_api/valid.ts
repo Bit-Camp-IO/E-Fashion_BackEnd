@@ -87,9 +87,9 @@ export interface CreateBrandSchema {
 
 export const createBrandSchema = Joi.object({
   name: Joi.string().required(),
-  description: Joi.string().default('').optional(),
-  link: Joi.string().uri().default(''),
-  logo: Joi.string().uri().default(''),
+  description: Joi.string().required(),
+  link: Joi.string().uri().required(),
+  logo: Joi.string().uri().required(),
 });
 
 export const updateBrandSchema = Joi.object({

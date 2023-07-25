@@ -1,7 +1,7 @@
-import {AdminRole, getAdminServices} from '@/core/admin';
-import {UnauthorizedError} from '@/core/errors';
+import { AdminRole, getAdminServices } from '@/core/admin';
+import { UnauthorizedError } from '@/core/errors';
 import RequestError from '@server/utils/errors';
-import {HttpStatus} from '@server/utils/status';
+import { HttpStatus } from '@server/utils/status';
 
 export const Guard = (role: AdminRole) => {
   return (_: any, __: string, descriptor: PropertyDescriptor) => {

@@ -7,6 +7,7 @@ import { BrandData } from '@/core/brand/interfaces';
 import RequestError from '@server/utils/errors';
 import { HttpStatus } from '@server/utils/status';
 import { DuplicateError, NotFoundError } from '@/core/errors';
+import { validateId } from '@/core/utils';
 
 @Controller()
 class BrandController {
@@ -41,11 +42,12 @@ class BrandController {
       description: body.description,
       link: body.link,
     };
-    const product = await admin.editBrand(productData, id);
-    if (product.error) {
+    const brand = await admin.editBrand(productData, id);
+    if (brand.error) {
+      console.log(brand.error);
       throw RequestError._500();
     }
-    res.JSON(HttpStatus.Ok, product.result);
+    res.JSON(HttpStatus.Ok, brand.result);
   }
 
   @Guard(AdminRole.ADMIN)
@@ -56,6 +58,36 @@ class BrandController {
     if (error) {
       if (error instanceof NotFoundError)
         throw new RequestError(error.message, HttpStatus.NotFound);
+      throw RequestError._500();
+    }
+    res.sendStatus(HttpStatus.NoContent);
+  }
+
+  @Guard(AdminRole.ADMIN)
+  async addProducts(req: Request, res: Response) {
+    const admin = req.admin as Admin;
+    const ids = req.body['productsId'];
+    for (const id of ids) {
+      if (!validateId) throw new RequestError('Invalid id' + id, HttpStatus.BadRequest);
+    }
+    const brand = await admin.addProductsToBrand(req.params['id']!, ids);
+    if (brand.error) {
+      if (brand.error instanceof NotFoundError)
+        throw new RequestError(brand.error.message, HttpStatus.BadRequest);
+      throw RequestError._500();
+    }
+    res.JSON(HttpStatus.Accepted, brand);
+  }
+
+  @Guard(AdminRole.ADMIN)
+  async removeProducts(req: Request, res: Response) {
+    const admin = req.admin as Admin;
+    const ids = req.body['productsId'];
+    for (const id of ids) {
+      if (!validateId) throw new RequestError('Invalid id' + id, HttpStatus.BadRequest);
+    }
+    const error = await admin.removeProductsFromBrand(req.params['id']!, ids);
+    if (error) {
       throw RequestError._500();
     }
     res.sendStatus(HttpStatus.NoContent);
