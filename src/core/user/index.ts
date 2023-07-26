@@ -10,6 +10,8 @@ import { AddressData } from '../address/interfaces';
 import { addAdress, removeAddress } from '../address';
 import { join } from 'path';
 import Config from '@/config';
+import { PaymentData } from '../payment/interface';
+import Payment from '../payment';
 interface UserServices {
   // addToCart(id: string): Promise<Error | null>;
   addToFav(prId: string): AsyncSafeResult<FavItem[]>;
@@ -138,6 +140,15 @@ export class User implements UserServices {
     try {
       await removeAddress(this._id, addressId);
       return null;
+    } catch (err) {
+      return err;
+    }
+  }
+
+  async createPayment(paymentData: PaymentData): AsyncSafeResult<any> {
+    try {
+      const result = await Payment.create(paymentData, this._id);
+      return { result, error: null };
     } catch (err) {
       return err;
     }

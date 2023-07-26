@@ -22,4 +22,5 @@ router.patch('/cart', isAuth, cartController.editItemQ);
 router.post('/address', isAuth, userController.addAddress)
 router.delete('/address', isAuth, controller.removeAddress);
 
+router.post('/payment', isAuth, userController.createPayment);
 export default router;

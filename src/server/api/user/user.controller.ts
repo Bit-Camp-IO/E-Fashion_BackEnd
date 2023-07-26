@@ -75,6 +75,16 @@ class UserController {
     if (error) throw RequestError._500();
     res.sendStatus(HttpStatus.NoContent);
   }
+
+  async createPayment(req: Request, res: Response) {
+    const user = new User(req.userId!);
+    const body = req.body;
+    const payment = await user.createPayment(body);
+    if (payment.error) {
+      throw new RequestError(payment.error.message, HttpStatus.BadRequest);
+    }
+    res.JSON(HttpStatus.Created, payment.result);
+  }
 }
 
 export default new UserController();

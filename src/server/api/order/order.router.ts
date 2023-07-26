@@ -1,10 +1,11 @@
 import { Router } from 'express';
 import controler from './order.controller';
+import { isAuth } from '@server/middleware/isAuth';
 const router = Router();
 
-router.post('/', controler.create);
-router.get('/', controler.getAll);
-router.get('/:id', controler.getOne);
-router.get('/:id/items', controler.getItems);
+router.post('/', isAuth, controler.create);
+router.get('/', isAuth, controler.getAll);
+router.get('/:id', isAuth, controler.getOne);
+router.get('/:id/items', isAuth, controler.getItems);
 
 export default router;
