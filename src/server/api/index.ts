@@ -6,6 +6,7 @@ import { HttpStatus } from '@server/utils/status';
 import initCategory from './category';
 import initBrand from './brand';
 import initUser from './user';
+import initOrder from './order';
 
 const initApi: InitRouterFunc = app => {
   const router = Router();
@@ -16,6 +17,7 @@ const initApi: InitRouterFunc = app => {
   initProduct(router);
   initCategory(router);
   initBrand(router);
+  initOrder(router);
   app.use('/api', router);
 };
 

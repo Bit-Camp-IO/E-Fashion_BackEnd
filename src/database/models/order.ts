@@ -1,11 +1,9 @@
 import mongoose, { Schema } from 'mongoose';
 import { UserDB } from './user';
-import { AddressDB } from './address';
-import { PaymentDB } from './payment';
 import { ProductDB } from './product';
 import { ObjectId, Relation } from '@type/database';
 
-export interface OrderDB {
+export interface OrderDB extends mongoose.Document {
   items: {
     product: Relation<ProductDB>;
     name: string;
@@ -15,8 +13,22 @@ export interface OrderDB {
     color: string;
   }[];
   user: Relation<UserDB>;
-  address: Relation<AddressDB>;
-  payment: Relation<PaymentDB>;
+  address: {
+    city: string;
+    state: string;
+    phone: string;
+    postalCode: number;
+  };
+  payment: {
+    method: string;
+    cardNumber?: string;
+    cardName?: string;
+    exMonth?: number;
+    exYear?: number;
+    cvv?: number;
+    provider?: string;
+  };
+  paymentMethod: string;
   totalPrice: number;
   totalQuantity: number;
   price: number;
@@ -36,8 +48,37 @@ const orderSchema = new Schema<OrderDB>(
       },
     ],
     user: { type: ObjectId, ref: 'User' },
-    address: { type: ObjectId, ref: 'Address' },
-    payment: { type: ObjectId, ref: 'Payment' },
+    address: {
+      city: {
+        type: String,
+        required: true,
+      },
+      state: {
+        type: String,
+        required: true,
+      },
+      phone: {
+        type: String,
+        required: true,
+      },
+      postalCode: {
+        type: Number,
+        required: true,
+      },
+    },
+    payment: {
+      method: {
+        type: String,
+        enum: ['VISA', 'MASTERCARD'],
+        required: true,
+      },
+      cardName: String,
+      cardNumber: String,
+      exMonth: Number,
+      exYear: Number,
+      cvv: Number,
+      provider: String,
+    },
     totalPrice: { type: Number, required: true },
     totalQuantity: { type: Number, required: true },
     price: { type: Number, required: true },
@@ -47,3 +88,5 @@ const orderSchema = new Schema<OrderDB>(
 );
 
 const OrderModel = mongoose.model('Order', orderSchema);
+
+export default OrderModel;
