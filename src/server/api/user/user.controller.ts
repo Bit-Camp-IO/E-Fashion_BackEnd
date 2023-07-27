@@ -5,7 +5,8 @@ import { Controller, Validate } from '@server/decorator';
 import RequestError from '@server/utils/errors';
 import { HttpStatus } from '@server/utils/status';
 import { Request, Response } from 'express';
-import { addressSchema } from './user.valid';
+import { PaymentSchema, addressSchema, paymentSchema } from './user.valid';
+import { PaymentData } from '@/core/payment/interface';
 
 @Controller()
 class UserController {
@@ -76,10 +77,15 @@ class UserController {
     res.sendStatus(HttpStatus.NoContent);
   }
 
+  @Validate(paymentSchema)
   async createPayment(req: Request, res: Response) {
     const user = new User(req.userId!);
-    const body = req.body;
-    const payment = await user.createPayment(body);
+    const body: PaymentSchema = req.body;
+    const paymentPayload: PaymentData = {
+      ...body,
+      method: body.cardNumber[0] === '4' ? 'VISA' : 'MASTERCARD',
+    };
+    const payment = await user.createPayment(paymentPayload);
     if (payment.error) {
       throw new RequestError(payment.error.message, HttpStatus.BadRequest);
     }

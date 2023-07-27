@@ -3,17 +3,39 @@ import { Controller, Validate } from '@server/decorator';
 import RequestError from '@server/utils/errors';
 import { HttpStatus } from '@server/utils/status';
 import { Request, Response } from 'express';
-import { createOrderSchema } from './order.valid';
-import { OrderData } from '@/core/order/interfaces';
+import { OrderSchema, orderSchema } from './order.valid';
+import { OrderData, OrderPayment } from '@/core/order/interfaces';
 import { validateId } from '@/core/utils';
+import { InvalidDataError } from '@/core/errors';
 
 @Controller()
 class OrderController {
-  @Validate(createOrderSchema)
+  @Validate(orderSchema)
   async create(req: Request, res: Response) {
-    const body: OrderData = req.body;
-    const order = await createOrder({...body, userId: req.userId!});
+    const body: OrderSchema = req.body;
+    if (validateId(body.cartId)) throw new RequestError('Invalid cartId', HttpStatus.BadRequest);
+    const payment: OrderPayment =
+      typeof body.payment === 'string'
+        ? body.payment
+        : !body.payment
+        ? body.payment
+        : {
+            ...body.payment,
+            method: body.payment.cardName[1] === '4' ? 'VISA' : 'MASTERCARD',
+          };
+
+    const orderPayload: OrderData = {
+      address: body.address,
+      cartId: body.cartId,
+      payment: payment,
+      paymentMethod: body.paymentMethod,
+      phoneNumber: body.phoneNumber,
+      userId: req.userId!,
+    };
+    const order = await createOrder(orderPayload);
     if (order.error) {
+      if (order.error instanceof InvalidDataError)
+        throw new RequestError(order.error.message, HttpStatus.BadRequest);
       throw RequestError._500();
     }
     res.JSON(HttpStatus.Created, order.result);
@@ -23,7 +45,7 @@ class OrderController {
     if (orders.error) {
       throw RequestError._500();
     }
-    res.JSON(HttpStatus.Ok, orders.result)
+    res.JSON(HttpStatus.Ok, orders.result);
   }
   async getOne(req: Request, res: Response) {
     const id = req.body['id'];
@@ -32,7 +54,7 @@ class OrderController {
     if (order.error) {
       throw RequestError._500();
     }
-    res.JSON(HttpStatus.Ok, order.result)
+    res.JSON(HttpStatus.Ok, order.result);
   }
   async getItems(req: Request, res: Response) {
     const id = req.body['id'];
@@ -41,7 +63,7 @@ class OrderController {
     if (items.error) {
       throw RequestError._500();
     }
-    res.JSON(HttpStatus.Ok, items.result)
+    res.JSON(HttpStatus.Ok, items.result);
   }
 }
 

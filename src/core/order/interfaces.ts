@@ -10,8 +10,8 @@ export interface OrderData {
   phoneNumber: string;
 }
 
-export type OrderAddress = Omit<AddressData, 'isPrimary'>;
-export type OrderPayment = PaymentData | string;
+export type OrderAddress = Omit<AddressData, 'isPrimary'> | string;
+export type OrderPayment = PaymentData | string | undefined;
 
 export interface OrderResult {
   id: string;

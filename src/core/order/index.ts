@@ -84,6 +84,7 @@ async function _getPayment(paymentMethod: string, paymentData: OrderPayment): Ge
   if (!['VISA', 'MASTERCARD'].includes(paymentMethod))
     throw new InvalidDataError('Invalid Payment Method!');
   if (typeof paymentData !== 'string') {
+    if (!paymentData) throw new InvalidDataError('paymnet required!');
     return paymentData;
   }
   const paymentDb = await PaymentModel.findById(paymentData);
