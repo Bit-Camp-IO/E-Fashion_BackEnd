@@ -1,4 +1,10 @@
-import { createCashOrder, getAllOrder, getOrderByID, getOrderItems } from '@/core/order';
+import {
+  createCashOrder,
+  createOrderPaymentIntents,
+  getAllOrder,
+  getOrderByID,
+  getOrderItems,
+} from '@/core/order';
 import { Controller, Validate } from '@server/decorator';
 import RequestError from '@server/utils/errors';
 import { HttpStatus } from '@server/utils/status';
@@ -6,7 +12,7 @@ import { Request, Response } from 'express';
 import { OrderSchema, orderSchema } from './order.valid';
 import { OrderData } from '@/core/order/interfaces';
 import { validateId } from '@/core/utils';
-import { InvalidDataError } from '@/core/errors';
+import { InvalidDataError, NotFoundError } from '@/core/errors';
 // import { createCheckoutSessionURL } from '@/core/payment/stripe';
 
 @Controller()
@@ -60,14 +66,24 @@ class OrderController {
     res.JSON(HttpStatus.Ok, items.result);
   }
 
-  // async checkoutSession(_: Request, res: Response) {
-  //   const checkoutUrl = await createCheckoutSessionURL();
-  //   if (checkoutUrl.error) {
-  //     console.log(checkoutUrl.error);
-  //     throw RequestError._500();
-  //   }
-  //   res.JSON(HttpStatus.Created, { url: checkoutUrl });
-  // }
+  @Validate(orderSchema)
+  async paymentIntent(req: Request, res: Response) {
+    const body: OrderSchema = req.body;
+    if (!validateId(body.addressId)) throw new RequestError('invalid address id');
+    const orderPayload: OrderData = {
+      addressId: body.addressId,
+      phoneNumber: body.phoneNumber,
+      userId: req.userId!,
+    };
+    const paymnet = await createOrderPaymentIntents(orderPayload);
+    if (paymnet.error) {
+      if (paymnet.error instanceof NotFoundError || paymnet.error instanceof InvalidDataError) {
+        throw new RequestError(paymnet.error.message, HttpStatus.BadRequest);
+      }
+      throw RequestError._500();
+    }
+    res.JSON(HttpStatus.Created, paymnet.result);
+  }
 }
 
 export default new OrderController();
