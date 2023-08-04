@@ -3,23 +3,12 @@ import { ProductDB } from './product';
 import { ObjectId, Relation } from '@type/database';
 
 export interface CartDB extends Document {
-  totalPrice: number;
+  // totalPrice: number;
   totalQuantity: number;
-  items: {
-    product: Relation<ProductDB>;
-    title: string;
-    price: number;
-    quantity: number;
-    size: string;
-    color: string;
-  }[];
+  items: { product: Relation<ProductDB>; quantity: number; color: string; size: string }[];
 }
 
 const cartSchema = new Schema<CartDB>({
-  totalPrice: {
-    type: Number,
-    default: 0,
-  },
   totalQuantity: {
     type: Number,
     default: 0,
@@ -27,11 +16,10 @@ const cartSchema = new Schema<CartDB>({
   items: [
     {
       product: { type: ObjectId, ref: 'Product' },
-      name: String,
-      price: Number,
       quantity: { type: Number, default: 1 },
       size: String,
       color: String,
+      _id: false,
     },
   ],
 });

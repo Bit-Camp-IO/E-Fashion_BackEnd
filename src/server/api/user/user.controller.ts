@@ -5,8 +5,7 @@ import { Controller, Validate } from '@server/decorator';
 import RequestError from '@server/utils/errors';
 import { HttpStatus } from '@server/utils/status';
 import { Request, Response } from 'express';
-import { PaymentSchema, addressSchema, paymentSchema } from './user.valid';
-import { PaymentData } from '@/core/payment/interface';
+import { addressSchema } from './user.valid';
 
 @Controller()
 class UserController {
@@ -27,6 +26,7 @@ class UserController {
     }
     res.JSON(HttpStatus.Ok, myFav.result);
   }
+
   async addToFav(req: Request, res: Response) {
     const id = req.body['id'];
     if (!validateId(id)) throw new RequestError(`id '${id}' is not valid`, HttpStatus.BadRequest);
@@ -39,6 +39,7 @@ class UserController {
     }
     res.JSON(HttpStatus.Ok, favList.result);
   }
+
   async removeFav(req: Request, res: Response) {
     const id = req.body['id'];
     if (!validateId(id)) throw new RequestError(`id '${id}' is not valid`, HttpStatus.BadRequest);
@@ -47,6 +48,7 @@ class UserController {
     if (error) throw RequestError._500();
     res.sendStatus(HttpStatus.NoContent);
   }
+
   async updateProfile(req: Request, res: Response) {
     const user = new User(req.userId!);
     const image = await user.updateProfileImage(req.file!);
@@ -58,38 +60,40 @@ class UserController {
     }
     res.JSON(HttpStatus.Accepted, image.result);
   }
+
+  async getAddresses(req: Request, res: Response) {
+    const user = new User(req.userId!);
+    const addresses = await user.getAddresses();
+    if (addresses.error) {
+      if (addresses.error instanceof NotFoundError) {
+        throw new RequestError(addresses.error.message, HttpStatus.BadRequest);
+      }
+      throw RequestError._500();
+    }
+    res.JSON(HttpStatus.Ok, addresses.result);
+  }
+
   @Validate(addressSchema)
   async addAddress(req: Request, res: Response) {
     const user = new User(req.userId!);
     const body = req.body;
-    const userAdress = await user.addNewAddress(body);
-    if (userAdress.error) {
-      throw new RequestError(userAdress.error.message, HttpStatus.BadRequest);
+    const userAddress = await user.addNewAddress(body);
+    if (userAddress.error) {
+      if (userAddress.error instanceof NotFoundError) {
+        throw new RequestError(userAddress.error.message, HttpStatus.BadRequest);
+      }
+      throw new RequestError(userAddress.error.message, HttpStatus.BadRequest);
     }
-    res.JSON(HttpStatus.Created, userAdress.result);
+    res.JSON(HttpStatus.Created, userAddress.result);
   }
+
   async removeAddress(req: Request, res: Response) {
-    const id = req.body['id'];
+    const id = req.params['id'];
     if (!validateId(id)) throw new RequestError(`id '${id}' is not valid`, HttpStatus.BadRequest);
     const user = new User(req.userId!);
     const error = await user.removeAddress(id);
     if (error) throw RequestError._500();
     res.sendStatus(HttpStatus.NoContent);
-  }
-
-  @Validate(paymentSchema)
-  async createPayment(req: Request, res: Response) {
-    const user = new User(req.userId!);
-    const body: PaymentSchema = req.body;
-    const paymentPayload: PaymentData = {
-      ...body,
-      method: body.cardNumber[0] === '4' ? 'VISA' : 'MASTERCARD',
-    };
-    const payment = await user.createPayment(paymentPayload);
-    if (payment.error) {
-      throw new RequestError(payment.error.message, HttpStatus.BadRequest);
-    }
-    res.JSON(HttpStatus.Created, payment.result);
   }
 }
 

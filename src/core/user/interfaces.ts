@@ -1,5 +1,5 @@
-import { RelationList } from "@type/database";
-import { AddressData } from "../address/interfaces";
+import { RelationList } from '@type/database';
+import { AddressData } from '../address/interfaces';
 
 export interface FavItem {
   title: string;
@@ -9,15 +9,14 @@ export interface FavItem {
 
 export interface CartItemData {
   id: string;
+  quantity: number;
   size: string;
   color: string;
-  quantity: number;
 }
 
 export interface CartItem extends Omit<CartItemData, 'id'> {
-  title: string;
-  price: number;
-  product: string;
+  productId: string;
+  imageUrl: string;
 }
 
 export interface CartResult {
@@ -35,5 +34,5 @@ export interface UserResult {
   isVerified: boolean;
   settings: any;
   profile?: string;
-  addresses: RelationList<AddressData>
+  addresses: RelationList<AddressData>;
 }

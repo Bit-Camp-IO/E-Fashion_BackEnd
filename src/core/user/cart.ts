@@ -1,6 +1,6 @@
 import CartModel, { CartDB } from '@/database/models/cart';
 import { AsyncSafeResult } from '@type/common';
-import { CartItem, CartItemData, CartResult } from './interfaces';
+import { CartItemData, CartResult } from './interfaces';
 import ProductModel from '@/database/models/product';
 import { NotFoundError } from '../errors';
 import { Types } from 'mongoose';
@@ -19,26 +19,40 @@ import { Types } from 'mongoose';
 
 export class Cart {
   constructor(private cart: CartDB) {}
+
+  static async createCart(): Promise<CartDB> {
+    return await CartModel.create({});
+  }
+
   async addItem(item: CartItemData): AsyncSafeResult<CartResult> {
     try {
       const product = await ProductModel.findById(item.id);
       if (!product) {
-        return { error: new NotFoundError('Product '), result: null };
+        return { error: new NotFoundError('Product'), result: null };
       }
-      const cartItem: CartItem = {
-        product: product._id,
-        quantity: item.quantity,
-        color: item.color,
-        price: product.price,
-        size: item.size,
-        title: product.title,
-      };
-      this.cart.items.push(cartItem);
+      const itemIndex = this.cart.items.findIndex(
+        i =>
+          i.product.toString() === product._id.toString() &&
+          item.color === i.color &&
+          item.size === i.size,
+      );
+      if (itemIndex !== -1) {
+        this.cart.items[itemIndex].quantity += item.quantity;
+      } else {
+        const cartItem = {
+          product: product._id,
+          quantity: item.quantity,
+          size: item.size,
+          color: item.color,
+        };
+        this.cart.items.push(cartItem);
+      }
       this.cart.totalQuantity += item.quantity;
-      this.cart.totalPrice += Number((item.quantity * product.price).toFixed(2));
+      // this.cart.totalPrice += Number((item.quantity * product.price).toFixed(2));
       await this.cart.save();
-      return { result: this._formatCart(), error: null };
+      return { result: await this._formatCart(), error: null };
     } catch (err) {
+      // console.log(err);
       return { error: err, result: null };
     }
   }
@@ -49,10 +63,10 @@ export class Cart {
       (this.cart.items as Types.DocumentArray<any>).pull({ product: id });
       if (this.cart.items.length === 1) {
         this.cart.totalQuantity = 0;
-        this.cart.totalPrice = 0;
+        // this.cart.totalPrice = 0;
       } else {
         this.cart.totalQuantity -= item.quantity;
-        this.cart.totalPrice -= Number((item.price * item.quantity).toFixed(2));
+        // this.cart.totalPrice -= Number((item.price * item.quantity).toFixed(2));
       }
       await this.cart.save();
       return null;
@@ -60,9 +74,7 @@ export class Cart {
       return err;
     }
   }
-  static async createCart(): Promise<CartDB> {
-    return await CartModel.create({});
-  }
+
   async editItemQuantity(id: string, newQ: number): AsyncSafeResult<CartResult> {
     try {
       const itemIndex = this.cart.items.findIndex(i => i.product.toString() === id);
@@ -73,25 +85,42 @@ export class Cart {
       newItem.quantity = newQ;
       (this.cart.items as Types.DocumentArray<any>).set(itemIndex, newItem);
       this.cart.totalQuantity += qdi;
-      this.cart.totalPrice += Number((qdi * newItem.price).toFixed(2));
+      // this.cart.totalPrice += Number((qdi * newItem.price).toFixed(2));
       await this.cart.save();
-      return { result: this._formatCart(), error: null };
+      return { result: await this._formatCart(), error: null };
     } catch (err) {
       return { error: err, result: null };
     }
   }
 
-  getCart(): CartResult {
-    return this._formatCart();
+  async getCart(): Promise<CartResult> {
+    return await this._formatCart();
   }
 
-  private _formatCart(): CartResult {
+  private async _formatCart(): Promise<CartResult> {
+    await this.cart.populate('items.product');
+    const { totalPrice } = getCartItemsInfo(this.cart);
     return {
-      items: this.cart.items,
-      subtotal: Number(this.cart.totalPrice.toFixed(2)),
+      items: this.cart.items.map(i => ({
+        color: i.color,
+        productId: i.product._id,
+        quantity: i.quantity,
+        size: i.size,
+        imageUrl: i.product.imageURL,
+      })),
+      subtotal: totalPrice,
       totalQuantity: this.cart.totalQuantity,
       tax: 0,
-      total: Number(this.cart.totalPrice.toFixed(2)),
+      total: totalPrice,
     };
   }
+}
+
+export function getCartItemsInfo(cart: CartDB) {
+  let result: { totalPrice: number } = { totalPrice: 0 };
+  for (const i of cart.items) {
+    if (typeof i.product === 'string') continue;
+    result.totalPrice += i.product.price * i.quantity;
+  }
+  return result;
 }

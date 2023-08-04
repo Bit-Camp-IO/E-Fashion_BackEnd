@@ -1,38 +1,29 @@
-import { createOrder, getAllOrder, getOrderByID, getOrderItems } from '@/core/order';
+import { createCashOrder, getAllOrder, getOrderByID, getOrderItems } from '@/core/order';
 import { Controller, Validate } from '@server/decorator';
 import RequestError from '@server/utils/errors';
 import { HttpStatus } from '@server/utils/status';
 import { Request, Response } from 'express';
 import { OrderSchema, orderSchema } from './order.valid';
-import { OrderData, OrderPayment } from '@/core/order/interfaces';
+import { OrderData } from '@/core/order/interfaces';
 import { validateId } from '@/core/utils';
 import { InvalidDataError } from '@/core/errors';
+// import { createCheckoutSessionURL } from '@/core/payment/stripe';
 
 @Controller()
 class OrderController {
   @Validate(orderSchema)
-  async create(req: Request, res: Response) {
+  async createCashOrder(req: Request, res: Response) {
     const body: OrderSchema = req.body;
-    if (validateId(body.cartId)) throw new RequestError('Invalid cartId', HttpStatus.BadRequest);
-    const payment: OrderPayment =
-      typeof body.payment === 'string'
-        ? body.payment
-        : !body.payment
-        ? body.payment
-        : {
-            ...body.payment,
-            method: body.payment.cardName[1] === '4' ? 'VISA' : 'MASTERCARD',
-          };
+    if (!validateId(body.addressId)) throw new RequestError('invalid address id');
 
     const orderPayload: OrderData = {
-      address: body.address,
-      cartId: body.cartId,
-      payment: payment,
-      paymentMethod: body.paymentMethod,
+      addressId: body.addressId,
       phoneNumber: body.phoneNumber,
       userId: req.userId!,
     };
-    const order = await createOrder(orderPayload);
+
+    const order = await createCashOrder(orderPayload);
+
     if (order.error) {
       if (order.error instanceof InvalidDataError)
         throw new RequestError(order.error.message, HttpStatus.BadRequest);
@@ -40,6 +31,7 @@ class OrderController {
     }
     res.JSON(HttpStatus.Created, order.result);
   }
+
   async getAll(req: Request, res: Response) {
     const orders = await getAllOrder(req.userId!);
     if (orders.error) {
@@ -47,6 +39,7 @@ class OrderController {
     }
     res.JSON(HttpStatus.Ok, orders.result);
   }
+
   async getOne(req: Request, res: Response) {
     const id = req.body['id'];
     if (!validateId(id)) throw new RequestError(`id '${id}' is not valid`, HttpStatus.BadRequest);
@@ -56,6 +49,7 @@ class OrderController {
     }
     res.JSON(HttpStatus.Ok, order.result);
   }
+
   async getItems(req: Request, res: Response) {
     const id = req.body['id'];
     if (!validateId(id)) throw new RequestError(`id '${id}' is not valid`, HttpStatus.BadRequest);
@@ -65,6 +59,15 @@ class OrderController {
     }
     res.JSON(HttpStatus.Ok, items.result);
   }
+
+  // async checkoutSession(_: Request, res: Response) {
+  //   const checkoutUrl = await createCheckoutSessionURL();
+  //   if (checkoutUrl.error) {
+  //     console.log(checkoutUrl.error);
+  //     throw RequestError._500();
+  //   }
+  //   res.JSON(HttpStatus.Created, { url: checkoutUrl });
+  // }
 }
 
 export default new OrderController();

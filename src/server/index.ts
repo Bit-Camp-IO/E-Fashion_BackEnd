@@ -7,6 +7,7 @@ import _404Middleware from './middleware/404';
 import cors from './middleware/cors';
 import { JSONMiddleware } from './middleware/JSON';
 import { join } from 'path';
+import { stripeWebhook } from './middleware/stripe_webhook';
 
 function createServer(): express.Express {
   const app = express();
@@ -25,6 +26,7 @@ function createServer(): express.Express {
 function initMiddleware(app: express.Express) {
   cors(app);
   app.use('/api/u', express.static(join(__dirname, '..', '..', 'uploads')));
+  app.use('/stripe-webhook', ...stripeWebhook());
   app.use(express.json());
   app.use(JSONMiddleware());
 }

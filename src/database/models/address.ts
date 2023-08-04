@@ -1,9 +1,8 @@
 import mongoose, { Schema } from 'mongoose';
 
-export interface AddressDB {
+export interface AddressDB extends mongoose.Document {
   city: string;
   state: string;
-  phone: string;
   postalCode: number;
   isPrimary: boolean;
 }
@@ -14,10 +13,6 @@ const addressSchema = new Schema<AddressDB>({
     required: true,
   },
   state: {
-    type: String,
-    required: true,
-  },
-  phone: {
     type: String,
     required: true,
   },

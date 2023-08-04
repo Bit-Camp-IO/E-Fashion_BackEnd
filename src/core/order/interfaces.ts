@@ -1,34 +1,16 @@
-import { AddressData } from '../address/interfaces';
-import { PaymentData } from '../payment/interface';
-
 export interface OrderData {
   userId: string;
-  cartId: string;
-  address: OrderAddress;
-  payment: OrderPayment;
-  paymentMethod: string;
+  addressId: string;
+  // paymentMethod: 'CASH' | 'STRIPE';
   phoneNumber: string;
 }
-
-export type OrderAddress = Omit<AddressData, 'isPrimary'> | string;
-export type OrderPayment = PaymentData | string | undefined;
 
 export interface OrderResult {
   id: string;
   address: {
     city: string;
     state: string;
-    phone: string;
     postalCode: number;
-  };
-  payment: {
-    method: string;
-    cardNumber?: string;
-    cardName?: string;
-    exMonth?: number;
-    exYear?: number;
-    cvv?: number;
-    provider?: string;
   };
   paymentMethod: string;
   totalPrice: number;

@@ -7,11 +7,9 @@ import { Cart } from './cart';
 import { CartDB } from '@/database/models/cart';
 import { removeFile } from '../utils';
 import { AddressData } from '../address/interfaces';
-import { addAdress, removeAddress } from '../address';
+import { AddressResult, addAddress, getUserAddresses, removeAddress } from '../address';
 import { join } from 'path';
 import Config from '@/config';
-import { PaymentData } from '../payment/interface';
-import Payment from '../payment';
 interface UserServices {
   // addToCart(id: string): Promise<Error | null>;
   addToFav(prId: string): AsyncSafeResult<FavItem[]>;
@@ -73,9 +71,7 @@ export class User implements UserServices {
   }
   async getMyCart(): AsyncSafeResult<Cart> {
     try {
-      const user = await UserModel.findById(this._id)
-        .populate<{ favorites: CartDB }>('cart')
-        .exec();
+      const user = await UserModel.findById(this._id).populate<{ cart: CartDB }>('cart').exec();
       if (!user) return { error: new NotFoundError('User with id ' + this._id), result: null };
       let cart = user.cart;
       if (!cart) {
@@ -88,6 +84,7 @@ export class User implements UserServices {
       return { error: err, result: null };
     }
   }
+
   async me(): AsyncSafeResult<UserResult> {
     try {
       const user = await UserModel.findById(this._id)
@@ -116,6 +113,7 @@ export class User implements UserServices {
       return { error: err, result: null };
     }
   }
+
   async updateProfileImage(path: string): AsyncSafeResult<ProfileImageResult> {
     try {
       const user = await UserModel.findByIdAndUpdate(this._id, { $set: { profileImage: path } });
@@ -128,29 +126,16 @@ export class User implements UserServices {
       return { error: err, result: null };
     }
   }
-  async addNewAddress(addressData: AddressData): AsyncSafeResult<any> {
-    try {
-      const result = await addAdress(this._id, addressData);
-      return { result, error: null };
-    } catch (err) {
-      return { error: err, result: null };
-    }
-  }
-  async removeAddress(addressId: string): Promise<Error | null> {
-    try {
-      await removeAddress(this._id, addressId);
-      return null;
-    } catch (err) {
-      return err;
-    }
+
+  async getAddresses(): AsyncSafeResult<AddressResult[]> {
+    return getUserAddresses(this._id);
   }
 
-  async createPayment(paymentData: PaymentData): AsyncSafeResult<any> {
-    try {
-      const result = await Payment.create(paymentData, this._id);
-      return { result, error: null };
-    } catch (err) {
-      return err;
-    }
+  async addNewAddress(addressData: AddressData): AsyncSafeResult<any> {
+    return addAddress(this._id, addressData);
+  }
+
+  async removeAddress(addressId: string): Promise<Error | null> {
+    return await removeAddress(this._id, addressId);
   }
 }

@@ -19,8 +19,8 @@ router.delete('/cart', isAuth, cartController.removeItem);
 router.get('/cart', isAuth, cartController.getMyCart);
 router.patch('/cart', isAuth, cartController.editItemQ);
 
-router.post('/address', isAuth, userController.addAddress)
-router.delete('/address', isAuth, controller.removeAddress);
+router.get('/address', isAuth, userController.getAddresses);
+router.post('/address', isAuth, userController.addAddress);
+router.delete('/address/:id', isAuth, controller.removeAddress);
 
-router.post('/payment', isAuth, userController.createPayment);
 export default router;

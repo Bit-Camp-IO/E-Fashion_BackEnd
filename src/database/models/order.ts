@@ -16,18 +16,9 @@ export interface OrderDB extends mongoose.Document {
   address: {
     city: string;
     state: string;
-    phone: string;
     postalCode: number;
   };
-  payment: {
-    method: string;
-    cardNumber?: string;
-    cardName?: string;
-    exMonth?: number;
-    exYear?: number;
-    cvv?: number;
-    provider?: string;
-  };
+  phoneNumber: string;
   paymentMethod: string;
   totalPrice: number;
   totalQuantity: number;
@@ -43,8 +34,8 @@ const orderSchema = new Schema<OrderDB>(
         name: { type: String, required: true },
         price: { type: Number, required: true },
         quantity: { type: Number, required: true },
-        size: { type: String, required: true },
-        color: { type: String, required: true },
+        size: { type: String },
+        color: { type: String },
       },
     ],
     user: { type: ObjectId, ref: 'User' },
@@ -57,28 +48,12 @@ const orderSchema = new Schema<OrderDB>(
         type: String,
         required: true,
       },
-      phone: {
-        type: String,
-        required: true,
-      },
       postalCode: {
         type: Number,
         required: true,
       },
     },
-    payment: {
-      method: {
-        type: String,
-        enum: ['VISA', 'MASTERCARD'],
-        required: true,
-      },
-      cardName: String,
-      cardNumber: String,
-      exMonth: Number,
-      exYear: Number,
-      cvv: Number,
-      provider: String,
-    },
+    phoneNumber: { type: String, required: true },
     totalPrice: { type: Number, required: true },
     totalQuantity: { type: Number, required: true },
     price: { type: Number, required: true },

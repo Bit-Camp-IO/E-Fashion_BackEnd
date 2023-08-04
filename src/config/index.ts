@@ -16,5 +16,8 @@ const Config = {
   CatImagesDir: join(__dirname, '..', '..', 'uploads', 'category'),
   ProductImagesDir: join(__dirname, '..', '..', 'uploads', 'product'),
   ENCRYPTION_KEY: process.env['ENCRYPTION_KEY']!,
+  STRIPE_PUBLIC_KEY: process.env['STRIPE_PUBLIC_KEY']!,
+  STRIPE_PRIVATE_KEY: process.env['STRIPE_PRIVATE_KEY']!,
+  STRIPE_ENDPOINT_SECRET: process.env['STRIPE_ENDPOINT_SECRET']!,
 };
 export default Config;
