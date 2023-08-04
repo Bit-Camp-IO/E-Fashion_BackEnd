@@ -21,3 +21,4 @@ const reviewSchema = new Schema<ReviewDB>(
 );
 
 const ReviewModel = mongoose.model('Review', reviewSchema);
+export default ReviewModel;
