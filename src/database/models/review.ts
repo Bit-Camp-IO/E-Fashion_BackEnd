@@ -19,6 +19,7 @@ const reviewSchema = new Schema<ReviewDB>(
   },
   { timestamps: true },
 );
+//handle rate re-calc on deletion
 
 const ReviewModel = mongoose.model('Review', reviewSchema);
 export default ReviewModel;
