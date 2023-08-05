@@ -151,17 +151,35 @@ export async function addReviewToProduct(reviewData: ProductReviewData): Promise
       throw new Error('You have already reviewed this product.');
     }
 
-    const rev = await ReviewModel.create(reviewData);
+    const rev: ProductReviewData = {
+      userId: reviewData.userId,
+      productId: reviewData.productId,
+      rate: reviewData.rate,
+      comment: reviewData.comment
+    }
+
+    const review = await ReviewModel.create(rev);
 
     product.rate = _calculateProductRate(product.reviews, reviewData.rate);
 
-    product.reviews.push(rev);
+    product.reviews.push(review);
     await product.save();
     return null;
   } catch (err) {
     return err;
   }
 }
+
+export async function removeReview(reviewId: string, userId: string) {
+  try {
+    const product = await ProductModel.findOneAndUpdate({ reviews: reviewId }, { $pull: { reviews: reviewId } })
+    if (!product) throw new NotFoundError("Review with id"+reviewId);
+    const review = await ReviewModel.findOneAndRemove({ user: userId });
+    return review;  
+  } catch (err) {
+    return err;
+  }
+} 
 
 function _calculateProductRate(reviews: ReviewDB[], newRating: number): number {
   const totalRatings = reviews.reduce((total, review) => total + review.rate, 0);
