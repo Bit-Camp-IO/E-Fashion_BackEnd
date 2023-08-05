@@ -153,10 +153,7 @@ export async function addReviewToProduct(reviewData: ProductReviewData): Promise
 
     const rev = await ReviewModel.create(reviewData);
 
-    const totalRatings = product.reviews.reduce((total, review) => total + review.rate, 0);
-    const newTotalRatings = totalRatings + reviewData.rate;
-
-    product.rate = newTotalRatings / (product.reviews.length + 1);
+    product.rate = _calculateProductRate(product.reviews, reviewData.rate);
 
     product.reviews.push(rev);
     await product.save();
@@ -164,6 +161,12 @@ export async function addReviewToProduct(reviewData: ProductReviewData): Promise
   } catch (err) {
     return err;
   }
+}
+
+function _calculateProductRate(reviews: ReviewDB[], newRating: number): number {
+  const totalRatings = reviews.reduce((total, review) => total + review.rate, 0);
+  const newTotalRatings = totalRatings + newRating;
+  return newTotalRatings / (reviews.length + 1);
 }
 
 function _formatProduct(pDoc: ProductDB): ProductItemApi {

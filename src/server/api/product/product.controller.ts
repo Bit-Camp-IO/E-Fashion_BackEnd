@@ -1,12 +1,13 @@
 // import Product from '@/core/product';
 import { NotFoundError } from '@/core/errors';
-import { ProductOptions, getProductForUser, getProductsList, productsInfo } from '@/core/product';
+import { ProductOptions, ProductReviewData, addReviewToProduct, getProductForUser, getProductsList, productsInfo } from '@/core/product';
 import { validateId } from '@/core/utils';
-import { Controller } from '@server/decorator';
+import { Controller, Validate } from '@server/decorator';
 import RequestError from '@server/utils/errors';
 // import {wrappResponse} from '@server/utils/response';
 import { HttpStatus } from '@server/utils/status';
 import { Request, RequestHandler, Response } from 'express';
+import { ReviewSchema, reviewSchema } from './product.valid';
 
 interface ProductHandler {
   getList: RequestHandler;
@@ -82,6 +83,22 @@ class ProductController implements ProductHandler {
       throw RequestError._500();
     }
     res.JSON(HttpStatus.Ok, info.result);
+  }
+
+  @Validate(reviewSchema)
+  async addReview(req: Request, res: Response) {
+    const productId = req.params.id;
+    if (!validateId(productId)) throw new RequestError('invalid address id');
+    const body: ReviewSchema = req.body;
+    const review: ProductReviewData = {
+      userId: req.userId!,
+      productId: productId,
+      rate: body.rate,
+      comment: body.comment
+    }
+    const error = await addReviewToProduct(review);
+    if (error) throw new RequestError(error.message, HttpStatus.Conflict);
+    res.sendStatus(HttpStatus.NoContent);
   }
 }
 
