@@ -170,12 +170,12 @@ export async function addReviewToProduct(reviewData: ProductReviewData): Promise
   }
 }
 
-export async function removeReview(reviewId: string, userId: string) {
+export async function removeReview(reviewId: string, userId: string): Promise<Error | null> {
   try {
     const product = await ProductModel.findOneAndUpdate({ reviews: reviewId }, { $pull: { reviews: reviewId } })
     if (!product) throw new NotFoundError("Review with id"+reviewId);
-    const review = await ReviewModel.findOneAndRemove({ user: userId });
-    return review;  
+    await ReviewModel.findOneAndRemove({ user: userId });
+    return null;  
   } catch (err) {
     return err;
   }
