@@ -9,12 +9,15 @@ import {
   ProductItemsApiList,
   ProductOptions,
   ProductResult,
+  ProductReviewData,
   ProductSortOptions,
   ProductsInfo,
 } from './interfaces';
 import { removeFile } from '../utils';
 import Config from '@/config';
 import { join } from 'path';
+import ReviewModel, { ReviewDB } from '@/database/models/review';
+//import ReviewModel, { ReviewDB } from '@/database/models/review';
 export * from './interfaces';
 
 export async function createProduct(data: ProductData, adminId: string): CreateProductReturn {
@@ -135,6 +138,31 @@ export async function productsInfo(): AsyncSafeResult<ProductsInfo> {
     return { result: info, error: null };
   } catch (err) {
     return { error: err, result: null };
+  }
+}
+
+export async function addReviewToProduct(reviewData: ProductReviewData): Promise<Error | null> {
+  try {
+    const product = await ProductModel.findById(reviewData.productId).populate<{ reviews: ReviewDB[] }>('reviews');
+    if (!product) return new NotFoundError('Product with ' + reviewData.productId);
+
+    const existingReview = product.reviews.find((review) => review.user?.toString() === reviewData.userId);
+    if (existingReview) {
+      throw new Error('You have already reviewed this product.');
+    }
+
+    const rev = await ReviewModel.create(reviewData);
+
+    const totalRatings = product.reviews.reduce((total, review) => total + review.rate, 0);
+    const newTotalRatings = totalRatings + reviewData.rate;
+
+    product.rate = newTotalRatings / (product.reviews.length + 1);
+
+    product.reviews.push(rev);
+    await product.save();
+    return null;
+  } catch (err) {
+    return err;
   }
 }
 

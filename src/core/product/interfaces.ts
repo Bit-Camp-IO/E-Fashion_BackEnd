@@ -71,3 +71,10 @@ export interface ProductsInfo {
   maxPrice: number;
   minPrice: number;
 }
+
+export interface ProductReviewData {
+  userId: string;
+  productId: string;
+  rate: number;
+  comment: string;
+}

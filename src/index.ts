@@ -1,4 +1,5 @@
 import './config/init';
+import { ProductReviewData, addReviewToProduct } from './core/product';
 import {initDB} from './database/init';
 // import ProductModel from './database/models/product';
 // @ts-ignore
@@ -10,6 +11,14 @@ import {initDB} from './database/init';
 async function main() {
   await initDB();
   import('./server/index');
+  const rev: ProductReviewData = {
+    comment: "This product is good as hell",
+    userId: "64bcf1615084fe109ff413c9",
+    productId: "64b44bcaf5a027ed2349e147",
+    rate: 5
+  }
+
+  console.log(await addReviewToProduct(rev));
   // for (const p of products) {
   //   await ProductModel.create(p);
   // }
