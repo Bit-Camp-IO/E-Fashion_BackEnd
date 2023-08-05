@@ -88,7 +88,7 @@ class ProductController implements ProductHandler {
   @Validate(reviewSchema)
   async addReview(req: Request, res: Response) {
     const productId = req.params.id;
-    if (!validateId(productId)) throw new RequestError('invalid address id');
+    if (!validateId(productId)) throw new RequestError('invalid product id');
     const body: ReviewSchema = req.body;
     const review: ProductReviewData = {
       userId: req.userId!,
