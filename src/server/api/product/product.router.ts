@@ -7,4 +7,7 @@ const router = Router();
 router.get('/list', controller.getList);
 router.get('/:id', controller.getOne);
 router.get('/list/info', controller.listInfo);
+
+//review
+router.post('/:id/rate', controller.addReview);
 export default router;
