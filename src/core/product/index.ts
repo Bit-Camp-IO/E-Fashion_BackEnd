@@ -16,7 +16,7 @@ import {
 import { removeFile } from '../utils';
 import Config from '@/config';
 import { join } from 'path';
-import ReviewModel, { ReviewDB } from '@/database/models/review';
+import ReviewModel from '@/database/models/review';
 //import ReviewModel, { ReviewDB } from '@/database/models/review';
 export * from './interfaces';
 
@@ -143,27 +143,19 @@ export async function productsInfo(): AsyncSafeResult<ProductsInfo> {
 
 export async function addReviewToProduct(reviewData: ProductReviewData): Promise<Error | null> {
   try {
-    const product = await ProductModel.findById(reviewData.productId).populate<{ reviews: ReviewDB[] }>('reviews');
-    if (!product) return new NotFoundError('Product with ' + reviewData.productId);
-
-    const existingReview = product.reviews.find((review) => review.user?.toString() === reviewData.userId);
+    const existingReview = await ReviewModel.findOne({ user: reviewData.userId, product: reviewData.productId });
     if (existingReview) {
       throw new Error('You have already reviewed this product.');
-    }
-
-    const rev: ProductReviewData = {
-      userId: reviewData.userId,
-      productId: reviewData.productId,
+    } 
+  
+    const review = await ReviewModel.create({
+      user: reviewData.userId,
+      product: reviewData.productId,
       rate: reviewData.rate,
       comment: reviewData.comment
-    }
+    });
 
-    const review = await ReviewModel.create(rev);
-
-    product.rate = _calculateProductRate(product.reviews, reviewData.rate);
-
-    product.reviews.push(review);
-    await product.save();
+    await ProductModel.findByIdAndUpdate(reviewData.productId, { $addToSet: { reviews: review } });
     return null;
   } catch (err) {
     return err;
@@ -181,11 +173,11 @@ export async function removeReview(reviewId: string, userId: string): Promise<Er
   }
 } 
 
-function _calculateProductRate(reviews: ReviewDB[], newRating: number): number {
-  const totalRatings = reviews.reduce((total, review) => total + review.rate, 0);
-  const newTotalRatings = totalRatings + newRating;
-  return newTotalRatings / (reviews.length + 1);
-}
+// function _calculateProductRate(reviews: ReviewDB[], newRating: number): number {
+//   const totalRatings = reviews.reduce((total, review) => total + review.rate, 0);
+//   const newTotalRatings = totalRatings + newRating;
+//   return newTotalRatings / (reviews.length + 1);
+// }
 
 function _formatProduct(pDoc: ProductDB): ProductItemApi {
   return {
