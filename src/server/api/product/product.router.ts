@@ -10,6 +10,7 @@ router.get('/:id', controller.getOne);
 router.get('/list/info', controller.listInfo);
 
 //review
+router.get('/:id/rate', isAuth, controller.listReviews);
 router.post('/:id/rate', isAuth, controller.addReview);
-router.delete('/:id/rate', isAuth, controller.removeReview);
+router.delete('/rate', isAuth, controller.removeReview);
 export default router;

@@ -17,6 +17,7 @@ import { removeFile } from '../utils';
 import Config from '@/config';
 import { join } from 'path';
 import ReviewModel from '@/database/models/review';
+import { UserDB } from '@/database/models/user';
 //import ReviewModel, { ReviewDB } from '@/database/models/review';
 export * from './interfaces';
 
@@ -165,13 +166,24 @@ export async function addReviewToProduct(reviewData: ProductReviewData): Promise
 export async function removeReview(reviewId: string, userId: string): Promise<Error | null> {
   try {
     const product = await ProductModel.findOneAndUpdate({ reviews: reviewId }, { $pull: { reviews: reviewId } })
-    if (!product) throw new NotFoundError("Review with id"+reviewId);
+    console.log(product);
+    if (!product) throw new NotFoundError("Review with id "+reviewId);
     await ReviewModel.findOneAndRemove({ user: userId, product: product._id });
     return null;  
   } catch (err) {
     return err;
   }
 } 
+
+export async function listReviews(productId: string): AsyncSafeResult<any> {
+  try {
+    const reviews = await ReviewModel.find({ product: productId }).populate< { user: UserDB }>('user');
+    if (!reviews) throw new NotFoundError("Product with id " + productId);
+    return { result: reviews, error: null }
+  } catch (err) {
+    return { error: err, result: null };
+   }
+}
 
 // function _calculateProductRate(reviews: ReviewDB[], newRating: number): number {
 //   const totalRatings = reviews.reduce((total, review) => total + review.rate, 0);
