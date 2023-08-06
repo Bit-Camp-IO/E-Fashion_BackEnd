@@ -166,7 +166,7 @@ export async function removeReview(reviewId: string, userId: string): Promise<Er
   try {
     const product = await ProductModel.findOneAndUpdate({ reviews: reviewId }, { $pull: { reviews: reviewId } })
     if (!product) throw new NotFoundError("Review with id"+reviewId);
-    await ReviewModel.findOneAndRemove({ user: userId });
+    await ReviewModel.findOneAndRemove({ user: userId, product: product._id });
     return null;  
   } catch (err) {
     return err;

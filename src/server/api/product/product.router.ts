@@ -11,4 +11,5 @@ router.get('/list/info', controller.listInfo);
 
 //review
 router.post('/:id/rate', isAuth, controller.addReview);
+router.delete('/:id/rate', isAuth, controller.removeReview);
 export default router;

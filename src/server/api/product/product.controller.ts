@@ -1,6 +1,6 @@
 // import Product from '@/core/product';
 import { NotFoundError } from '@/core/errors';
-import { ProductOptions, ProductReviewData, addReviewToProduct, getProductForUser, getProductsList, productsInfo } from '@/core/product';
+import { ProductOptions, ProductReviewData, addReviewToProduct, getProductForUser, getProductsList, productsInfo, removeReview } from '@/core/product';
 import { validateId } from '@/core/utils';
 import { Controller, Validate } from '@server/decorator';
 import RequestError from '@server/utils/errors';
@@ -99,6 +99,14 @@ class ProductController implements ProductHandler {
     const error = await addReviewToProduct(review);
     if (error) throw new RequestError(error.message, HttpStatus.Conflict);
     res.sendStatus(HttpStatus.NoContent);
+  }
+
+  async removeReview(req: Request, res: Response) {
+    const { reviewId } = req.body;
+    if (!validateId(reviewId)) throw new RequestError('invalid review id');
+    const error = await removeReview(reviewId, req.userId!);
+    if (error) throw new RequestError(error.message, HttpStatus.BadRequest);
+    res.sendStatus(HttpStatus.Accepted)
   }
 }
 
