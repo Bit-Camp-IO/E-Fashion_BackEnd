@@ -16,7 +16,7 @@ import {
 import { removeFile } from '../utils';
 import Config from '@/config';
 import { join } from 'path';
-import ReviewModel from '@/database/models/review';
+import ReviewModel, { ReviewDB } from '@/database/models/review';
 import { UserDB } from '@/database/models/user';
 //import ReviewModel, { ReviewDB } from '@/database/models/review';
 export * from './interfaces';
@@ -147,8 +147,8 @@ export async function addReviewToProduct(reviewData: ProductReviewData): Promise
     const existingReview = await ReviewModel.findOne({ user: reviewData.userId, product: reviewData.productId });
     if (existingReview) {
       throw new Error('You have already reviewed this product.');
-    } 
-  
+    }
+
     const review = await ReviewModel.create({
       user: reviewData.userId,
       product: reviewData.productId,
@@ -156,7 +156,10 @@ export async function addReviewToProduct(reviewData: ProductReviewData): Promise
       comment: reviewData.comment
     });
 
-    await ProductModel.findByIdAndUpdate(reviewData.productId, { $addToSet: { reviews: review } });
+    const productReviews = await ReviewModel.find({ product: reviewData.productId });
+    const rate = _calculateProductRate(productReviews, reviewData.rate);
+
+    await ProductModel.findByIdAndUpdate(reviewData.productId, { $addToSet: { reviews: review }, $set: { rate: rate } });
     return null;
   } catch (err) {
     return err;
@@ -165,31 +168,47 @@ export async function addReviewToProduct(reviewData: ProductReviewData): Promise
 
 export async function removeReview(reviewId: string, userId: string): Promise<Error | null> {
   try {
-    const product = await ProductModel.findOneAndUpdate({ reviews: reviewId }, { $pull: { reviews: reviewId } })
-    console.log(product);
-    if (!product) throw new NotFoundError("Review with id "+reviewId);
-    await ReviewModel.findOneAndRemove({ user: userId, product: product._id });
-    return null;  
+    const review = await ReviewModel.findById(reviewId);
+    if (!review) {
+      throw new NotFoundError("Review with id " + reviewId);
+    }
+
+    const productId = review.product;
+    const product = await ProductModel.findById(productId);
+
+    if (!product) {
+      throw new NotFoundError("Product with id " + productId);
+    }
+
+    await ProductModel.findByIdAndUpdate(productId, { $pull: { reviews: reviewId } });
+
+    await ReviewModel.findOneAndRemove({ _id: reviewId, user: userId });
+
+    const remainingReviews = await ReviewModel.find({ product: productId });
+    const rate = _calculateProductRate(remainingReviews, 0);
+
+    await ProductModel.findByIdAndUpdate(productId, { $set: { rate: rate } });
+    return null;
   } catch (err) {
     return err;
   }
-} 
+}
 
 export async function listReviews(productId: string): AsyncSafeResult<any> {
   try {
-    const reviews = await ReviewModel.find({ product: productId }).populate< { user: UserDB }>('user');
+    const reviews = await ReviewModel.find({ product: productId }).populate<{ user: UserDB }>('user');
     if (!reviews) throw new NotFoundError("Product with id " + productId);
     return { result: reviews, error: null }
   } catch (err) {
     return { error: err, result: null };
-   }
+  }
 }
 
-// function _calculateProductRate(reviews: ReviewDB[], newRating: number): number {
-//   const totalRatings = reviews.reduce((total, review) => total + review.rate, 0);
-//   const newTotalRatings = totalRatings + newRating;
-//   return newTotalRatings / (reviews.length + 1);
-// }
+function _calculateProductRate(reviews: ReviewDB[], newRating: number): number {
+  const totalRatings = reviews.reduce((total, review) => total + review.rate, 0);
+  const newTotalRatings = totalRatings + newRating;
+  return newTotalRatings / (reviews.length + 1);
+}
 
 function _formatProduct(pDoc: ProductDB): ProductItemApi {
   return {
