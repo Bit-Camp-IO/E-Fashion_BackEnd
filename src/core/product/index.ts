@@ -194,11 +194,26 @@ export async function removeReview(reviewId: string, userId: string): Promise<Er
   }
 }
 
+//TODO: Handle Review obejct as Response
 export async function listReviews(productId: string): AsyncSafeResult<any> {
   try {
     const reviews = await ReviewModel.find({ product: productId }).populate<{ user: UserDB }>('user');
     if (!reviews) throw new NotFoundError("Product with id " + productId);
     return { result: reviews, error: null }
+  } catch (err) {
+    return { error: err, result: null };
+  }
+}
+
+export async function addDiscount(productId: string, discount: number): AsyncSafeResult<ProductResult> {
+  try {
+    const product = await ProductModel.findByIdAndUpdate(productId, {
+      $set: {
+        discount: discount
+      }
+    }, { new: true });
+    if (!product) throw new NotFoundError("Product with id " + productId);
+    return { result: _formatProduct(product), error: null }
   } catch (err) {
     return { error: err, result: null };
   }

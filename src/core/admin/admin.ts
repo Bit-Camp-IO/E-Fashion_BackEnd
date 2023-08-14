@@ -17,6 +17,7 @@ import {
   updateBrand,
   removeProductsFromBrand,
 } from '../brand';
+import { addDiscount } from '../product';
 interface AdminService {
   addProduct(data: ProductData): AsyncSafeResult<ProductResult>;
   removeProduct(id: string): void;
@@ -137,6 +138,10 @@ export class Admin implements AdminService {
 
   async removeProductsFromBrand(brandId: string, prodIds: string[]): Promise<Error | null> {
     return removeProductsFromBrand(brandId, prodIds);
+  }
+
+  async addDiscount(productId: string, discount: number): AsyncSafeResult<ProductResult> {
+    return addDiscount(productId, discount)
   }
 }
 

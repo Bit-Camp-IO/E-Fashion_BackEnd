@@ -113,3 +113,7 @@ export const updateProductSchema = Joi.object({
   price: Joi.number(),
   sizes: Joi.array().items(Joi.string()),
 });
+
+export const productDiscount = Joi.object({
+  discount: Joi.number().min(1).max(100).required()
+})

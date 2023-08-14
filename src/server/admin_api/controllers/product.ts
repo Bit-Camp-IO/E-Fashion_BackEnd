@@ -6,6 +6,7 @@ import {
   CreateProductSchema,
   UpdateProductSchema,
   createProductSchema,
+  productDiscount,
   updateProductSchema,
 } from '../valid';
 import RequestError from '@server/utils/errors';
@@ -60,6 +61,19 @@ class ProductController {
       title: body.title,
     };
     const product = await admin.editProduct(id, productData);
+    if (product.error) {
+      throw RequestError._500();
+    }
+    res.JSON(HttpStatus.Ok, product.result);
+  }
+
+  @Validate(productDiscount)
+  @Guard(AdminRole.ADMIN)
+  async addDiscount(req: Request, res: Response) {
+    const admin = req.admin as Admin;
+    const { id } = req.params;
+    const body = req.body;
+    const product = await admin.addDiscount(id, body);
     if (product.error) {
       throw RequestError._500();
     }

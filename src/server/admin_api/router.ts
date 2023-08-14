@@ -33,6 +33,8 @@ router.post('/product/create', isAuth, UplaodProductsPics(), productController.c
 router.put('/product/:id/edit', isAuth, productController.editProduct);
 router.delete('/product/:id/remove', isAuth, productController.remove);
 
+router.post('/product/:id/discount', isAuth, productController.addDiscount);
+
 const categoryRouter = Router();
 categoryRouter.post('/create', isAuth, UplaodCategoryPic(), categoryController.create);
 categoryRouter.post('/:id/add-sub', isAuth, categoryController.createSub);
