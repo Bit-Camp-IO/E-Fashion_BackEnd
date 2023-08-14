@@ -58,6 +58,7 @@ const orderSchema = new Schema<OrderDB>(
     totalQuantity: { type: Number, required: true },
     price: { type: Number, required: true },
     tax: { type: Number, required: true },
+    paymentMethod: { type: String, enum: ['CASH', 'STRIPE'] },
   },
   { timestamps: true },
 );

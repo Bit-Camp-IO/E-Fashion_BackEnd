@@ -1,28 +1,77 @@
-import { OrderData, OrderResult } from './interfaces';
+import { OrderData, OrderPaymentMethod, OrderResult, PaymentIntents } from './interfaces';
 import { AsyncSafeResult } from '@type/common';
 import { InvalidDataError, UnauthorizedError } from '../errors';
 import { AddressData } from '../address/interfaces';
 import AddressModel from '@/database/models/address';
 import CartModel, { CartDB } from '@/database/models/cart';
 import OrderModel, { OrderDB } from '@/database/models/order';
-import UserModel from '@/database/models/user';
+import UserModel, { UserDB } from '@/database/models/user';
 import { getCartItemsInfo } from '../user/cart';
+import { StripeMetadata, createPaymnetIntents } from '../payment/stripe';
 
-export async function createCashOrder(orderData: OrderData): AsyncSafeResult<OrderResult> {
+export function createCashOrder(orderData: OrderData): AsyncSafeResult<OrderResult> {
+  return createOrder(orderData, 'CASH');
+}
+
+export async function createOrderPaymentIntents(
+  orderData: OrderData,
+): AsyncSafeResult<PaymentIntents> {
   try {
-    const address = await _getAddress(orderData.addressId);
-    const user = await UserModel.findById(orderData.userId).populate<{ cart: CartDB | null }>(
-      'cart',
-    );
-    if (!user) throw new InvalidDataError('Invalid User Id!');
-    // TODO: Cart
-    const cart = user.cart;
-    if (!cart) throw new InvalidDataError('Cart Not exsits');
-    if (cart.items.length === 0) {
-      throw new InvalidDataError('Cart is empty!');
+    const { cart, totalPrice, user } = await getUserOrderData(orderData);
+    const clientSecret = await createPaymnetIntents({
+      userId: user._id.toString(),
+      addressId: orderData.addressId.toString(),
+      cartId: cart._id.toString(),
+      totalPrice: totalPrice,
+      phoneNumber: orderData.phoneNumber,
+    });
+    if (!clientSecret) {
+      throw new Error();
     }
-    await cart.populate('items.product');
-    console.log(cart);
+    return { result: { clientSecret }, error: null };
+  } catch (error) {
+    return { error, result: null };
+  }
+}
+
+export async function createStripeOrder(
+  paymentMetadata: StripeMetadata,
+): AsyncSafeResult<OrderResult> {
+  const orderData = {
+    addressId: paymentMetadata.addressId,
+    phoneNumber: paymentMetadata.phoneNumber,
+    userId: paymentMetadata.userId,
+  };
+  return createOrder(orderData, 'STRIPE');
+}
+
+interface UserOrderData {
+  totalPrice: number;
+  user: UserDB;
+  cart: CartDB;
+  address: Omit<AddressData, 'isPrimary'>;
+}
+
+async function getUserOrderData(orderData: OrderData): Promise<UserOrderData> {
+  const address = await _getAddress(orderData.addressId);
+  const user = await UserModel.findById(orderData.userId).populate<{ cart: CartDB | null }>('cart');
+  if (!user) throw new InvalidDataError('Invalid User Id!');
+  const cart = user.cart;
+  if (!cart) throw new InvalidDataError('Cart Not exsits');
+  if (cart.items.length === 0) {
+    throw new InvalidDataError('Cart is empty!');
+  }
+  await cart.populate('items.product');
+  const totalPrice = getCartItemsInfo(cart).totalPrice;
+  return { totalPrice, user, cart, address };
+}
+
+async function createOrder(
+  orderData: OrderData,
+  method: OrderPaymentMethod,
+): AsyncSafeResult<OrderResult> {
+  try {
+    const { address, cart, totalPrice, user } = await getUserOrderData(orderData);
     const items = cart.items.map(p => ({
       product: p.product._id,
       name: p.product.title,
@@ -31,11 +80,10 @@ export async function createCashOrder(orderData: OrderData): AsyncSafeResult<Ord
       size: p.size,
       color: p.color,
     }));
-    const totalPrice = getCartItemsInfo(cart).totalPrice;
     const order = await OrderModel.create({
       address,
       items,
-      paymentMethod: 'CASH',
+      paymentMethod: method,
       price: totalPrice,
       tax: 0,
       totalPrice: totalPrice,
@@ -47,7 +95,6 @@ export async function createCashOrder(orderData: OrderData): AsyncSafeResult<Ord
     await UserModel.findByIdAndUpdate(user._id, { $unset: { cart: '' } });
     return { result: _formatOrder(order), error: null };
   } catch (error) {
-    console.log(error);
     return { error, result: null };
   }
 }
@@ -84,7 +131,7 @@ export async function getOrderForAdmin(id: string): AsyncSafeResult<OrderDB> {
 
 export async function getOrderItems(userId: string, orderId: string): AsyncSafeResult<unknown[]> {
   try {
-    const order = await OrderModel.findById(orderId);
+    const order = await OrderModel.findById(orderId).populate('items.product');
     if (!order) throw new InvalidDataError('Invalid Order Id!');
     if (order.user.toString() !== userId) throw new UnauthorizedError();
     return { result: order.items, error: null };

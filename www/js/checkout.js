@@ -22,7 +22,7 @@ async function initialize() {
   //   body: JSON.stringify({ items }),
   // });
   // const { clientSecret } = await response.json();
-  const clientSecret = 'pi_3NbB9xF3PbDnuPn40zyLAX6T_secret_sWiTJKJi6hYQS1GRC3xHl4BdM';
+  const clientSecret = 'pi_3NbXU3F3PbDnuPn40ENvf5Z3_secret_CvpXdrsP5YPe0k0QlqKNI7Ch8';
   console.log(clientSecret);
 
   const appearance = {

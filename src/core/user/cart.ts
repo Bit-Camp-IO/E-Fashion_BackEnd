@@ -52,7 +52,6 @@ export class Cart {
       await this.cart.save();
       return { result: await this._formatCart(), error: null };
     } catch (err) {
-      // console.log(err);
       return { error: err, result: null };
     }
   }

@@ -1,4 +1,5 @@
-import { getStripeEvent } from '@/core/payment/stripe';
+import { createStripeOrder } from '@/core/order';
+import { getStripeEvent, stripeEventsHook } from '@/core/payment/stripe';
 import express from 'express';
 
 export function stripeWebhook(): express.RequestHandler[] {
@@ -10,14 +11,13 @@ export function stripeWebhook(): express.RequestHandler[] {
         res.sendStatus(400);
         return;
       }
-      // console.log(req.body);
+
       const event = getStripeEvent(req.body, signature);
       if (!event) {
         res.sendStatus(400);
         return;
       }
-      console.log(event?.data);
-      console.log('#'.repeat(30), event.type, '#'.repeat(30));
+      stripeEventsHook(event, createStripeOrder);
       res.json({ received: true });
     },
   ];
