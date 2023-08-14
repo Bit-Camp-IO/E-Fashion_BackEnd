@@ -44,7 +44,6 @@ class BrandController {
     };
     const brand = await admin.editBrand(productData, id);
     if (brand.error) {
-      console.log(brand.error);
       throw RequestError._500();
     }
     res.JSON(HttpStatus.Ok, brand.result);

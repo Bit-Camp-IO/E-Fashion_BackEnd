@@ -1,7 +1,6 @@
 export interface OrderData {
   userId: string;
   addressId: string;
-  // paymentMethod: 'CASH' | 'STRIPE';
   phoneNumber: string;
 }
 
@@ -17,4 +16,10 @@ export interface OrderResult {
   totalQuantity: number;
   price: number;
   tax: number;
+}
+
+export type OrderPaymentMethod = 'CASH' | 'STRIPE';
+
+export interface PaymentIntents {
+  clientSecret: string;
 }
