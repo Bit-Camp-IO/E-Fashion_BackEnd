@@ -5,6 +5,7 @@ import {initDB} from './database/init';
 // import products from '../DUMMY_DATA.json';
 // import cluster from 'cluster';
 // import path from 'path';
+import 'module-alias/register';
 
 // Dont touch
 async function main() {
