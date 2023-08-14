@@ -219,6 +219,18 @@ export async function addDiscount(productId: string, discount: number): AsyncSaf
   }
 }
 
+export async function removeDiscount(productId: string): Promise<Error | null> {
+  try {
+    const product = await ProductModel.findByIdAndUpdate(productId, {
+      $unset: { discount : 0 }
+    });
+    if (!product) throw new NotFoundError("Product with id " + productId);
+    return null;
+  } catch (err) {
+    return err;
+  }
+}
+
 function _calculateProductRate(reviews: ReviewDB[], newRating: number): number {
   const totalRatings = reviews.reduce((total, review) => total + review.rate, 0);
   const newTotalRatings = totalRatings + newRating;

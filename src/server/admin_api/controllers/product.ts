@@ -72,12 +72,25 @@ class ProductController {
   async addDiscount(req: Request, res: Response) {
     const admin = req.admin as Admin;
     const { id } = req.params;
-    const body = req.body;
-    const product = await admin.addDiscount(id, body);
+    const { discount } = req.body;
+    const product = await admin.addDiscount(id, discount);
     if (product.error) {
       throw RequestError._500();
     }
     res.JSON(HttpStatus.Ok, product.result);
+  }
+
+  @Guard(AdminRole.ADMIN)
+  async removeDiscount(req: Request, res: Response) {
+    const admin = req.admin as Admin;
+    const { id } = req.params;
+    const error = await admin.removeDiscount(id);
+    if (error) {
+      if (error instanceof NotFoundError)
+        throw new RequestError(error.message, HttpStatus.NotFound);
+      throw RequestError._500();
+    }
+    res.sendStatus(HttpStatus.NoContent);
   }
 }
 export default new ProductController();
