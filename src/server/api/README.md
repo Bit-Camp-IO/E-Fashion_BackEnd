@@ -19,6 +19,9 @@
    - `GET /list`
    - `GET /:id`
    - `GET /list/info`
+   - `GET /:id/rate`
+   - `POST /:id/rate`
+   - `DELET /rate`
 
 3. **`/order` routes**
    - `POST /cash-order`

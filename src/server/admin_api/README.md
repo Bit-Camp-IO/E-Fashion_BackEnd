@@ -18,7 +18,9 @@
    - `POST /admin/product/create`
    - `PUT /admin/product/:id/edit`
    - `DELETE /admin/product/:id/remove`
-
+   - `POST admin/product/:id/discount`
+   - `DELETE admin/product/:id/discount`
+   
 5. **Category Routes**:
    - `POST /admin/category/create`
    - `POST /admin/category/:id/add-sub`

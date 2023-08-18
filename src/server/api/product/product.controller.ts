@@ -41,7 +41,6 @@ class ProductController implements ProductHandler {
       filter: {},
       sort: {},
     };
-
     const _maxPrice = queryToNumber(req.query['max-price']);
     if (_maxPrice) options.filter.maxPrice = _maxPrice;
     const _minPrice = queryToNumber(req.query['min-price']);
@@ -96,8 +95,8 @@ class ProductController implements ProductHandler {
       rate: body.rate,
       comment: body.comment
     }
-    const error = await addReviewToProduct(review);
-    if (error) throw new RequestError(error.message, HttpStatus.Conflict);
+    const product = await addReviewToProduct(review);
+    if (!product) throw RequestError._500();
     res.sendStatus(HttpStatus.NoContent);
   }
 

@@ -142,7 +142,8 @@ export async function productsInfo(): AsyncSafeResult<ProductsInfo> {
   }
 }
 
-export async function addReviewToProduct(reviewData: ProductReviewData): Promise<Error | null> {
+//TODO: Check response type 
+export async function addReviewToProduct(reviewData: ProductReviewData): AsyncSafeResult<any> {
   try {
     const existingReview = await ReviewModel.findOne({ user: reviewData.userId, product: reviewData.productId });
     if (existingReview) {
@@ -159,10 +160,10 @@ export async function addReviewToProduct(reviewData: ProductReviewData): Promise
     const productReviews = await ReviewModel.find({ product: reviewData.productId });
     const rate = _calculateProductRate(productReviews, reviewData.rate);
 
-    await ProductModel.findByIdAndUpdate(reviewData.productId, { $addToSet: { reviews: review }, $set: { rate: rate } });
-    return null;
+    await ProductModel.findByIdAndUpdate(reviewData.productId, { $addToSet: { reviews: review }, $set: { rate: rate } }, { new: true });
+    return { result: review, error: null };
   } catch (err) {
-    return err;
+    return { error: err, result: null };
   }
 }
 
@@ -199,7 +200,12 @@ export async function listReviews(productId: string): AsyncSafeResult<any> {
   try {
     const reviews = await ReviewModel.find({ product: productId }).populate<{ user: UserDB }>('user');
     if (!reviews) throw new NotFoundError("Product with id " + productId);
-    return { result: reviews, error: null }
+    const result = reviews.map((review) => ({
+      user: review.user.fullName,
+      rate: review.rate,
+      comment: review.comment
+    }))
+    return { result: result, error: null }
   } catch (err) {
     return { error: err, result: null };
   }
