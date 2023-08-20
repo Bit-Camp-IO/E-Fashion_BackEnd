@@ -3,12 +3,12 @@ import { AsyncSafeResult } from '@type/common';
 import { NotFoundError } from '../errors';
 import {
   CreateProductReturn,
+  ProductApi,
   ProductData,
   ProductFilterOptions,
   ProductItemApi,
   ProductItemsApiList,
   ProductOptions,
-  ProductResult,
   ProductReviewData,
   ProductSortOptions,
   ProductsInfo,
@@ -32,7 +32,7 @@ export async function createProduct(data: ProductData, adminId: string): CreateP
       colors: data.colors,
       imagesURL: data.imagesUrl,
     });
-    const result: ProductResult = _formatProduct(product);
+    const result: ProductApi = _formatProduct(product);
     return { result, error: null };
   } catch (err) {
     return { error: err, result: null };
@@ -58,10 +58,10 @@ export async function getProductForAdmin(id: string): AsyncSafeResult<unknown> {
   }
 }
 
-export async function getProductForUser(id: string): AsyncSafeResult<ProductResult> {
+export async function getProductForUser(id: string): AsyncSafeResult<ProductApi> {
   try {
     const product = await _getProduct(id);
-    const result: ProductResult = _formatProduct(product);
+    const result: ProductApi = _formatProduct(product);
     return { result, error: null };
   } catch (err) {
     return { error: err, result: null };
@@ -80,7 +80,7 @@ export async function getProductsList(
     const products = await productsQuery.skip(skipDocsNumber).limit(limit).exec();
     const count = await ProductModel.count(_filter(options.filter));
     const result: ProductItemsApiList = {
-      products: products.map(p => _formatProduct(p)),
+      products: products.map(p => _formatItemProductList(p)),
       count: products.length,
       page: page,
       totalItems: count,
@@ -142,10 +142,13 @@ export async function productsInfo(): AsyncSafeResult<ProductsInfo> {
   }
 }
 
-//TODO: Check response type 
+//TODO: Check response type
 export async function addReviewToProduct(reviewData: ProductReviewData): AsyncSafeResult<any> {
   try {
-    const existingReview = await ReviewModel.findOne({ user: reviewData.userId, product: reviewData.productId });
+    const existingReview = await ReviewModel.findOne({
+      user: reviewData.userId,
+      product: reviewData.productId,
+    });
     if (existingReview) {
       throw new Error('You have already reviewed this product.');
     }
@@ -154,13 +157,17 @@ export async function addReviewToProduct(reviewData: ProductReviewData): AsyncSa
       user: reviewData.userId,
       product: reviewData.productId,
       rate: reviewData.rate,
-      comment: reviewData.comment
+      comment: reviewData.comment,
     });
 
     const productReviews = await ReviewModel.find({ product: reviewData.productId });
     const rate = _calculateProductRate(productReviews, reviewData.rate);
 
-    await ProductModel.findByIdAndUpdate(reviewData.productId, { $addToSet: { reviews: review }, $set: { rate: rate } }, { new: true });
+    await ProductModel.findByIdAndUpdate(
+      reviewData.productId,
+      { $addToSet: { reviews: review }, $set: { rate: rate } },
+      { new: true },
+    );
     return { result: review, error: null };
   } catch (err) {
     return { error: err, result: null };
@@ -171,14 +178,14 @@ export async function removeReview(reviewId: string, userId: string): Promise<Er
   try {
     const review = await ReviewModel.findById(reviewId);
     if (!review) {
-      throw new NotFoundError("Review with id " + reviewId);
+      throw new NotFoundError('Review with id ' + reviewId);
     }
 
     const productId = review.product;
     const product = await ProductModel.findById(productId);
 
     if (!product) {
-      throw new NotFoundError("Product with id " + productId);
+      throw new NotFoundError('Product with id ' + productId);
     }
 
     await ProductModel.findByIdAndUpdate(productId, { $pull: { reviews: reviewId } });
@@ -198,28 +205,37 @@ export async function removeReview(reviewId: string, userId: string): Promise<Er
 //TODO: Handle Review obejct as Response
 export async function listReviews(productId: string): AsyncSafeResult<any> {
   try {
-    const reviews = await ReviewModel.find({ product: productId }).populate<{ user: UserDB }>('user');
-    if (!reviews) throw new NotFoundError("Product with id " + productId);
-    const result = reviews.map((review) => ({
+    const reviews = await ReviewModel.find({ product: productId }).populate<{ user: UserDB }>(
+      'user',
+    );
+    if (!reviews) throw new NotFoundError('Product with id ' + productId);
+    const result = reviews.map(review => ({
       user: review.user.fullName,
       rate: review.rate,
-      comment: review.comment
-    }))
-    return { result: result, error: null }
+      comment: review.comment,
+    }));
+    return { result: result, error: null };
   } catch (err) {
     return { error: err, result: null };
   }
 }
 
-export async function addDiscount(productId: string, discount: number): AsyncSafeResult<ProductResult> {
+export async function addDiscount(
+  productId: string,
+  discount: number,
+): AsyncSafeResult<ProductApi> {
   try {
-    const product = await ProductModel.findByIdAndUpdate(productId, {
-      $set: {
-        discount: discount
-      }
-    }, { new: true });
-    if (!product) throw new NotFoundError("Product with id " + productId);
-    return { result: _formatProduct(product), error: null }
+    const product = await ProductModel.findByIdAndUpdate(
+      productId,
+      {
+        $set: {
+          discount: discount,
+        },
+      },
+      { new: true },
+    );
+    if (!product) throw new NotFoundError('Product with id ' + productId);
+    return { result: _formatProduct(product), error: null };
   } catch (err) {
     return { error: err, result: null };
   }
@@ -228,9 +244,9 @@ export async function addDiscount(productId: string, discount: number): AsyncSaf
 export async function removeDiscount(productId: string): Promise<Error | null> {
   try {
     const product = await ProductModel.findByIdAndUpdate(productId, {
-      $unset: { discount : 0 }
+      $unset: { discount: 0 },
     });
-    if (!product) throw new NotFoundError("Product with id " + productId);
+    if (!product) throw new NotFoundError('Product with id ' + productId);
     return null;
   } catch (err) {
     return err;
@@ -243,7 +259,18 @@ function _calculateProductRate(reviews: ReviewDB[], newRating: number): number {
   return newTotalRatings / (reviews.length + 1);
 }
 
-function _formatProduct(pDoc: ProductDB): ProductItemApi {
+function _formatItemProductList(pDoc: ProductDB): ProductItemApi {
+  return {
+    id: pDoc._id.toString(),
+    title: pDoc.title,
+    price: pDoc.price - (pDoc.discount || 0 * pDoc.price),
+    discount: pDoc.discount || 0,
+    imageUrl: pDoc.imagesURL[0],
+    oldPrice: pDoc.price,
+  };
+}
+
+function _formatProduct(pDoc: ProductDB): ProductApi {
   return {
     id: pDoc._id.toString(),
     title: pDoc.title,

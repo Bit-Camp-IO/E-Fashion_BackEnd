@@ -3,9 +3,13 @@ import { AsyncSafeResult } from '@type/common';
 export interface ProductItemApi {
   id: string;
   title: string;
-  oldPrice: number;
+  imageUrl: string;
   price: number;
+  oldPrice: number;
   discount: number;
+}
+
+export interface ProductApi extends Omit<ProductItemApi, 'imageUrl'> {
   colors: { name: string; hex: string }[];
   sizes: string[];
   imagesUrl: string[];
@@ -33,15 +37,16 @@ export interface ProductData {
   imagesUrl: string[];
 }
 
-export interface ProductResult {
-  title: string;
-  description: string;
-  price: number;
-  colors: { name: string; hex: string }[];
-  sizes: string[];
-  id: string;
-}
-export type CreateProductReturn = AsyncSafeResult<ProductResult>;
+// export interface ProductResult {
+//   title: string;
+//   description: string;
+//   price: number;
+//   colors: { name: string; hex: string }[];
+//   sizes: string[];
+//   id: string;
+// }
+
+export type CreateProductReturn = AsyncSafeResult<ProductApi>;
 
 export interface ProductOptions {
   page: number;
