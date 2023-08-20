@@ -16,12 +16,7 @@ class CategoryController {
   public async create(req: Request, res: Response) {
     const admin = req.admin as Admin;
     const body: CreateCategorySchema = req.body;
-    const categoryData: CategoryData = {
-      name: body.name,
-      description: body.description,
-      image: body.image,
-    };
-    const category = await admin.addCategory(categoryData);
+    const category = await admin.addCategory(body);
     if (category.error) {
       if (category.error instanceof DuplicateError)
         throw new RequestError(category.error.message, HttpStatus.BadRequest);
@@ -30,23 +25,23 @@ class CategoryController {
     res.JSON(HttpStatus.Created, category.result);
   }
 
-  @Validate(createCategorySchema)
-  @Guard(AdminRole.ADMIN)
-  public async createSub(req: Request, res: Response) {
-    const admin = req.admin as Admin;
-    const { id } = req.params;
-    const body: CreateCategorySchema = req.body;
-    const categoryData: CategoryData = {
-      name: body.name,
-      description: body.description,
-      image: body.image,
-    };
-    const category = await admin.addSubCategory(categoryData, id);
-    if (category.error) {
-      throw RequestError._500();
-    }
-    res.JSON(HttpStatus.Created, category.result);
-  }
+  // @Validate(createCategorySchema)
+  // @Guard(AdminRole.ADMIN)
+  // public async createSub(req: Request, res: Response) {
+  //   const admin = req.admin as Admin;
+  //   const { id } = req.params;
+  //   const body: CreateCategorySchema = req.body;
+  //   const categoryData: CategoryData = {
+  //     name: body.name,
+  //     description: body.description,
+  //     image: body.image,
+  //   };
+  //   const category = await admin.addSubCategory(categoryData, id);
+  //   if (category.error) {
+  //     throw RequestError._500();
+  //   }
+  //   res.JSON(HttpStatus.Created, category.result);
+  // }
 
   @Validate(updateCategorySchema)
   @Guard(AdminRole.ADMIN)

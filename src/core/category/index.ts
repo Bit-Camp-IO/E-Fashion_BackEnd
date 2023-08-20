@@ -6,6 +6,7 @@ import { removeFile } from '../utils';
 import { join } from 'path';
 import Config from '@/config';
 import ProductModel from '@/database/models/product';
+import { Gender } from '../gender';
 
 export async function createCategory(
   data: CategoryData,
@@ -15,9 +16,10 @@ export async function createCategory(
     const category = await CategoryModel.create({
       addedBy: adminId,
       description: data.description,
-      isMain: true,
       name: data.name,
       imageURL: data.image,
+      gender: data.gender,
+      // isMain: true,
     });
     return { result: _formatCategory(category), error: null };
   } catch (err) {
@@ -40,35 +42,35 @@ export async function getCategoryForUser(id: string): AsyncSafeResult<CategoryRe
   }
 }
 
-export async function addSubCategory(
-  data: CategoryData,
-  id: string,
-  adminId: string,
-): AsyncSafeResult<CategoryResult> {
-  try {
-    const subCategory = await CategoryModel.create({
-      addedBy: adminId,
-      description: data.description,
-      isMain: false,
-      name: data.name,
-      imageURL: data.image,
-    });
-    const category = await CategoryModel.findByIdAndUpdate(id, {
-      $push: { subCategories: subCategory },
-    });
-    if (!category) {
-      throw new NotFoundError('Category with id' + id);
-    }
+// export async function addSubCategory(
+//   data: CategoryData,
+//   id: string,
+//   adminId: string,
+// ): AsyncSafeResult<CategoryResult> {
+//   try {
+//     const subCategory = await CategoryModel.create({
+//       addedBy: adminId,
+//       description: data.description,
+//       isMain: false,
+//       name: data.name,
+//       imageURL: data.image,
+//     });
+//     const category = await CategoryModel.findByIdAndUpdate(id, {
+//       $push: { subCategories: subCategory },
+//     });
+//     if (!category) {
+//       throw new NotFoundError('Category with id' + id);
+//     }
 
-    return { result: _formatCategory(category), error: null };
-  } catch (err) {
-    return { error: err, result: null };
-  }
-}
+//     return { result: _formatCategory(category), error: null };
+//   } catch (err) {
+//     return { error: err, result: null };
+//   }
+// }
 
-export async function getAllCategories(): AsyncSafeResult<CategoryResult[]> {
+export async function getAllCategories(gender?: Gender): AsyncSafeResult<CategoryResult[]> {
   try {
-    const categories = await CategoryModel.find({ isMain: true }).populate('subCategories');
+    const categories = await CategoryModel.find({ gender });
     const result = categories.map(category => _formatCategory(category));
     return { result: result, error: null };
   } catch (err) {
@@ -138,8 +140,9 @@ function _formatCategory(cDoc: CategorieDB): CategoryResult {
     name: cDoc.name,
     description: cDoc.description || '',
     imageURL: cDoc.imageURL,
-    subCategories: cDoc.subCategories
-      ? cDoc.subCategories.map(category => _formatCategory(category))
-      : [],
+    gender: cDoc.gender,
+    // subCategories: cDoc.subCategories
+    //   ? cDoc.subCategories.map(category => _formatCategory(category))
+    //   : [],
   };
 }

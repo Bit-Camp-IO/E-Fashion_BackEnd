@@ -38,7 +38,7 @@ router.delete('/product/:id/discount', isAuth, productController.removeDiscount)
 
 const categoryRouter = Router();
 categoryRouter.post('/create', isAuth, UplaodCategoryPic(), categoryController.create);
-categoryRouter.post('/:id/add-sub', isAuth, categoryController.createSub);
+// categoryRouter.post('/:id/add-sub', isAuth, categoryController.createSub);
 categoryRouter.put('/:id/edit', isAuth, categoryController.editCategory);
 categoryRouter.delete('/:id/remove', isAuth, categoryController.remove);
 categoryRouter.post('/:id/add-products', isAuth, categoryController.addProducts);

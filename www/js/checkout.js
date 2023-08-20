@@ -3,6 +3,8 @@ const stripe = Stripe(
   'pk_test_51Na71gF3PbDnuPn4RnTYoM6ug4Ph1LLllOTkKTM6JpmkxuGZ4H4ox2oX8I793FzXyrCvqWHT5QAuByqmnz1SPEXr00t9UwcwU1',
 );
 
+// /stripe-config
+
 // The items the customer wants to buy
 const items = [{ id: 'xl-tshirt' }];
 
@@ -22,7 +24,7 @@ async function initialize() {
   //   body: JSON.stringify({ items }),
   // });
   // const { clientSecret } = await response.json();
-  const clientSecret = 'pi_3NbXU3F3PbDnuPn40ENvf5Z3_secret_CvpXdrsP5YPe0k0QlqKNI7Ch8';
+  const clientSecret = 'pi_3NbXn8F3PbDnuPn4068IGKda_secret_kaVYgAGiZOKOHOCdrJGemqi4r';
   console.log(clientSecret);
 
   const appearance = {

@@ -1,3 +1,4 @@
+import { Gender } from '@/core/gender';
 import Joi from 'joi';
 
 export interface AdminBody {
@@ -63,7 +64,8 @@ export const createProductSchema = Joi.object({
 export interface CreateCategorySchema {
   name: string;
   description: string;
-  isMain: boolean;
+  // isMain: boolean;
+  gender: Gender;
   image: string;
 }
 
@@ -71,6 +73,7 @@ export const createCategorySchema = Joi.object({
   name: Joi.string().required(),
   description: Joi.string().allow('').optional(),
   image: Joi.string().default(''),
+  gender: Joi.number().min(Gender.MALE).max(Gender.BOTH).required(),
 });
 
 export const updateCategorySchema = Joi.object({
@@ -115,5 +118,5 @@ export const updateProductSchema = Joi.object({
 });
 
 export const productDiscount = Joi.object({
-  discount: Joi.number().min(1).max(100).required()
-})
+  discount: Joi.number().min(1).max(100).required(),
+});

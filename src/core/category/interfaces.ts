@@ -1,9 +1,12 @@
+import { Gender } from '../gender';
+
 export interface CategoryData {
   name: string;
   description: string;
-  isMain?: boolean;
   image: string;
-  subCategories?: string[];
+  gender: Gender;
+  // isMain?: boolean;
+  // subCategories?: string[];
 }
 
 export interface CategoryResult {
@@ -11,5 +14,6 @@ export interface CategoryResult {
   name: string;
   description: string;
   imageURL: string;
-  subCategories: CategoryResult[];
+  // subCategories: CategoryResult[];
+  gender: Gender;
 }

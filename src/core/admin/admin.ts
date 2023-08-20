@@ -74,9 +74,9 @@ export class Admin implements AdminService {
     return Category.removeProductFromCategory(catId, proIds);
   }
 
-  async addSubCategory(data: CategoryData, id: string): AsyncSafeResult<CategoryResult> {
-    return Category.addSubCategory(data, id, this._id);
-  }
+  // async addSubCategory(data: CategoryData, id: string): AsyncSafeResult<CategoryResult> {
+  //   return Category.addSubCategory(data, id, this._id);
+  // }
 
   async editCategory(data: Partial<CategoryData>, id: string): AsyncSafeResult<CategoryResult> {
     return Category.updateCategory(id, data);
@@ -141,10 +141,10 @@ export class Admin implements AdminService {
   }
 
   async addDiscount(productId: string, discount: number): AsyncSafeResult<ProductResult> {
-    return addDiscount(productId, discount)
+    return addDiscount(productId, discount);
   }
 
-  async removeDiscount(productId: string): Promise< Error | null> {
+  async removeDiscount(productId: string): Promise<Error | null> {
     return removeDiscount(productId);
   }
 }
