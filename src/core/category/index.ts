@@ -70,7 +70,8 @@ export async function getCategoryForUser(id: string): AsyncSafeResult<CategoryRe
 
 export async function getAllCategories(gender?: Gender): AsyncSafeResult<CategoryResult[]> {
   try {
-    const categories = await CategoryModel.find({ gender });
+    const categories = await (gender ? CategoryModel.find({ gender }) : CategoryModel.find({}));
+    //const categories = gender ? await CategoryModel.find({ gender }) : await CategoryModel.find({});
     const result = categories.map(category => _formatCategory(category));
     return { result: result, error: null };
   } catch (err) {
