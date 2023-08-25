@@ -16,7 +16,7 @@ export function stringToGender(g?: string): Gender | undefined {
       return Gender.FEMALE;
     case '2':
     case 'both':
-      return undefined;
+      return Gender.BOTH;
   }
   return undefined;
 }
