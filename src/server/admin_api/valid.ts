@@ -73,7 +73,7 @@ export const createCategorySchema = Joi.object({
   name: Joi.string().required(),
   description: Joi.string().allow('').optional(),
   image: Joi.string().default(''),
-  gender: Joi.number().min(Gender.MALE).max(Gender.BOTH).required(),
+  gender: Joi.number().min(Gender.BOTH).max(Gender.FEMALE).required(),
 });
 
 export const updateCategorySchema = Joi.object({

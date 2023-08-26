@@ -70,7 +70,13 @@ export async function getCategoryForUser(id: string): AsyncSafeResult<CategoryRe
 
 export async function getAllCategories(gender?: Gender): AsyncSafeResult<CategoryResult[]> {
   try {
-    const categories = await (gender ? CategoryModel.find({ gender }) : CategoryModel.find({}));
+    let filter: { gender?: any } = {};
+    if (gender === Gender.MALE) {
+      filter.gender = { $in: [Gender.MALE, Gender.BOTH] };
+    } else if (gender === Gender.FEMALE) {
+      filter.gender = { $in: [Gender.FEMALE, Gender.BOTH] };
+    }
+    const categories = await CategoryModel.find(filter);
     //const categories = gender ? await CategoryModel.find({ gender }) : await CategoryModel.find({});
     const result = categories.map(category => _formatCategory(category));
     return { result: result, error: null };
