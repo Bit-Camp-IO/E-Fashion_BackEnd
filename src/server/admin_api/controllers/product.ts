@@ -27,6 +27,7 @@ class ProductController {
       sizes: body.sizes,
       title: body.title,
       imagesUrl: body.imagesPath,
+      gender: body.gender
     };
     const product = await admin.addProduct(productData);
     if (product.error) {
@@ -59,6 +60,7 @@ class ProductController {
       price: body.price,
       sizes: body.sizes,
       title: body.title,
+      gender: body.gender
     };
     const product = await admin.editProduct(id, productData);
     if (product.error) {

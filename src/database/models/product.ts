@@ -23,7 +23,7 @@ export interface ProductDB extends Document {
   categories: RelationList<CategorieDB>;
   addedBy: Relation<AdminDB>;
   tags: string[];
-  gender: string;
+  gender: Number;
 }
 const productSchema = new Schema<ProductDB>(
   {
@@ -43,7 +43,7 @@ const productSchema = new Schema<ProductDB>(
     reviews: [{ type: ObjectId, ref: 'Review' }],
     categories: [{ type: ObjectId, ref: 'Categorie' }],
     tags: [String],
-    gender: String,
+    gender: { type: Number, required: true },
     addedBy: { type: ObjectId, ref: 'Admin' },
   },
   { timestamps: true },

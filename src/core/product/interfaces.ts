@@ -18,6 +18,7 @@ export interface ProductApi extends Omit<ProductItemApi, 'imageUrl'> {
   rate: number;
   brand: string;
   description: string;
+  gender: Number;
 }
 
 export interface ProductItemsApiList {
@@ -35,6 +36,7 @@ export interface ProductData {
   colors: { name: string; hex: string }[];
   sizes: string[];
   imagesUrl: string[];
+  gender: Number;
 }
 
 // export interface ProductResult {
@@ -70,6 +72,7 @@ export interface ProductFilterOptions {
   brands?: string[];
   brandsName?: string[];
   search?: string;
+  gender?: Number;
 }
 
 export interface ProductsInfo {

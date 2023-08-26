@@ -285,6 +285,7 @@ function _formatProduct(pDoc: ProductDB): ProductApi {
     rate: pDoc.rate || 0,
     colors: pDoc.colors || [],
     sizes: pDoc.sizes || [],
+    gender: pDoc.gender
   };
 }
 
