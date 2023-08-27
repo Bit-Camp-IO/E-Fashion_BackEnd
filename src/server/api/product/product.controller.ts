@@ -1,6 +1,16 @@
 // import Product from '@/core/product';
 import { NotFoundError } from '@/core/errors';
-import { ProductOptions, ProductReviewData, addReviewToProduct, getProductForUser, getProductsList, listReviews, productsInfo, removeReview } from '@/core/product';
+import {
+  ProductOptions,
+  ProductReviewData,
+  Sort,
+  addReviewToProduct,
+  getProductForUser,
+  getProductsList,
+  listReviews,
+  productsInfo,
+  removeReview,
+} from '@/core/product';
 import { validateId } from '@/core/utils';
 import { Controller, Validate } from '@server/decorator';
 import RequestError from '@server/utils/errors';
@@ -30,6 +40,18 @@ function queryToListId(q?: any): string[] | null {
   return listId;
 }
 
+function queryToSort(q?: any): Sort | null {
+  if (!q) return null;
+  q = (q.toString() as string).toLowerCase();
+  if (q === 'asc' || q === '1') {
+    return 1;
+  } else if (q === 'desc' || q === '-1') {
+    return -1;
+  } else {
+    return null;
+  }
+}
+
 @Controller()
 class ProductController implements ProductHandler {
   public async getList(req: Request, res: Response) {
@@ -51,10 +73,17 @@ class ProductController implements ProductHandler {
     if (_categories && _categories.length > 0) options.filter.categories = _categories;
     const _brands = queryToListId(req.query['brands']);
     if (_brands && _brands.length > 0) options.filter.brands = _brands;
-    const _brandsName = queryToListId(req.query['brandsName']);
-    if (_brandsName && _brandsName.length > 0) options.filter.brandsName = _brandsName;
+    options.filter.discount =
+      req.query['discount']?.toString().toLowerCase() === 'true' ? true : false;
     const _search = req.query['search'] as string;
     if (_search) options.filter.search = _search;
+
+    const _sortWithPrice = queryToSort(req.query['sort-price']);
+    if (_sortWithPrice) options.sort.price = _sortWithPrice;
+    const _sortWithNew = queryToSort(req.query['sort-new']);
+    if (_sortWithNew) options.sort.newness = _sortWithNew;
+    const _sortWithRate = queryToSort(req.query['sort-popularity']);
+    if (_sortWithRate) options.sort.popularity = _sortWithRate;
 
     const products = await getProductsList(options);
     if (products.error) {
@@ -95,8 +124,8 @@ class ProductController implements ProductHandler {
       userId: req.userId!,
       productId: productId,
       rate: body.rate,
-      comment: body.comment
-    }
+      comment: body.comment,
+    };
     const product = await addReviewToProduct(review);
     if (!product) throw RequestError._500();
     res.sendStatus(HttpStatus.NoContent);
@@ -107,7 +136,7 @@ class ProductController implements ProductHandler {
     if (!validateId(reviewId)) throw new RequestError('invalid review id');
     const error = await removeReview(reviewId, req.userId!);
     if (error) throw new RequestError(error.message, HttpStatus.BadRequest);
-    res.sendStatus(HttpStatus.Accepted)
+    res.sendStatus(HttpStatus.Accepted);
   }
 
   async listReviews(req: Request, res: Response) {

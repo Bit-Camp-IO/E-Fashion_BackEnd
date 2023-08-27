@@ -57,7 +57,7 @@ export interface ProductOptions {
   filter: ProductFilterOptions;
 }
 
-type Sort = 'asc' | 'desc';
+export type Sort = 1 | -1;
 
 export interface ProductSortOptions {
   price?: Sort;
@@ -70,9 +70,9 @@ export interface ProductFilterOptions {
   minPrice?: number;
   categories?: string[];
   brands?: string[];
-  brandsName?: string[];
   search?: string;
   gender?: number;
+  discount?: boolean;
 }
 
 export interface ProductsInfo {

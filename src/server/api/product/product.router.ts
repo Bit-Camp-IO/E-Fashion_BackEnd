@@ -12,6 +12,69 @@ const router = Router();
  *      - Products
  *    summary: Products List
  *    description: Endpoint for get back list with products with filter, sort or search.
+ *    parameters:
+ *      - in: query
+ *        name: page
+ *        schema:
+ *          type: number
+ *        default: 1
+ *        description: Number of page
+ *      - in: query
+ *        name: limit
+ *        schema:
+ *          type: number
+ *        default: 20
+ *        description: Number of returned products
+ *      - in: query
+ *        name: max-price
+ *        schema:
+ *          type: number
+ *        description: Set max price limit
+ *      - in: query
+ *        name: min-price
+ *        schema:
+ *          type: number
+ *        description: Set min price limit
+ *      - in: query
+ *        name: gender
+ *        schema:
+ *          type: number
+ *        description: Filter with gender (0 = all | 1 = male | 2 = female)
+ *      - in: query
+ *        name: categories
+ *        schema:
+ *          type: string
+ *        description: Filter with Categories Ids e.x. categories=1,2,3
+ *      - in: query
+ *        name: brands
+ *        schema:
+ *          type: string
+ *        description: Filter with Brands Ids e.x. brands=1,2,3
+ *      - in: query
+ *        name: discount
+ *        schema:
+ *          type: boolean
+ *        description: Return products with discount
+ *      - in: query
+ *        name: search
+ *        schema:
+ *          type: string
+ *        description: Search with name of products
+ *      - in: query
+ *        name: sort-price
+ *        schema:
+ *          type: string
+ *        description: Sort with price (1, -1, asc, desc)
+ *      - in: query
+ *        name: sort-new
+ *        schema:
+ *          type: string
+ *        description: Sort with the most recent product (1, -1, asc, desc)
+ *      - in: query
+ *        name: sort-popularity
+ *        schema:
+ *          type: string
+ *        description: Sort with rate (1, -1, asc, desc)
  *    responses:
  *      200:
  *        description: successful operation

@@ -285,7 +285,7 @@ function _formatProduct(pDoc: ProductDB): ProductApi {
     rate: pDoc.rate || 0,
     colors: pDoc.colors || [],
     sizes: pDoc.sizes || [],
-    gender: pDoc.gender
+    gender: pDoc.gender,
   };
 }
 
@@ -310,8 +310,8 @@ function _filter(options?: ProductFilterOptions) {
   if (options.brands && options.brands.length > 0) {
     filter.brand = { $in: options.brands };
   }
-  if (options.brandsName && options.brandsName.length > 0) {
-    filter.brand = { $in: options.brands };
+  if (options.discount) {
+    filter.discount = { $gte: 1 };
   }
   return filter;
 }
