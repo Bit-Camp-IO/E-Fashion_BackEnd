@@ -87,17 +87,7 @@ export class User implements UserServices {
 
   async me(): AsyncSafeResult<UserResult> {
     try {
-      const user = await UserModel.findById(this._id)
-        .select([
-          'email',
-          'fullName',
-          'isVerified',
-          'provider',
-          'settings',
-          'profileImage',
-          'addresses',
-        ])
-        .populate('addresses');
+      const user = await UserModel.findById(this._id).populate('addresses');
       if (!user) return { error: new NotFoundError('User with id ' + this._id), result: null };
       const result: UserResult = {
         email: user.email,
@@ -106,7 +96,14 @@ export class User implements UserServices {
         provider: user.provider,
         settings: user.settings,
         profile: user.profileImage,
-        addresses: user.addresses,
+        addresses: user.addresses.map(a => ({
+          id: a._id,
+          state: a.state,
+          postalCode: a.postalCode,
+          city: a.city,
+          isPrimary: a.isPrimary,
+        })),
+        phoneNumber: user.phoneNumber,
       };
       return { result, error: null };
     } catch (err) {

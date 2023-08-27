@@ -42,8 +42,8 @@ export interface CreateProductSchema {
   price: number;
   colors: { name: string; hex: string }[];
   sizes: string[];
-  imagesPath: string[];
-  gender: Number;
+  imagesUrl: string[];
+  gender: Gender;
 }
 
 const colorItem = Joi.object({
@@ -53,14 +53,14 @@ const colorItem = Joi.object({
     .required(),
 }).required();
 
-export const createProductSchema = Joi.object({
+export const createProductSchema = Joi.object<CreateProductSchema>({
   title: Joi.string().min(2).required(),
   description: Joi.string().max(500).required(),
   price: Joi.number().required(),
   colors: Joi.array().items(colorItem).default([]),
   sizes: Joi.array().items(Joi.string()).default([]),
-  imagesPath: Joi.array().items(Joi.string()),
-  gender: Joi.number().required().min(0).max(2)
+  imagesUrl: Joi.array().items(Joi.string()).required(),
+  gender: Joi.number().required().min(0).max(2),
 });
 
 export interface CreateCategorySchema {
@@ -118,7 +118,7 @@ export const updateProductSchema = Joi.object({
   description: Joi.string(),
   price: Joi.number(),
   sizes: Joi.array().items(Joi.string()),
-  gender: Joi.number().min(0).max(2)
+  gender: Joi.number().min(0).max(2),
 });
 
 export const productDiscount = Joi.object({

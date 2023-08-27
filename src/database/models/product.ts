@@ -23,7 +23,7 @@ export interface ProductDB extends Document {
   categories: RelationList<CategorieDB>;
   addedBy: Relation<AdminDB>;
   tags: string[];
-  gender: Number;
+  gender: number;
 }
 const productSchema = new Schema<ProductDB>(
   {
@@ -61,8 +61,6 @@ const productSchema = new Schema<ProductDB>(
 
 //   next();
 // });
-
-
 
 productSchema.index({ title: 'text' });
 

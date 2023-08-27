@@ -10,7 +10,7 @@ import { UplaodCategoryPic, UplaodProductsPics } from '@server/middleware/upload
 
 const router = Router();
 
-router.post('/create-manager', managerController.create); // *
+router.post('/create-manager', managerController.create);
 
 router.post('/create-super', isAuth, managerController.createSuper); // *
 

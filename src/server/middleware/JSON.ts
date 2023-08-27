@@ -1,14 +1,14 @@
-import {wrappResponse} from '@server/utils/response';
-import {HttpStatus} from '@server/utils/status';
-import {NextFunction, Request, Response} from 'express';
+import { wrappResponse } from '@server/utils/response';
+import { HttpStatus } from '@server/utils/status';
+import { NextFunction, Request, Response, Express } from 'express';
 
-export function JSONMiddleware() {
-  return (_: Request, res: Response, next: NextFunction) => {
+export function JSONMiddleware(app: Express) {
+  app.use((_: Request, res: Response, next: NextFunction) => {
     res.JSON = (statusCode: HttpStatus, data: unknown) => {
       res.status(statusCode).json(wrappResponse(data, statusCode));
     };
     next();
-  };
+  });
 }
 
 declare global {

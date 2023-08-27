@@ -3,4 +3,5 @@ export interface AddressData {
   state: string;
   postalCode: number;
   isPrimary?: boolean;
+  id?: string;
 }

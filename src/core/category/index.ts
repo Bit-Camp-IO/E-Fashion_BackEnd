@@ -77,7 +77,6 @@ export async function getAllCategories(gender?: Gender): AsyncSafeResult<Categor
       filter.gender = { $in: [Gender.FEMALE, Gender.BOTH] };
     }
     const categories = await CategoryModel.find(filter);
-    //const categories = gender ? await CategoryModel.find({ gender }) : await CategoryModel.find({});
     const result = categories.map(category => _formatCategory(category));
     return { result: result, error: null };
   } catch (err) {

@@ -21,6 +21,7 @@ export interface AuthResponse {
   email: string;
   fullName: string;
   id: string;
+  phoneNumber?: string;
   accessToken: string;
   refreshToken: string;
 }
@@ -81,10 +82,11 @@ export class JWTAuthService {
         Config.REFRESH_TOKEN_PRIVATE_KEY,
         Config.REFRESH_TOKEN_EXP,
       );
-      const result = {
+      const result: AuthResponse = {
         id: user._id,
         email: user.email,
         fullName: user.fullName,
+        phoneNumber: user.phoneNumber,
         accessToken,
         refreshToken,
       };
@@ -106,10 +108,8 @@ export class JWTAuthService {
   static async refreshToken(token: string): AsyncSafeResult<string> {
     try {
       const payload = verifyToken(token, Config.REFRESH_TOKEN_PUBLIC_KEY);
-      // TODO: search for user in data base
       const user = await UserModel.findById(payload.id);
       if (!user) {
-        // Create new error for bad id
         throw new Error('');
       }
       const newAccessToken = createToken(
