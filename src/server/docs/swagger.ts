@@ -29,9 +29,9 @@ const options: swaggerJSDoc.Options = {
     ],
   },
   apis: [
-    join(__dirname, '..', 'api') + '/**/*.router.ts',
-    join(__dirname, '..', 'api') + '/**/*.valid.ts',
-    join(__dirname, '..', 'admin_api') + '/router.ts',
+    join(__dirname, '..', 'api') + '/**/*.router.{ts,js}',
+    join(__dirname, '..', 'api') + '/**/*.valid.{ts,js}',
+    join(__dirname, '..', 'admin_api') + '/router.{ts,js}',
   ],
 };
 

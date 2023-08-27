@@ -7,7 +7,7 @@
     "sourceMap": true,
     "outDir": "./dist",
     "moduleResolution": "node",
-    "removeComments": true,
+    "removeComments": false,
     "noImplicitAny": true,
     "strictNullChecks": true,
     "strictFunctionTypes": true,
@@ -28,9 +28,7 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": [
-    "src/**/*.ts"
-  ],
+  "include": ["src/**/*.ts"],
   "exclude": ["node_modules"],
   "files": ["custom.d.ts"]
 }
