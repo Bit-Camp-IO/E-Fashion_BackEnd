@@ -6,7 +6,6 @@ import { NextFunction, Request, Response } from 'express';
 export async function isAuth(req: Request, _: Response, next: NextFunction) {
   try {
     const authHeader = req.get('Authorization');
-    console.log(authHeader);
     if (!authHeader) {
       throw new RequestError('not authorized', 401);
     }

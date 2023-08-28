@@ -11,6 +11,7 @@ export interface AdminBody {
 }
 
 const passwordValidate = Joi.string().trim().min(8).max(30).required();
+const genderValidate = Joi.number().min(0).max(2).required();
 const confirmPasswordValidate = Joi.string().valid(Joi.ref('password')).required();
 
 export const adminSchema = Joi.object({
@@ -60,7 +61,7 @@ export const createProductSchema = Joi.object<CreateProductSchema>({
   colors: Joi.array().items(colorItem).default([]),
   sizes: Joi.array().items(Joi.string()).default([]),
   imagesUrl: Joi.array().items(Joi.string()).required(),
-  gender: Joi.number().required().min(0).max(2),
+  gender: genderValidate,
 });
 
 export interface CreateCategorySchema {
@@ -74,8 +75,8 @@ export interface CreateCategorySchema {
 export const createCategorySchema = Joi.object({
   name: Joi.string().required(),
   description: Joi.string().allow('').optional(),
-  image: Joi.string().default(''),
-  gender: Joi.number().min(Gender.BOTH).max(Gender.FEMALE).required(),
+  image: Joi.string().required().allow(),
+  gender: genderValidate,
 });
 
 export const updateCategorySchema = Joi.object({
@@ -122,5 +123,5 @@ export const updateProductSchema = Joi.object({
 });
 
 export const productDiscount = Joi.object({
-  discount: Joi.number().min(1).max(100).required(),
+  discount: Joi.number().min(1).required(),
 });
