@@ -95,6 +95,10 @@ export function UplaodCategoryPic(): RequestHandler {
   return (req, _, next) => {
     const body: any = {};
     try {
+      if (req.get('Content-type') === 'application/json') {
+        next();
+        return;
+      }
       const bb = busboy({ headers: req.headers, limits: { files: 300000 } });
       bb.on('error', err => {
         next(err);

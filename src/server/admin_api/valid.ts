@@ -1,4 +1,5 @@
 import { Gender } from '@/core/gender';
+import { validateId } from '@/core/utils';
 import Joi from 'joi';
 
 export interface AdminBody {
@@ -10,7 +11,14 @@ export interface AdminBody {
   confirmPassword: string;
 }
 
+const objectIdSchema = Joi.string().custom((value, helpers) => {
+  if (!validateId(value)) {
+    return helpers.error('Invalid id');
+  }
+  return value;
+});
 const passwordValidate = Joi.string().trim().min(8).max(30).required();
+const genderValidate = Joi.number().min(0).max(2).required();
 const confirmPasswordValidate = Joi.string().valid(Joi.ref('password')).required();
 
 export const adminSchema = Joi.object({
@@ -42,7 +50,10 @@ export interface CreateProductSchema {
   price: number;
   colors: { name: string; hex: string }[];
   sizes: string[];
-  imagesPath: string[];
+  imagesUrl: string[];
+  gender: Gender;
+  categoryId?: string;
+  brandId?: string;
 }
 
 const colorItem = Joi.object({
@@ -50,21 +61,23 @@ const colorItem = Joi.object({
   hex: Joi.string()
     .regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/)
     .required(),
-}).required();
+});
 
-export const createProductSchema = Joi.object({
+export const createProductSchema = Joi.object<CreateProductSchema>({
   title: Joi.string().min(2).required(),
   description: Joi.string().max(500).required(),
   price: Joi.number().required(),
   colors: Joi.array().items(colorItem).default([]),
   sizes: Joi.array().items(Joi.string()).default([]),
-  imagesPath: Joi.array().items(Joi.string()),
+  imagesUrl: Joi.array().items(Joi.string()).min(1).required(),
+  gender: genderValidate,
+  brandId: objectIdSchema,
+  categoryId: objectIdSchema,
 });
 
 export interface CreateCategorySchema {
   name: string;
   description: string;
-  // isMain: boolean;
   gender: Gender;
   image: string;
 }
@@ -72,8 +85,8 @@ export interface CreateCategorySchema {
 export const createCategorySchema = Joi.object({
   name: Joi.string().required(),
   description: Joi.string().allow('').optional(),
-  image: Joi.string().default(''),
-  gender: Joi.number().min(Gender.MALE).max(Gender.BOTH).required(),
+  image: Joi.string().required().allow(),
+  gender: genderValidate,
 });
 
 export const updateCategorySchema = Joi.object({
@@ -108,6 +121,7 @@ export interface UpdateProductSchema {
   price?: number;
   colors?: { name: string; hex: string }[];
   sizes?: string[];
+  gender?: number;
 }
 
 export const updateProductSchema = Joi.object({
@@ -115,8 +129,9 @@ export const updateProductSchema = Joi.object({
   description: Joi.string(),
   price: Joi.number(),
   sizes: Joi.array().items(Joi.string()),
+  gender: Joi.number().min(0).max(2),
 });
 
 export const productDiscount = Joi.object({
-  discount: Joi.number().min(1).max(100).required(),
+  discount: Joi.number().min(1).required(),
 });

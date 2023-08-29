@@ -49,6 +49,7 @@ class AuthController implements IAuth {
     }
     res.JSON(HttpStatus.Created, response.result);
   }
+
   public async refresh(req: Request, res: Response) {
     const refreshToken = req.get('X-Refresh-Token');
     if (!refreshToken) {
@@ -63,10 +64,12 @@ class AuthController implements IAuth {
     }
     res.JSON(HttpStatus.Created, { accessToken: newAccessToken.result });
   }
+
   public google(_: Request, res: Response) {
     const url = OAuthAuthService.loginGooglePageUrl();
     res.redirect(url);
   }
+
   public async googleRedirect(req: Request, res: Response) {
     if (!req.query.code) {
       throw new RequestError('Only access from google Oauth2', HttpStatus.BadRequest);

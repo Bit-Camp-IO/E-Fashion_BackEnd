@@ -18,6 +18,7 @@ export interface ProductApi extends Omit<ProductItemApi, 'imageUrl'> {
   rate: number;
   brand: string;
   description: string;
+  gender: number;
 }
 
 export interface ProductItemsApiList {
@@ -35,6 +36,9 @@ export interface ProductData {
   colors: { name: string; hex: string }[];
   sizes: string[];
   imagesUrl: string[];
+  gender: number;
+  categoryId?: string;
+  brandId?: string;
 }
 
 // export interface ProductResult {
@@ -55,7 +59,7 @@ export interface ProductOptions {
   filter: ProductFilterOptions;
 }
 
-type Sort = 'asc' | 'desc';
+export type Sort = 1 | -1;
 
 export interface ProductSortOptions {
   price?: Sort;
@@ -68,13 +72,16 @@ export interface ProductFilterOptions {
   minPrice?: number;
   categories?: string[];
   brands?: string[];
-  brandsName?: string[];
   search?: string;
+  gender?: number;
+  discount?: boolean;
 }
 
 export interface ProductsInfo {
   maxPrice: number;
   minPrice: number;
+  colors: { hex: string; name: string }[];
+  sizes: string[];
 }
 
 export interface ProductReviewData {

@@ -1,4 +1,3 @@
-import { RelationList } from '@type/database';
 import { AddressData } from '../address/interfaces';
 
 export interface FavItem {
@@ -30,9 +29,10 @@ export interface CartResult {
 export interface UserResult {
   email: string;
   fullName: string;
+  phoneNumber?: string;
   provider: string;
   isVerified: boolean;
   settings: any;
   profile?: string;
-  addresses: RelationList<AddressData>;
+  addresses: AddressData[];
 }
