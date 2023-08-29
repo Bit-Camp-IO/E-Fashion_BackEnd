@@ -1,6 +1,6 @@
-import UserModel from '@/database/models/user';
+import UserModel, { UserDB } from '@/database/models/user';
 import { AsyncSafeResult } from '@type/common';
-import { NotFoundError } from '../errors';
+import { InvalidDataError, NotFoundError } from '../errors';
 import ProductModel, { ProductDB } from '@/database/models/product';
 import { FavItem, UserResult } from './interfaces';
 import { Cart } from './cart';
@@ -87,27 +87,24 @@ export class User implements UserServices {
 
   async me(): AsyncSafeResult<UserResult> {
     try {
-      const user = await UserModel.findById(this._id).populate('addresses');
+      const user = await UserModel.findById(this._id);
       if (!user) return { error: new NotFoundError('User with id ' + this._id), result: null };
-      const result: UserResult = {
-        email: user.email,
-        fullName: user.fullName,
-        isVerified: user.isVerified,
-        provider: user.provider,
-        settings: user.settings,
-        profile: user.profileImage,
-        addresses: user.addresses.map(a => ({
-          id: a._id,
-          state: a.state,
-          postalCode: a.postalCode,
-          city: a.city,
-          isPrimary: a.isPrimary,
-        })),
-        phoneNumber: user.phoneNumber,
-      };
+      const result: UserResult = _formatUser(user);
       return { result, error: null };
     } catch (err) {
       return { error: err, result: null };
+    }
+  }
+
+  async editMe(data: any): AsyncSafeResult<UserResult> {
+    try {
+      const user = await UserModel.findByIdAndUpdate(this._id, data, { new: true });
+      if (!user) {
+        throw new InvalidDataError('Invalid user data');
+      }
+      return { result: _formatUser(user), error: null };
+    } catch (error) {
+      return { error, result: null };
     }
   }
 
@@ -135,4 +132,23 @@ export class User implements UserServices {
   async removeAddress(addressId: string): Promise<Error | null> {
     return await removeAddress(this._id, addressId);
   }
+}
+
+function _formatUser(user: UserDB): UserResult {
+  return {
+    email: user.email,
+    fullName: user.fullName,
+    isVerified: user.isVerified,
+    provider: user.provider,
+    settings: user.settings,
+    profile: user.profileImage,
+    addresses: user.addresses?.map(a => ({
+      id: a._id,
+      state: a.state,
+      postalCode: a.postalCode,
+      city: a.city,
+      isPrimary: a.isPrimary,
+    })),
+    phoneNumber: user.phoneNumber,
+  };
 }

@@ -24,12 +24,10 @@ export interface UserDB extends mongoose.Document {
 }
 
 interface SettingsDB {
-  darkmode: 'dark' | 'light' | 'system';
   language: 'en' | 'ar';
 }
 
 const defaultSetting: SettingsDB = {
-  darkmode: 'system',
   language: 'en',
 };
 
@@ -65,11 +63,6 @@ const userSchema = new Schema<UserDB>(
     },
     settings: {
       type: {
-        darkmode: {
-          type: String,
-          enum: ['dark', 'light', 'system'],
-          default: 'system',
-        },
         language: {
           type: String,
           enum: ['en', 'ar'],

@@ -5,13 +5,24 @@ import { Controller, Validate } from '@server/decorator';
 import RequestError from '@server/utils/errors';
 import { HttpStatus } from '@server/utils/status';
 import { Request, Response } from 'express';
-import { addressSchema } from './user.valid';
+import { EditUserSchem, addressSchema, editUserSchema } from './user.valid';
 
 @Controller()
 class UserController {
   async getMe(req: Request, res: Response) {
     const user = new User(req.userId!);
     const userResult = await user.me();
+    if (userResult.error) {
+      throw RequestError._500();
+    }
+    res.JSON(HttpStatus.Ok, userResult.result);
+  }
+
+  @Validate(editUserSchema)
+  async editMe(req: Request, res: Response) {
+    const user = new User(req.userId!);
+    const body: EditUserSchem = req.body;
+    const userResult = await user.editMe(body);
     if (userResult.error) {
       throw RequestError._500();
     }

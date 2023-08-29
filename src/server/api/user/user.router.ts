@@ -29,6 +29,31 @@ router.get('/me', isAuth, controller.getMe);
 
 /**
  * @openapi
+ * /api/user/me/edit:
+ *   patch:
+ *     tags:
+ *       - User
+ *     summary: Update User
+ *     description: Update user data
+ *     security:
+ *      - bearerAuth: []
+ *     requestBody:
+ *      content:
+ *        application/json:
+ *          schema:
+ *           $ref: '#/components/schemas/EditUserData'
+ *     responses:
+ *       200:
+ *         description: Successful operation.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ */
+router.patch('/me/edit', isAuth, controller.editMe);
+
+/**
+ * @openapi
  * /api/user/profile-image:
  *   post:
  *     tags:
@@ -49,10 +74,6 @@ router.get('/me', isAuth, controller.getMe);
  *     responses:
  *       200:
  *         description: Profile image uploaded successfully.
- *       401:
- *         $ref: '#/components/responses/UnauthorizedError'
- *       500:
- *         $ref: '#/components/responses/InternalServerError'
  */
 router.post('/profile-image', isAuth, UplaodProfilePic(), controller.updateProfile);
 
