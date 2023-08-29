@@ -61,7 +61,7 @@ const colorItem = Joi.object({
   hex: Joi.string()
     .regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/)
     .required(),
-}).required();
+});
 
 export const createProductSchema = Joi.object<CreateProductSchema>({
   title: Joi.string().min(2).required(),
@@ -78,7 +78,6 @@ export const createProductSchema = Joi.object<CreateProductSchema>({
 export interface CreateCategorySchema {
   name: string;
   description: string;
-  // isMain: boolean;
   gender: Gender;
   image: string;
 }
