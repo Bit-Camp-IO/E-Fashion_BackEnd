@@ -1,6 +1,6 @@
 import ProductModel, { ProductDB } from '@/database/models/product';
 import { AsyncSafeResult } from '@type/common';
-import { NotFoundError } from '../errors';
+import { InvalidDataError, NotFoundError } from '../errors';
 import {
   CreateProductReturn,
   ProductApi,
@@ -18,19 +18,25 @@ import Config from '@/config';
 import { join } from 'path';
 import ReviewModel, { ReviewDB } from '@/database/models/review';
 import { UserDB } from '@/database/models/user';
+import BrandModel from '@/database/models/brand';
+import CategoryModel from '@/database/models/categorie';
 //import ReviewModel, { ReviewDB } from '@/database/models/review';
 export * from './interfaces';
 
 export async function createProduct(data: ProductData, adminId: string): CreateProductReturn {
   try {
+    if (data.brandId) {
+      const brand = await BrandModel.findById(data.brandId);
+      if (!brand) throw new InvalidDataError('Invalid Brand id ' + data.brandId);
+    }
+    if (data.categoryId) {
+      const category = await CategoryModel.findById(data.categoryId);
+      if (!category) throw new InvalidDataError('Invalid Brand id ' + data.categoryId);
+    }
     const product = await ProductModel.create({
-      title: data.title,
-      description: data.description,
-      addedBy: adminId,
-      price: data.price,
-      sizes: data.sizes,
-      colors: data.colors,
+      ...data,
       imagesURL: data.imagesUrl,
+      addedBy: adminId,
     });
     const result: ProductApi = _formatProduct(product);
     return { result, error: null };

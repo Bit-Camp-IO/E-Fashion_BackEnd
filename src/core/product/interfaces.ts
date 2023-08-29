@@ -37,6 +37,8 @@ export interface ProductData {
   sizes: string[];
   imagesUrl: string[];
   gender: number;
+  categoryId?: string;
+  brandId?: string;
 }
 
 // export interface ProductResult {

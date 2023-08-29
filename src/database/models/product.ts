@@ -20,7 +20,7 @@ export interface ProductDB extends Document {
   available: boolean;
   discount?: number;
   reviews: RelationList<ReviewDB>;
-  categories: RelationList<CategorieDB>;
+  category: Relation<CategorieDB>;
   addedBy: Relation<AdminDB>;
   tags: string[];
   gender: number;
@@ -41,7 +41,7 @@ const productSchema = new Schema<ProductDB>(
     available: { type: Boolean, default: true },
     discount: Number,
     reviews: [{ type: ObjectId, ref: 'Review' }],
-    categories: [{ type: ObjectId, ref: 'Categorie' }],
+    category: { type: ObjectId, ref: 'Categorie' },
     tags: [String],
     gender: { type: Number, required: true },
     addedBy: { type: ObjectId, ref: 'Admin' },

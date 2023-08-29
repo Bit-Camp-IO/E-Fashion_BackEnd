@@ -1,5 +1,4 @@
 import { Admin } from '@/core/admin/admin';
-import { ProductData } from '@/core/product';
 import { Controller, Validate, Guard } from '@server/decorator';
 import { Request, Response } from 'express';
 import {
@@ -12,7 +11,7 @@ import {
 import RequestError from '@server/utils/errors';
 import { HttpStatus } from '@server/utils/status';
 import { AdminRole } from '@/core/admin';
-import { NotFoundError } from '@/core/errors';
+import { InvalidDataError, NotFoundError } from '@/core/errors';
 @Controller()
 class ProductController {
   @Validate(createProductSchema)
@@ -20,17 +19,11 @@ class ProductController {
   async create(req: Request, res: Response) {
     const admin = req.admin as Admin;
     const body: CreateProductSchema = req.body;
-    const productData: ProductData = {
-      colors: body.colors,
-      description: body.description,
-      price: body.price,
-      sizes: body.sizes,
-      title: body.title,
-      imagesUrl: body.imagesUrl,
-      gender: body.gender,
-    };
-    const product = await admin.addProduct(productData);
+    const product = await admin.addProduct(body);
     if (product.error) {
+      if (product.error instanceof InvalidDataError) {
+        throw new RequestError(product.error.message, 400);
+      }
       throw RequestError._500();
     }
     res.JSON(HttpStatus.Created, product.result);
