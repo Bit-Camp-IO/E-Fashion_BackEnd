@@ -70,7 +70,7 @@ class ProductController implements ProductHandler {
     const _gender = queryToNumber(req.query['gender']);
     if (_gender) options.filter.gender = _gender;
     const _categories = queryToListId(req.query['categories']);
-    if (_categories && _categories.length > 0) options.filter.categories = _categories;
+    if (_categories && _categories.length > 0) options.filter.category = _categories;
     const _brands = queryToListId(req.query['brands']);
     if (_brands && _brands.length > 0) options.filter.brands = _brands;
     options.filter.discount =

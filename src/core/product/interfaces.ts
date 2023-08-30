@@ -70,7 +70,7 @@ export interface ProductSortOptions {
 export interface ProductFilterOptions {
   maxPrice?: number;
   minPrice?: number;
-  categories?: string[];
+  category?: string[];
   brands?: string[];
   search?: string;
   gender?: number;

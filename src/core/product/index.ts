@@ -23,21 +23,32 @@ import CategoryModel from '@/database/models/categorie';
 //import ReviewModel, { ReviewDB } from '@/database/models/review';
 export * from './interfaces';
 
+type ProductCreationData = Omit<ProductData, 'categoryId' | 'brandId' | 'imagesUrl'> & {
+  imagesURL: string[];
+  addedBy: string;
+  category?: string;
+  brand?: string;
+  brandName?: string;
+};
 export async function createProduct(data: ProductData, adminId: string): CreateProductReturn {
   try {
+    const productModelData: ProductCreationData = {
+      ...data,
+      imagesURL: data.imagesUrl,
+      addedBy: adminId,
+    };
     if (data.brandId) {
       const brand = await BrandModel.findById(data.brandId);
       if (!brand) throw new InvalidDataError('Invalid Brand id ' + data.brandId);
+      productModelData.brand = brand._id.toString();
+      productModelData.brandName = brand.name;
     }
     if (data.categoryId) {
       const category = await CategoryModel.findById(data.categoryId);
       if (!category) throw new InvalidDataError('Invalid Brand id ' + data.categoryId);
+      productModelData.category = category._id;
     }
-    const product = await ProductModel.create({
-      ...data,
-      imagesURL: data.imagesUrl,
-      addedBy: adminId,
-    });
+    const product = await ProductModel.create(productModelData);
     const result: ProductApi = _formatProduct(product);
     return { result, error: null };
   } catch (err) {
@@ -307,8 +318,8 @@ function _filter(options?: ProductFilterOptions) {
   if (!options) return filter;
   if (options.maxPrice) filter.price = { $lte: options.maxPrice };
   if (options.minPrice) filter.price = { ...filter.price, $gte: options.minPrice };
-  if (options.categories && options.categories.length > 0) {
-    filter.categories = { $in: options.categories };
+  if (options.category && options.category.length > 0) {
+    filter.category = { $in: options.category };
   }
   if (options.search) {
     filter.$or = [{ $text: { $search: options.search } }];
