@@ -69,7 +69,7 @@ router.post('/register', controller.register);
  *      content:
  *        application/json:
  *          schema:
- *            $ref: '#/components/schemas/PasswordSchema'
+ *            $ref: '#/components/schemas/ChangePasswordSchema'
  *    responses:
  *      204:
  *        description: successful operation
