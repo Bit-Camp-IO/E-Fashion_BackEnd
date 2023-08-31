@@ -1,6 +1,6 @@
 import UserModel, { UserDB } from '@/database/models/user';
 import { AsyncSafeResult } from '@type/common';
-import { InvalidDataError, NotFoundError } from '../errors';
+import { InvalidCredentialsError, InvalidDataError, NotFoundError } from '../errors';
 import ProductModel, { ProductDB } from '@/database/models/product';
 import { FavItem, UserResult } from './interfaces';
 import { Cart } from './cart';
@@ -10,6 +10,8 @@ import { AddressData } from '../address/interfaces';
 import { AddressResult, addAddress, getUserAddresses, removeAddress } from '../address';
 import { join } from 'path';
 import Config from '@/config';
+import bcrypt from 'bcrypt';
+
 interface UserServices {
   // addToCart(id: string): Promise<Error | null>;
   addToFav(prId: string): AsyncSafeResult<FavItem[]>;
@@ -118,6 +120,25 @@ export class User implements UserServices {
       return { error: null, result: { path: path } };
     } catch (err) {
       return { error: err, result: null };
+    }
+  }
+
+  async changePassword(data: { oldPassword: string; newPassword: string }): Promise<Error | null> {
+    try {
+      const user = await UserModel.findById(this._id).select('+password').exec();
+      if (!user) {
+        throw new NotFoundError('User With id ' + this._id);
+      }
+      const validPass = await bcrypt.compare(data.oldPassword, user?.password);
+      if (!validPass) {
+        throw new InvalidCredentialsError('Invalid old password');
+      }
+      const hashedPassword = await bcrypt.hash(data.newPassword, 12);
+      user.password = hashedPassword;
+      await user.save();
+      return null;
+    } catch (error) {
+      return error;
     }
   }
 

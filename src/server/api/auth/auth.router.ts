@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import controller from './auth.controller';
+import { isAuth } from '@server/middleware/isAuth';
 const router = Router();
 
 /**
@@ -52,9 +53,32 @@ router.post('/login', controller.login);
  *              $ref: '#/components/schemas/AuthResponse'
  *      400:
  *        description: Bad Request or invalid data
- *
  */
 router.post('/register', controller.register);
+
+/**
+ * @openapi
+ * '/api/auth/change-password':
+ *  patch:
+ *    tags:
+ *      - Auth
+ *    summary: Change user password
+ *    description: Create new password
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/PasswordSchema'
+ *    responses:
+ *      204:
+ *        description: successful operation
+ *      400:
+ *        description: Bad Request or invalid data
+ *      401:
+ *        description: Old password is wrong
+ */
+router.patch('/change-password', isAuth, controller.changePassword);
 
 /**
  * @openapi

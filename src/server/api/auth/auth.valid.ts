@@ -83,3 +83,31 @@ export const registerSchema = Joi.object({
   password: passwordValidate,
   confirmPassword: confirmPasswordValidate,
 });
+
+/**
+ * @openapi
+ * components:
+ *  schemas:
+ *     PasswordSchema:
+ *      type: object
+ *      properties:
+ *        oldPassword:
+ *          type: string
+ *        password:
+ *          description: New password
+ *          type: string
+ *        confirmNewPassword:
+ *          type: string
+ */
+
+export interface ChangePasswordSchema {
+  oldPassword: string;
+  password: string;
+  confirmNewPassword: string;
+}
+
+export const changePasswordSchema = Joi.object<ChangePasswordSchema>({
+  oldPassword: passwordValidate,
+  password: passwordValidate,
+  confirmNewPassword: confirmPasswordValidate,
+});

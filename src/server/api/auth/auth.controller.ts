@@ -1,16 +1,25 @@
 import { Request, RequestHandler, Response } from 'express';
 import { Controller } from '@server/decorator/controller';
 import { Validate } from '@server/decorator/validate';
-import { LoginSchema, RegisterSchema, loginSchema, registerSchema } from './auth.valid';
+import {
+  ChangePasswordSchema,
+  LoginSchema,
+  RegisterSchema,
+  changePasswordSchema,
+  loginSchema,
+  registerSchema,
+} from './auth.valid';
 import { HttpStatus } from '@server/utils/status';
 import { JWTAuthService, OAuthAuthService } from '@/core/auth';
 import {
   DuplicateError,
   InvalidCredentialsError,
   InvalidTokenError,
+  NotFoundError,
   UnauthorizedGoogleError,
 } from '@/core/errors';
 import RequestError from '@server/utils/errors';
+import { User } from '@/core/user';
 
 interface IAuth {
   login: RequestHandler;
@@ -82,6 +91,26 @@ class AuthController implements IAuth {
       throw RequestError._500();
     }
     res.JSON(HttpStatus.Created, response.result);
+  }
+
+  @Validate(changePasswordSchema)
+  public async changePassword(req: Request, res: Response) {
+    const body: ChangePasswordSchema = req.body;
+    const user = new User(req.userId!);
+    const error = await user.changePassword({
+      newPassword: body.password,
+      oldPassword: body.oldPassword,
+    });
+    if (error) {
+      if (error instanceof InvalidCredentialsError) {
+        throw new RequestError(error.message, 401);
+      }
+      if (error instanceof NotFoundError) {
+        throw new RequestError(error.message, 400);
+      }
+      throw RequestError._500();
+    }
+    res.sendStatus(204);
   }
 }
 
