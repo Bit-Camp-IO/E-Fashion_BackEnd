@@ -1,4 +1,10 @@
-import { AsyncSafeResult } from '@type/common';
+export type ProductCreationData = Omit<ProductData, 'categoryId' | 'brandId' | 'imagesUrl'> & {
+  imagesURL: string[];
+  addedBy: string;
+  category?: string;
+  brand?: string;
+  brandName?: string;
+};
 
 export interface ProductItemApi {
   id: string;
@@ -9,7 +15,7 @@ export interface ProductItemApi {
   discount: number;
 }
 
-export interface ProductApi extends Omit<ProductItemApi, 'imageUrl'> {
+export interface ProductResponse extends Omit<ProductItemApi, 'imageUrl'> {
   colors: { name: string; hex: string }[];
   sizes: string[];
   imagesUrl: string[];
@@ -40,17 +46,6 @@ export interface ProductData {
   categoryId?: string;
   brandId?: string;
 }
-
-// export interface ProductResult {
-//   title: string;
-//   description: string;
-//   price: number;
-//   colors: { name: string; hex: string }[];
-//   sizes: string[];
-//   id: string;
-// }
-
-export type CreateProductReturn = AsyncSafeResult<ProductApi>;
 
 export interface ProductOptions {
   page: number;
@@ -89,4 +84,30 @@ export interface ProductReviewData {
   productId: string;
   rate: number;
   comment: string;
+}
+
+export interface RateCountResponse {
+  1: number;
+  2: number;
+  3: number;
+  4: number;
+  5: number;
+  total: number;
+}
+export interface ReviewUserResponse {
+  id: string;
+  user: {
+    id: string;
+    fullName: string;
+    profileImage?: string;
+  };
+  comment?: string;
+  rate: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+export interface ReviewsResponse {
+  average: number;
+  rateCount: RateCountResponse;
+  reviews: ReviewUserResponse[];
 }

@@ -1,9 +1,8 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import { BrandDB } from './brand';
-import { ReviewDB } from './review';
 import { CategorieDB } from './categorie';
 import { AdminDB } from './admin';
-import { ObjectId, Relation, RelationList } from '@type/database';
+import { ObjectId, Relation } from '@type/database';
 
 export interface ProductDB extends Document {
   title: string;
@@ -19,7 +18,6 @@ export interface ProductDB extends Document {
   is_new: boolean;
   available: boolean;
   discount?: number;
-  reviews: RelationList<ReviewDB>;
   category: Relation<CategorieDB>;
   addedBy: Relation<AdminDB>;
   tags: string[];
@@ -40,7 +38,6 @@ const productSchema = new Schema<ProductDB>(
     is_new: { type: Boolean, default: true },
     available: { type: Boolean, default: true },
     discount: Number,
-    reviews: [{ type: ObjectId, ref: 'Review' }],
     category: { type: ObjectId, ref: 'Categorie' },
     tags: [String],
     gender: { type: Number, required: true },
