@@ -1,34 +1,47 @@
-import messageModel from "@/database/models/message";
-import { Server, Socket } from "socket.io";
-import { MessageData } from "./interfaces";
+import ChatModel from "@/database/models/chat";
+import { ChatData } from "./interfaces";
+import { AsyncSafeResult } from "@type/common";
+import { NotFoundError } from "../errors";
 
-class SocketHandler {
-  private io: Server;
-
-  constructor(io: Server) {
-    this.io = io;
-    this.setupSocket();
-  }
-
-  private setupSocket() {
-    this.io.on('connection', (socket: Socket) => {
-      console.log('A user connected');
-
-      socket.on('join', (room: string) => {
-        socket.join(room);
-      });
-
-      socket.on('chat', async (message: MessageData) => {
-        const newMessage = await messageModel.create(message);
-        this.io.to(message.sender).emit('chat', newMessage);
-        this.io.to(message.receiver).emit('chat', newMessage);
-      });
-
-      socket.on('disconnect', () => {
-        console.log('A user disconnected');
-      });
+export async function createChat(chatData: ChatData): AsyncSafeResult<ChatData> {
+  try {
+    const chat = await ChatModel.create({
+      ...chatData,
+      status: "waiting"
     });
+
+    const result: ChatData = {
+      admin: chat.admin?.id,
+      user: chat.user?.id,
+      id: chat._id,
+      messages: chat.messages,
+      status: chat.status
+    }
+
+    return { result, error: null }
+  } catch (err) {
+    return { error: err, result: null } 
   }
 }
 
-export default SocketHandler;
+export async function saveMessageToChat(chatID: string, senderId: string, content: string): AsyncSafeResult<any> {
+  try {
+    const chat = await ChatModel.findOneAndUpdate({ id: chatID }, {
+      $push: {
+        messages: {
+          sender: senderId,
+          content: content,
+        }
+      }
+    })
+    
+    if (!chat) {
+      throw new NotFoundError('Chat with id' + chatID);
+    }
+
+    return { result: chat, error: null }
+
+  } catch (err) {
+    return { error: err, result: null }
+  }
+}
