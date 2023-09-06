@@ -14,7 +14,7 @@ export interface ChatDB extends mongoose.Document {
   status: string
 }
 
-const messageSchema = new mongoose.Schema<ChatDB>({
+const chatSchema = new mongoose.Schema<ChatDB>({
   user: { 
     type: ObjectId,
     ref: 'User' 
@@ -30,5 +30,5 @@ const messageSchema = new mongoose.Schema<ChatDB>({
   }]
 }, { timestamps: true });
 
-const messageModel = mongoose.model('Message', messageSchema);
-export default messageModel;
+const ChatModel = mongoose.model('Chat', chatSchema);
+export default ChatModel;
