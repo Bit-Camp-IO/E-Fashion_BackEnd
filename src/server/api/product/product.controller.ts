@@ -10,6 +10,7 @@ import {
   listReviews,
   productsInfo,
   removeReview,
+  userRateOnProduct,
 } from '@/core/product';
 import { validateId } from '@/core/utils';
 import { Controller, Validate } from '@server/decorator';
@@ -118,35 +119,61 @@ class ProductController implements ProductHandler {
   @Validate(reviewSchema)
   async addReview(req: Request, res: Response) {
     const productId = req.params.id;
-    if (!validateId(productId)) throw new RequestError('invalid product id');
+    if (!validateId(productId)) throw new RequestError('invalid product id', HttpStatus.BadRequest);
     const body: ReviewSchema = req.body;
-    const review: ProductReviewData = {
+    const reviewData: ProductReviewData = {
       userId: req.userId!,
       productId: productId,
       rate: body.rate,
       comment: body.comment,
     };
-    const product = await addReviewToProduct(review);
-    if (!product) throw RequestError._500();
-    res.sendStatus(HttpStatus.NoContent);
+    const review = await addReviewToProduct(reviewData);
+    if (review.error) {
+      if (review.error instanceof NotFoundError) {
+        throw new RequestError(review.error.message, HttpStatus.BadRequest);
+      }
+      throw RequestError._500();
+    }
+    res.JSON(HttpStatus.Created, review.result);
   }
 
   async removeReview(req: Request, res: Response) {
-    const { reviewId } = req.body;
-    if (!validateId(reviewId)) throw new RequestError('invalid review id');
+    const reviewId = req.params['id'];
+    if (!validateId(reviewId)) throw new RequestError('invalid review id', HttpStatus.BadRequest);
     const error = await removeReview(reviewId, req.userId!);
-    if (error) throw new RequestError(error.message, HttpStatus.BadRequest);
-    res.sendStatus(HttpStatus.Accepted);
+    if (error) {
+      if (error instanceof NotFoundError) {
+        throw new RequestError(error.message, HttpStatus.BadRequest);
+      }
+      throw RequestError._500();
+    }
+    res.sendStatus(HttpStatus.NoContent);
   }
 
   async listReviews(req: Request, res: Response) {
     const productId = req.params.id;
-    if (!validateId(productId)) throw new RequestError('invalid product id');
+    if (!validateId(productId)) throw new RequestError('invalid product id', HttpStatus.BadRequest);
     const reviews = await listReviews(productId);
     if (reviews.error) {
+      if (reviews.error instanceof NotFoundError) {
+        throw new RequestError(reviews.error.message, HttpStatus.NotFound);
+      }
       throw RequestError._500();
     }
     res.JSON(HttpStatus.Ok, reviews.result);
+  }
+
+  async myRate(req: Request, res: Response) {
+    const productId = req.params.id;
+    if (!validateId(productId)) throw new RequestError('invalid product id', HttpStatus.BadRequest);
+    const review = await userRateOnProduct(req.userId!, productId);
+    if (review.error) {
+      if (review.error instanceof NotFoundError) {
+        throw new RequestError(review.error.message, HttpStatus.NotFound);
+      }
+      throw RequestError._500();
+    }
+    res.JSON(HttpStatus.Ok, review.result);
   }
 }
 

@@ -1,4 +1,4 @@
-import Joi from "joi";
+import Joi from 'joi';
 
 export interface ReviewSchema {
   rate: number;
@@ -7,5 +7,5 @@ export interface ReviewSchema {
 
 export const reviewSchema = Joi.object({
   rate: Joi.number().required().min(1).max(5),
-  comment: Joi.string().required().min(50).max(500),
+  comment: Joi.string().max(500),
 });

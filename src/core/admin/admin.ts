@@ -1,5 +1,5 @@
 import * as Product from '../product';
-import { ProductData, ProductApi } from '../product/interfaces';
+import { ProductData, ProductResponse } from '../product/interfaces';
 import { AsyncSafeResult } from '@type/common';
 import { AdminData, AdminResult } from './interfaces';
 import AdminModel from '@/database/models/admin';
@@ -19,7 +19,7 @@ import {
 } from '../brand';
 import { addDiscount, removeDiscount } from '../product';
 interface AdminService {
-  addProduct(data: ProductData): AsyncSafeResult<ProductApi>;
+  addProduct(data: ProductData): AsyncSafeResult<ProductResponse>;
   removeProduct(id: string): void;
   editProduct(id: string, data: Partial<ProductData>): AsyncSafeResult<ProductData>;
 
@@ -29,7 +29,7 @@ interface AdminService {
 
 export class Admin implements AdminService {
   constructor(protected _id: string, protected _role: string) {}
-  async addProduct(data: ProductData): AsyncSafeResult<ProductApi> {
+  async addProduct(data: ProductData): AsyncSafeResult<ProductResponse> {
     return await Product.createProduct(data, this._id);
   }
 
@@ -140,7 +140,7 @@ export class Admin implements AdminService {
     return removeProductsFromBrand(brandId, prodIds);
   }
 
-  async addDiscount(productId: string, discount: number): AsyncSafeResult<ProductApi> {
+  async addDiscount(productId: string, discount: number): AsyncSafeResult<ProductResponse> {
     return addDiscount(productId, discount);
   }
 

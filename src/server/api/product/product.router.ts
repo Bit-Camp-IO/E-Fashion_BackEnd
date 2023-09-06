@@ -152,10 +152,94 @@ router.get('/:id', controller.getOne);
  *                      - l
  */
 router.get('/list/info', controller.listInfo);
-
+/**
+ * @openapi
+ * /api/product/{product_id}/rate:
+ *  get:
+ *    tags:
+ *      - Products
+ *      - Reviews
+ *    summary: Reviews List
+ *    description: Get all reviews and rate for product
+ *    parameters:
+ *      - name: product_id
+ *        in: path
+ *        description: ID of the product in url
+ *        required: true
+ *        type: string
+ *    responses:
+ *      200:
+ *        description: successful operation
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/ReviewList'
+ *  post:
+ *    tags:
+ *      - Products
+ *      - Reviews
+ *    summary: Add or edit review
+ *    description: Add new review for product or update if already exists
+ *    parameters:
+ *      - name: product_id
+ *        in: path
+ *        description: ID of the product in url
+ *        required: true
+ *        type: string
+ *    responses:
+ *      200:
+ *        description: successful operation
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Review'
+ */
 router.get('/:id/rate', controller.listReviews);
 router.post('/:id/rate', isAuth, controller.addReview);
-router.delete('/rate', isAuth, controller.removeReview);
+/**
+ * @openapi
+ * /api/product/{product_id}/rate/my-rating:
+ *  get:
+ *    tags:
+ *      - Products
+ *      - Reviews
+ *    summary: User Review on product
+ *    description: Get user review on the product by id
+ *    parameters:
+ *      - name: product_id
+ *        in: path
+ *        description: ID of the product in url
+ *        required: true
+ *        type: string
+ *    responses:
+ *      200:
+ *        description: successful operation
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Review'
+ */
+router.get('/:id/rate/my-rating', isAuth, controller.myRate);
+/**
+ * @openapi
+ * /api/product/rate/{review_id}:
+ *  delete:
+ *    tags:
+ *      - Products
+ *      - Reviews
+ *    summary: Remove Review
+ *    description: remove review from product
+ *    parameters:
+ *      - name: review_id
+ *        in: path
+ *        description: ID of the product in url
+ *        required: true
+ *        type: string
+ *    responses:
+ *      204:
+ *        description: successful operation
+ */
+router.delete('/rate/:id', isAuth, controller.removeReview);
 
 export default router;
 
@@ -186,12 +270,6 @@ export default router;
  *         discount:
  *           type: number
  *           example: 2
- */
-
-/**
- * @openapi
- * components:
- *   schemas:
  *     Product:
  *       type: object
  *       properties:
@@ -256,4 +334,48 @@ export default router;
  *           type: number
  *           example: 1
  *           description: Gender is number from 0 to 2 => man = 1 | women = 2 | all = 0
+ *     Review:
+ *      type: object
+ *      properties:
+ *        id:
+ *          type: string
+ *        user:
+ *          type: object
+ *          properties:
+ *            id:
+ *              type: string
+ *            fullName:
+ *              type: string
+ *            profileImage:
+ *              type: string
+ *        comment:
+ *          type: string
+ *        rate:
+ *          type: number
+ *        createdAt:
+ *          type: date
+ *        updatedAt:
+ *          type: date
+ *     ReviewList:
+ *      type: object
+ *      properties:
+ *        average:
+ *          type: number
+ *        rateCount:
+ *          type: object
+ *          properties:
+ *            1:
+ *              type: number
+ *            2:
+ *              type: number
+ *            3:
+ *              type: number
+ *            4:
+ *              type: number
+ *            5:
+ *              type: number
+ *            total:
+ *              type: number
+ *        reviews:
+ *          $ref: '#/components/schemas/Review'
  */
