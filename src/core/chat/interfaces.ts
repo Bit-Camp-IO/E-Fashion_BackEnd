@@ -1,8 +1,8 @@
 export interface ChatData {
   id: string,
   user: string;
-  admin: string;
-  messages: [
+  admin?: string;
+  messages?: [
     {
       sender: string,
       content: string,

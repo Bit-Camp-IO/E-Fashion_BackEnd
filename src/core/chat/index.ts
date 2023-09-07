@@ -3,18 +3,16 @@ import { ChatData } from "./interfaces";
 import { AsyncSafeResult } from "@type/common";
 import { NotFoundError } from "../errors";
 
-export async function createChat(chatData: ChatData): AsyncSafeResult<ChatData> {
+export async function createChat(userId: string): AsyncSafeResult<ChatData> {
   try {
     const chat = await ChatModel.create({
-      ...chatData,
+      user: userId,
       status: "waiting"
     });
 
     const result: ChatData = {
-      admin: chat.admin?.id,
-      user: chat.user?.id,
+      user: chat.user._id,
       id: chat._id,
-      messages: chat.messages,
       status: chat.status
     }
 
