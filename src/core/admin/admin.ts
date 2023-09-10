@@ -18,7 +18,7 @@ import {
   removeProductsFromBrand,
 } from '../brand';
 import { addDiscount, removeDiscount } from '../product';
-import { acceptChat, changeStatus, getChats } from '../chat';
+import { acceptChat, getChats } from '../chat';
 interface AdminService {
   addProduct(data: ProductData): AsyncSafeResult<ProductResponse>;
   removeProduct(id: string): void;
