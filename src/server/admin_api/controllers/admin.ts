@@ -135,6 +135,30 @@ class AdminController {
     }
     res.JSON(HttpStatus.Ok, result);
   }
+
+  @Guard(AdminRole.ADMIN)
+  public async acceptChat(req: Request, res: Response) {
+    const { id } = req.params;
+    const admin = req.admin as Admin;
+    const error = await admin.acceptChat(id);
+    if (error) {
+      if (error instanceof UnauthorizedError) {
+        throw new RequestError(error.message, HttpStatus.Unauthorized);
+      }
+      throw RequestError._500();
+    }
+    res.JSON(HttpStatus.Accepted, null)
+  }
+
+  @Guard(AdminRole.ADMIN)
+  public async getChats(req: Request, res: Response) {
+    const admin = req.admin as Admin;
+    const result = await admin.getActiveChats();
+    if (result instanceof Error) {
+      throw new RequestError(result.message, HttpStatus.BadGateway)
+    }
+    res.JSON(HttpStatus.Ok, result)
+  }
 }
 
 export default new AdminController();

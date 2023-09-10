@@ -7,6 +7,7 @@ import productController from './controllers/product';
 import categoryController from './controllers/category';
 import brandController from './controllers/brand';
 import { UplaodCategoryPic, UplaodProductsPics } from '@server/middleware/upload';
+import admin from './controllers/admin';
 
 const router = Router();
 
@@ -35,6 +36,9 @@ router.delete('/product/:id/remove', isAuth, productController.remove);
 
 router.post('/product/:id/discount', isAuth, productController.addDiscount);
 router.delete('/product/:id/discount', isAuth, productController.removeDiscount);
+
+router.post('/accept-chat/:id', isAuth, admin.acceptChat)
+router.get('/chats', isAuth, admin.getChats)
 
 const categoryRouter = Router();
 categoryRouter.post('/create', isAuth, UplaodCategoryPic(), categoryController.create);

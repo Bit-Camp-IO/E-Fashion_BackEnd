@@ -18,6 +18,7 @@ import {
   removeProductsFromBrand,
 } from '../brand';
 import { addDiscount, removeDiscount } from '../product';
+import { changeStatus, getChats } from '../chat';
 interface AdminService {
   addProduct(data: ProductData): AsyncSafeResult<ProductResponse>;
   removeProduct(id: string): void;
@@ -28,7 +29,7 @@ interface AdminService {
 }
 
 export class Admin implements AdminService {
-  constructor(protected _id: string, protected _role: string) {}
+  constructor(protected _id: string, protected _role: string) { }
   async addProduct(data: ProductData): AsyncSafeResult<ProductResponse> {
     return await Product.createProduct(data, this._id);
   }
@@ -146,6 +147,14 @@ export class Admin implements AdminService {
 
   async removeDiscount(productId: string): Promise<Error | null> {
     return removeDiscount(productId);
+  }
+
+  async acceptChat(chatId: string): Promise<Error | null> {
+    return changeStatus(chatId, "active")
+  }
+
+  async getActiveChats(): AsyncSafeResult<any> {
+    return getChats('active')
   }
 }
 
