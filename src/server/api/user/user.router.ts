@@ -316,7 +316,7 @@ router.post('/address', isAuth, userController.addAddress);
  */
 router.delete('/address/:id', isAuth, controller.removeAddress);
 
-router.post('/new-chat', isAuth, controller.newChat)
+router.get('/new-chat', isAuth, controller.newChat)
 
 export default router;
 
