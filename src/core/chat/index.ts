@@ -79,3 +79,15 @@ export async function changeStatus(id: string, stuatus: string): Promise<Error |
     return err;
   }
 }
+
+export async function acceptChat(adminId: string, chatId: string): Promise<Error | null> {
+   try {
+    const chat = await ChatModel.findByIdAndUpdate(chatId, { $set: { status: 'active', admin: adminId } })
+    if (!chat) {
+      throw new NotFoundError("Chat wit id" + chatId)
+    }
+    return null
+  } catch (err) {
+    return err;
+  }
+}

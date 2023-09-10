@@ -4,8 +4,8 @@ import { Server, Socket } from "socket.io";
 export async function chatSocket(io: Server) {
   const chats = new Map();
   io.on('connection', (socket: Socket) => {
-    socket.on('join-chat', async (id, chatId) => {
-      chats.set(id, chatId)
+    socket.on('accept-chat', async (adminId, chatId) => {
+      chats.set(adminId, chatId)
       socket.join(chatId)
     })
 
@@ -15,8 +15,13 @@ export async function chatSocket(io: Server) {
     }
     )
 
-    socket.on('disconnect', async () => {
+    socket.on('join', async (userId, chatId) => {
+      chats.set(userId, chatId)
+      socket.join(chatId)
+    })
 
+    socket.on('disconnect', async () => {
+      
     });
   })
 }

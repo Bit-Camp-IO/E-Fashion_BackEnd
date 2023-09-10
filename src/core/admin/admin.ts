@@ -18,7 +18,7 @@ import {
   removeProductsFromBrand,
 } from '../brand';
 import { addDiscount, removeDiscount } from '../product';
-import { changeStatus, getChats } from '../chat';
+import { acceptChat, changeStatus, getChats } from '../chat';
 interface AdminService {
   addProduct(data: ProductData): AsyncSafeResult<ProductResponse>;
   removeProduct(id: string): void;
@@ -30,6 +30,7 @@ interface AdminService {
 
 export class Admin implements AdminService {
   constructor(protected _id: string, protected _role: string) { }
+
   async addProduct(data: ProductData): AsyncSafeResult<ProductResponse> {
     return await Product.createProduct(data, this._id);
   }
@@ -150,7 +151,7 @@ export class Admin implements AdminService {
   }
 
   async acceptChat(chatId: string): Promise<Error | null> {
-    return changeStatus(chatId, "active")
+    return acceptChat(this._id, chatId)
   }
 
   async getActiveChats(): AsyncSafeResult<any> {
