@@ -5,6 +5,11 @@ import { NotFoundError } from "../errors";
 
 export async function createChat(userId: string): AsyncSafeResult<ChatData> {
   try {
+    const chatExists = await ChatModel.findOne({ status: { $in: ['active', 'waiting'] }, user: userId })
+  
+    if (chatExists) {
+      throw new Error("You have an active or waiting to respond chat")
+    }
     const chat = await ChatModel.create({
       user: userId,
       status: "waiting"

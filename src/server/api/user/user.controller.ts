@@ -111,7 +111,9 @@ class UserController {
   async newChat(req: Request, res: Response) {
     const userId = req.userId!;
     const chat = await createChat(userId);
-    if (chat.error) throw RequestError._500();
+    if (chat.error) {
+      throw new RequestError(chat.error.message, HttpStatus.BadRequest)
+    }
     res.JSON(HttpStatus.Created, chat.result);
   }
 }
