@@ -39,6 +39,7 @@ router.delete('/product/:id/discount', isAuth, productController.removeDiscount)
 
 router.post('/accept-chat/:id', isAuth, admin.acceptChat)
 router.get('/chats', isAuth, admin.getChats)
+router.put('/chat/:id/close', isAuth, admin.closeChat)
 
 const categoryRouter = Router();
 categoryRouter.post('/create', isAuth, UplaodCategoryPic(), categoryController.create);

@@ -18,7 +18,7 @@ import {
   removeProductsFromBrand,
 } from '../brand';
 import { addDiscount, removeDiscount } from '../product';
-import { acceptChat, getChats } from '../chat';
+import { acceptChat, changeStatus, getChats } from '../chat';
 interface AdminService {
   addProduct(data: ProductData): AsyncSafeResult<ProductResponse>;
   removeProduct(id: string): void;
@@ -156,6 +156,10 @@ export class Admin implements AdminService {
 
   async getActiveChats(): AsyncSafeResult<any> {
     return getChats('active')
+  }
+
+  async closeChat(id: string): Promise<Error | null> {
+    return changeStatus(id, 'closed')
   }
 }
 
