@@ -96,3 +96,19 @@ export async function acceptChat(adminId: string, chatId: string): Promise<Error
     return err;
   }
 }
+
+export async function isChatActiveWithId(id: string, chatId: string): Promise<Boolean | Error> {
+  try {
+    const chat = await ChatModel.findOne({
+      chatId, $or: [
+        { user: id },
+        { admin: id }
+    ] }, { status: 'active' });
+    if (!chat) {
+      return false;
+    }
+    return true;
+  } catch (err) {
+    return err;
+  }
+}
