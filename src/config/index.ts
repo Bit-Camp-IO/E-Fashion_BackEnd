@@ -19,5 +19,7 @@ const Config = {
   STRIPE_PUBLIC_KEY: process.env['STRIPE_PUBLIC_KEY']!,
   STRIPE_PRIVATE_KEY: process.env['STRIPE_PRIVATE_KEY']!,
   STRIPE_ENDPOINT_SECRET: process.env['STRIPE_ENDPOINT_SECRET']!,
+  EMAIL_SENDER: process.env['EMAIL_SENDER']!,
+  EMAIL_SENDER_PASSWORD: process.env['EMAIL_SENDER_PASSWORD']!,
 };
 export default Config;

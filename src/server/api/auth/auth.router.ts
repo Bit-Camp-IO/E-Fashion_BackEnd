@@ -124,6 +124,9 @@ router.get('/refresh', controller.refresh);
 router.get('/google', controller.google);
 router.get('/google/redirect', controller.googleRedirect);
 
+router.get('/verify-email', isAuth, controller.sendVerifyEmail);
+router.get('/verify-email/:otp', isAuth, controller.verifyEmail);
+
 export default router;
 
 /**

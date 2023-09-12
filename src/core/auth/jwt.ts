@@ -50,6 +50,7 @@ export class JWTAuthService {
         accessToken,
         refreshToken,
       };
+
       return { result, error: null };
     } catch (err) {
       if (err.code === 11000) {

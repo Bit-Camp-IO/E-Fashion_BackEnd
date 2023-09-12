@@ -10,16 +10,23 @@ import {
   registerSchema,
 } from './auth.valid';
 import { HttpStatus } from '@server/utils/status';
-import { JWTAuthService, OAuthAuthService } from '@/core/auth';
+import {
+  JWTAuthService,
+  OAuthAuthService,
+  createEmailVerificationOTP,
+  verifyUserEmail,
+} from '@/core/auth';
 import {
   DuplicateError,
   InvalidCredentialsError,
+  InvalidDataError,
   InvalidTokenError,
   NotFoundError,
   UnauthorizedGoogleError,
 } from '@/core/errors';
 import RequestError from '@server/utils/errors';
 import { User } from '@/core/user';
+// import emails from '@/core/emails';
 
 interface IAuth {
   login: RequestHandler;
@@ -110,7 +117,36 @@ class AuthController implements IAuth {
       }
       throw RequestError._500();
     }
-    res.sendStatus(204);
+    res.sendStatus(HttpStatus.NoContent);
+  }
+  public async sendVerifyEmail(req: Request, res: Response) {
+    const otp = await createEmailVerificationOTP(req.userId!);
+    if (otp.error) {
+      if (otp.error instanceof InvalidDataError) {
+        throw new RequestError(otp.error.message, HttpStatus.BadRequest);
+      }
+      throw RequestError._500();
+    }
+    // const isSended = emails.sendOTPEmail(otp.result.otp, otp.result.user);
+    // if (!isSended) {
+    //   throw RequestError._500();
+    // }
+    res.sendStatus(HttpStatus.NoContent);
+  }
+
+  public async verifyEmail(req: Request, res: Response) {
+    const otp = req.params['otp'].toString();
+    if (!otp || otp.length !== 6) {
+      throw new RequestError('Invalid OTP', HttpStatus.BadRequest);
+    }
+    const error = await verifyUserEmail(req.userId!, otp);
+    if (error) {
+      if (error instanceof InvalidDataError) {
+        throw new RequestError(error.message, HttpStatus.BadRequest);
+      }
+      throw RequestError._500();
+    }
+    res.sendStatus(HttpStatus.NoContent);
   }
 }
 
