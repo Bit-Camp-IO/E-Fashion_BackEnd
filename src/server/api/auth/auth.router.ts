@@ -64,6 +64,8 @@ router.post('/register', controller.register);
  *      - Auth
  *    summary: Change user password
  *    description: Create new password
+ *    security:
+ *      - bearerAuth: []
  *    requestBody:
  *      required: true
  *      content:
@@ -124,8 +126,96 @@ router.get('/refresh', controller.refresh);
 router.get('/google', controller.google);
 router.get('/google/redirect', controller.googleRedirect);
 
+/**
+ * @openapi
+ * '/api/auth/verify-email':
+ *   get:
+ *     tags:
+ *       - Auth
+ *     summary: Verify user email
+ *     description: Send OTP Code to user email for verification.
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       204:
+ *         description: Successful operation
+ */
 router.get('/verify-email', isAuth, controller.sendVerifyEmail);
+/**
+ * @openapi
+ * '/api/auth/verify-email/{OTP}':
+ *   get:
+ *     tags:
+ *       - Auth
+ *     summary: Verify user email
+ *     description: Send OTP Code to user email for verification.
+ *     parameters:
+ *       - in: path
+ *         name: OTP
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: OTP code form email
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *         204:
+ *           description: Successful operation
+ */
 router.get('/verify-email/:otp', isAuth, controller.verifyEmail);
+
+/**
+ * @openapi
+ * /api/auth/forgot-password:
+ *   get:
+ *     tags:
+ *       - Auth
+ *     summary: Forgot Password
+ *     description: Send OTP Code to user email for reset his password.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *              email:
+ *                type: string
+ *                description: User email
+ *     responses:
+ *         204:
+ *           description: Successful operation
+ */
+router.get('/forgot-password', controller.forgotPassword);
+/**
+ * @openapi
+ * /api/auth/reset-password:
+ *   post:
+ *     tags:
+ *       - Auth
+ *     summary: Reset Password
+ *     description: reset user password.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *              email:
+ *                type: string
+ *                description: User email
+ *              newPassword:
+ *                type: string
+ *                description: new Password
+ *              otp:
+ *                type: string
+ *                description: otp code
+ *     responses:
+ *       204:
+ *         description: Successful operation
+ */
+router.post('/reset-password', controller.resetPassword);
 
 export default router;
 

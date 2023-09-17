@@ -1,6 +1,6 @@
 import UserModel, { UserDB } from '@/database/models/user';
 import { AsyncSafeResult } from '@type/common';
-import { InvalidDataError } from '../errors';
+import { InvalidDataError, NotFoundError } from '../errors';
 import { OTPType } from '@/database/models/OTP';
 import { createOTP, validateOTP } from './otp';
 
@@ -37,5 +37,37 @@ export async function verifyUserEmail(userId: string, otp: string): Promise<Erro
     return null;
   } catch (error) {
     return error;
+  }
+}
+
+export async function createForgotPasswordOTP(
+  email: string,
+): AsyncSafeResult<{ otp: string; user: UserDB }> {
+  try {
+    const user = await UserModel.findOne({ email });
+    if (!user) {
+      throw new NotFoundError('Email ');
+    }
+    const otp = await createOTP(user.email, OTPType.FORGOT_PASSWORD);
+    return { result: { otp, user }, error: null };
+  } catch (error) {
+    return { error, result: null };
+  }
+}
+
+export async function OTPVerification(
+  email: string,
+  otp: string,
+  type: OTPType,
+): AsyncSafeResult<boolean> {
+  try {
+    const user = await UserModel.findOne({ email });
+    if (!user) {
+      throw new NotFoundError('Email ');
+    }
+    const isValid = await validateOTP(otp, email, type);
+    return { result: isValid, error: null };
+  } catch (error) {
+    return { error, result: null };
   }
 }

@@ -26,7 +26,19 @@ class EmailServices {
       await this.sendMail({
         to: user.email,
         subject: 'OTP Verification',
-        html: `<p>Hello ${user.fullName}</p>,<p>Here is the verigication code. Please copy it and verify yor Email.</p><div style="text-align: center; background-color: #e2ebff; font-weight: bold; padding: 20px;">code: ${otp}</div>`,
+        html: `<p>Hello ${user.fullName},</p><p>Here is the verification code. Please copy it and verify yor Email.</p><div style="text-align: center; background-color: #e2ebff; font-weight: bold; padding: 20px;">code: ${otp}</div>`,
+      });
+      return true;
+    } catch {
+      return false;
+    }
+  }
+  async sendOTPPassword(otp: string, user: UserDB): Promise<boolean> {
+    try {
+      await this.sendMail({
+        to: user.email,
+        subject: 'OTP Verification',
+        html: `<p>Hello ${user.fullName},</p><p>Here is the verification code. Please copy to reset your password.</p><div style="text-align: center; background-color: #e2ebff; font-weight: bold; padding: 20px;">code: ${otp}</div>`,
       });
       return true;
     } catch {

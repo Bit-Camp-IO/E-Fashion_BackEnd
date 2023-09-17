@@ -1,11 +1,13 @@
 import mongoose, { Schema } from 'mongoose';
 
 export enum OTPType {
-  FORGET_PASSWORD = 1,
+  FORGOT_PASSWORD = 1,
   EMAIL_VERIFICATION,
 }
 
-export interface OTP_DB extends mongoose.Document {
+export interface OTP_DB
+  extends mongoose.Document,
+    mongoose.ResolveTimestamps<{ createdAt: Date; updatedAt: Date }, { timestamps: true }> {
   code: string;
   email: string;
   expireAt: Date;
@@ -26,7 +28,7 @@ const otpSchema = new Schema<OTP_DB>(
     otpType: {
       type: Number,
       required: true,
-      enum: [OTPType.EMAIL_VERIFICATION, OTPType.FORGET_PASSWORD],
+      enum: [OTPType.EMAIL_VERIFICATION, OTPType.FORGOT_PASSWORD],
     },
   },
   { timestamps: true },

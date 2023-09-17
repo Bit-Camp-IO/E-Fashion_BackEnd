@@ -5,15 +5,20 @@ import {
   ChangePasswordSchema,
   LoginSchema,
   RegisterSchema,
+  ResetPasswordSchema,
   changePasswordSchema,
+  emailSchema,
   loginSchema,
   registerSchema,
+  resetPasswordSchema,
 } from './auth.valid';
 import { HttpStatus } from '@server/utils/status';
 import {
   JWTAuthService,
   OAuthAuthService,
   createEmailVerificationOTP,
+  createForgotPasswordOTP,
+  resetPassword,
   verifyUserEmail,
 } from '@/core/auth';
 import {
@@ -26,6 +31,7 @@ import {
 } from '@/core/errors';
 import RequestError from '@server/utils/errors';
 import { User } from '@/core/user';
+import emails from '@/core/emails';
 // import emails from '@/core/emails';
 
 interface IAuth {
@@ -127,10 +133,10 @@ class AuthController implements IAuth {
       }
       throw RequestError._500();
     }
-    // const isSended = emails.sendOTPEmail(otp.result.otp, otp.result.user);
-    // if (!isSended) {
-    //   throw RequestError._500();
-    // }
+    const isSended = emails.sendOTPEmail(otp.result.otp, otp.result.user);
+    if (!isSended) {
+      throw RequestError._500();
+    }
     res.sendStatus(HttpStatus.NoContent);
   }
 
@@ -142,6 +148,35 @@ class AuthController implements IAuth {
     const error = await verifyUserEmail(req.userId!, otp);
     if (error) {
       if (error instanceof InvalidDataError) {
+        throw new RequestError(error.message, HttpStatus.BadRequest);
+      }
+      throw RequestError._500();
+    }
+    res.sendStatus(HttpStatus.NoContent);
+  }
+
+  @Validate(emailSchema)
+  public async forgotPassword(req: Request, res: Response) {
+    const otp = await createForgotPasswordOTP(req.body['email']);
+    if (otp.error) {
+      if (otp.error instanceof InvalidDataError) {
+        throw new RequestError(otp.error.message, HttpStatus.BadRequest);
+      }
+      throw RequestError._500();
+    }
+    const isSended = emails.sendOTPPassword(otp.result.otp, otp.result.user);
+    if (!isSended) {
+      throw RequestError._500();
+    }
+    res.sendStatus(HttpStatus.NoContent);
+  }
+
+  @Validate(resetPasswordSchema)
+  public async resetPassword(req: Request, res: Response) {
+    const body: ResetPasswordSchema = req.body;
+    const error = await resetPassword(body);
+    if (error) {
+      if (error instanceof NotFoundError || error instanceof InvalidDataError) {
         throw new RequestError(error.message, HttpStatus.BadRequest);
       }
       throw RequestError._500();

@@ -110,3 +110,19 @@ export const changePasswordSchema = Joi.object<ChangePasswordSchema>({
   password: passwordValidate,
   confirmNewPassword: confirmPasswordValidate,
 });
+
+export const emailSchema = Joi.object({
+  email: Joi.string().email().required(),
+});
+
+export interface ResetPasswordSchema {
+  email: string;
+  otp: string;
+  newPassword: string;
+}
+
+export const resetPasswordSchema = Joi.object<ResetPasswordSchema>({
+  email: Joi.string().email().required(),
+  newPassword: passwordValidate,
+  otp: Joi.string().length(6).required(),
+});
