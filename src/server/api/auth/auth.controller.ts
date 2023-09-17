@@ -75,7 +75,7 @@ class AuthController implements IAuth {
   public async refresh(req: Request, res: Response) {
     const refreshToken = req.get('X-Refresh-Token');
     if (!refreshToken) {
-      throw new RequestError('not authorized', 401);
+      throw new RequestError('not authorized', HttpStatus.Unauthorized);
     }
     const newAccessToken = await JWTAuthService.refreshToken(refreshToken);
     if (newAccessToken.error) {
@@ -116,14 +116,14 @@ class AuthController implements IAuth {
     });
     if (error) {
       if (error instanceof InvalidCredentialsError) {
-        throw new RequestError(error.message, 401);
+        throw new RequestError(error.message, HttpStatus.Unauthorized);
       }
       if (error instanceof NotFoundError) {
-        throw new RequestError(error.message, 400);
+        throw new RequestError(error.message, HttpStatus.BadRequest);
       }
       throw RequestError._500();
     }
-    res.sendStatus(HttpStatus.NoContent);
+    res.JSON(HttpStatus.Ok);
   }
   public async sendVerifyEmail(req: Request, res: Response) {
     const otp = await createEmailVerificationOTP(req.userId!);
@@ -137,7 +137,7 @@ class AuthController implements IAuth {
     if (!isSended) {
       throw RequestError._500();
     }
-    res.sendStatus(HttpStatus.NoContent);
+    res.JSON(HttpStatus.Ok);
   }
 
   public async verifyEmail(req: Request, res: Response) {
@@ -152,7 +152,7 @@ class AuthController implements IAuth {
       }
       throw RequestError._500();
     }
-    res.sendStatus(HttpStatus.NoContent);
+    res.JSON(HttpStatus.Ok);
   }
 
   @Validate(emailSchema)
@@ -168,7 +168,7 @@ class AuthController implements IAuth {
     if (!isSended) {
       throw RequestError._500();
     }
-    res.sendStatus(HttpStatus.NoContent);
+    res.JSON(HttpStatus.Ok);
   }
 
   @Validate(resetPasswordSchema)
@@ -181,7 +181,7 @@ class AuthController implements IAuth {
       }
       throw RequestError._500();
     }
-    res.sendStatus(HttpStatus.NoContent);
+    res.JSON(HttpStatus.Ok);
   }
 }
 

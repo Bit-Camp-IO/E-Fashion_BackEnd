@@ -4,7 +4,7 @@ import { NextFunction, Request, Response, Express } from 'express';
 
 export function JSONMiddleware(app: Express) {
   app.use((_: Request, res: Response, next: NextFunction) => {
-    res.JSON = (statusCode: HttpStatus, data: unknown) => {
+    res.JSON = (statusCode: HttpStatus, data?: unknown) => {
       res.status(statusCode).json(wrappResponse(data, statusCode));
     };
     next();
@@ -14,7 +14,7 @@ export function JSONMiddleware(app: Express) {
 declare global {
   namespace Express {
     export interface Response {
-      JSON: (code: HttpStatus, data: unknown) => void;
+      JSON: (code: HttpStatus, data?: unknown) => void;
     }
   }
 }

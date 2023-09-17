@@ -70,7 +70,7 @@ class CategoryController {
         throw new RequestError(error.message, HttpStatus.NotFound);
       throw RequestError._500();
     }
-    res.sendStatus(HttpStatus.NoContent);
+    res.JSON(HttpStatus.Ok);
   }
   @Guard(AdminRole.ADMIN)
   async addProducts(req: Request, res: Response) {
@@ -99,7 +99,7 @@ class CategoryController {
     if (error) {
       throw RequestError._500();
     }
-    res.sendStatus(HttpStatus.NoContent);
+    res.JSON(HttpStatus.Ok);
   }
 }
 

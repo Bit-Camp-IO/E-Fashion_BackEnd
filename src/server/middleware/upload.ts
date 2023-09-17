@@ -19,7 +19,7 @@ export function UplaodProfilePic(): RequestHandler {
       bb.once('file', (name, file, info) => {
         validMimeType(bb, info.mimeType);
         if (name !== 'profile') {
-          bb.emit('error', new RequestError('Accept only profile'));
+          bb.emit('error', new RequestError('Accept only profile', HttpStatus.BadRequest));
         }
         fileName = req.userId + Date.now().toString() + info.filename;
         const stream = createWriteStream(path.join(Config.ProfileImagesDir, fileName));

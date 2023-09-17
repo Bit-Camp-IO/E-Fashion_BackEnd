@@ -147,7 +147,7 @@ class ProductController implements ProductHandler {
       }
       throw RequestError._500();
     }
-    res.sendStatus(HttpStatus.NoContent);
+    res.JSON(HttpStatus.Ok);
   }
 
   async listReviews(req: Request, res: Response) {

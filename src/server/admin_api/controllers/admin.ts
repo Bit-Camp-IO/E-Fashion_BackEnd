@@ -66,7 +66,7 @@ class AdminController {
       }
       throw RequestError._500();
     }
-    res.sendStatus(HttpStatus.NoContent);
+    res.JSON(HttpStatus.Ok);
   }
   public async getAllAdmins(req: Request, res: Response) {
     let role = (req.query['role'] as string) || 'all';

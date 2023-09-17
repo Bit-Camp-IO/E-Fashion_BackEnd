@@ -1,17 +1,18 @@
 import { createStripeOrder } from '@/core/order';
 import { getStripeEvent, stripeEventsHook } from '@/core/payment/stripe';
+import { HttpStatus } from '@server/utils/status';
 import express from 'express';
 
 function stripeMiddleware(req: express.Request, res: express.Response) {
   const signature = req.get('stripe-signature');
   if (!signature) {
-    res.sendStatus(400);
+    res.JSON(HttpStatus.BadRequest);
     return;
   }
 
   const event = getStripeEvent(req.body, signature);
   if (!event) {
-    res.sendStatus(400);
+    res.JSON(HttpStatus.BadRequest);
     return;
   }
   stripeEventsHook(event, createStripeOrder);

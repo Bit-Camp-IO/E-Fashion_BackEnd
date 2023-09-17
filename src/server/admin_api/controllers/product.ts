@@ -22,7 +22,7 @@ class ProductController {
     const product = await admin.addProduct(body);
     if (product.error) {
       if (product.error instanceof InvalidDataError) {
-        throw new RequestError(product.error.message, 400);
+        throw new RequestError(product.error.message, HttpStatus.BadRequest);
       }
       throw RequestError._500();
     }
@@ -38,7 +38,7 @@ class ProductController {
         throw new RequestError(error.message, HttpStatus.NotFound);
       throw RequestError._500();
     }
-    res.sendStatus(HttpStatus.NoContent);
+    res.JSON(HttpStatus.Ok);
   }
 
   @Validate(updateProductSchema)
@@ -85,7 +85,7 @@ class ProductController {
         throw new RequestError(error.message, HttpStatus.NotFound);
       throw RequestError._500();
     }
-    res.sendStatus(HttpStatus.NoContent);
+    res.JSON(HttpStatus.Ok);
   }
 }
 export default new ProductController();

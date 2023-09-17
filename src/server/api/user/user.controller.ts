@@ -57,7 +57,7 @@ class UserController {
     const user = new User(req.userId!);
     const error = await user.removeFav(id);
     if (error) throw RequestError._500();
-    res.sendStatus(HttpStatus.NoContent);
+    res.JSON(HttpStatus.Ok);
   }
 
   async updateProfile(req: Request, res: Response) {
@@ -104,7 +104,7 @@ class UserController {
     const user = new User(req.userId!);
     const error = await user.removeAddress(id);
     if (error) throw RequestError._500();
-    res.sendStatus(HttpStatus.NoContent);
+    res.JSON(HttpStatus.Ok);
   }
 }
 
