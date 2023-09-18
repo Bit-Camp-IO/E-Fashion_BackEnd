@@ -147,7 +147,7 @@ class AdminController {
       }
       throw RequestError._500();
     }
-    res.JSON(HttpStatus.Accepted, null)
+    res.JSON(HttpStatus.Accepted, null);
   }
 
   @Guard(AdminRole.ADMIN)
@@ -155,9 +155,9 @@ class AdminController {
     const admin = req.admin as Admin;
     const result = await admin.getActiveChats();
     if (result instanceof Error) {
-      throw new RequestError(result.message, HttpStatus.BadGateway)
+      throw new RequestError(result.message, HttpStatus.BadGateway);
     }
-    res.JSON(HttpStatus.Ok, result)
+    res.JSON(HttpStatus.Ok, result);
   }
 
   @Guard(AdminRole.ADMIN)
@@ -167,11 +167,11 @@ class AdminController {
     const error = await admin.closeChat(id);
     if (error) {
       if (error instanceof NotFoundError) {
-        throw new RequestError(error.message, HttpStatus.NotFound)
+        throw new RequestError(error.message, HttpStatus.NotFound);
       }
-      throw new RequestError(error.message, HttpStatus.BadRequest)
+      throw new RequestError(error.message, HttpStatus.BadRequest);
     }
-    res.JSON(HttpStatus.Accepted, null)
+    res.JSON(HttpStatus.Accepted, null);
   }
 }
 

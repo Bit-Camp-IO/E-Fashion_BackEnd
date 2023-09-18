@@ -8,7 +8,9 @@ export const Guard = (role: AdminRole) => {
     const fn = descriptor.value;
     descriptor.value = async (...args: any) => {
       const [req] = args;
+      console.log(req.userId);
       const admin = await getAdminServices(req.userId, role);
+      console.log(admin);
       if (admin.error) {
         if (admin.error instanceof UnauthorizedError) {
           throw new RequestError(admin.error.message, HttpStatus.Unauthorized);

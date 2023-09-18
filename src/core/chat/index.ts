@@ -1,50 +1,59 @@
-import ChatModel, { ChatDB } from "@/database/models/chat";
-import { ChatData } from "./interfaces";
-import { AsyncSafeResult } from "@type/common";
-import { NotFoundError } from "../errors";
+import ChatModel, { ChatDB, ChatStatus } from '@/database/models/chat';
+import { ChatData } from './interfaces';
+import { AsyncSafeResult } from '@type/common';
+import { NotFoundError, UnauthorizedError } from '../errors';
 
 export async function createChat(userId: string): AsyncSafeResult<ChatData> {
   try {
-    const chatExists = await ChatModel.findOne({ status: { $in: ['active', 'waiting'] }, user: userId })
+    const chatExists = await ChatModel.findOne({
+      status: { $in: [ChatStatus.ACTIVE, ChatStatus.WAITING] },
+      user: userId,
+    });
 
     if (chatExists) {
-      throw new Error("You have an active or waiting to respond chat")
+      throw new Error('You have an active or waiting to respond chat');
     }
     const chat = await ChatModel.create({
       user: userId,
-      status: "waiting"
+      status: 'waiting',
     });
     const result: ChatData = {
       user: chat.user._id,
       id: chat._id,
-      status: chat.status
-    }
+      status: chat.status,
+    };
 
-    return { result, error: null }
+    return { result, error: null };
   } catch (err) {
-    return { error: err, result: null }
+    return { error: err, result: null };
   }
 }
 
-export async function saveMessageToChat(chatID: string, senderId: string, content: string): AsyncSafeResult<any> {
+export async function saveMessageToChat(
+  chatID: string,
+  senderId: string,
+  content: string,
+): AsyncSafeResult<any> {
   try {
-    const chat = await ChatModel.findOneAndUpdate({ id: chatID }, {
-      $push: {
-        messages: {
-          sender: senderId,
-          content: content,
-        }
-      }
-    })
+    const chat = await ChatModel.findOneAndUpdate(
+      { id: chatID },
+      {
+        $push: {
+          messages: {
+            sender: senderId,
+            content: content,
+          },
+        },
+      },
+    );
 
     if (!chat) {
       throw new NotFoundError('Chat with id' + chatID);
     }
 
-    return { result: chat, error: null }
-
+    return { result: chat, error: null };
   } catch (err) {
-    return { error: err, result: null }
+    return { error: err, result: null };
   }
 }
 
@@ -52,11 +61,11 @@ export async function getChats(status: string): AsyncSafeResult<any> {
   try {
     const chats = await ChatModel.find({ status });
     if (!chats) {
-      throw new NotFoundError('No chats specefied with status: ' + status)
+      throw new NotFoundError('No chats specefied with status: ' + status);
     }
-    return { result: chats, error: null }
+    return { result: chats, error: null };
   } catch (err) {
-    return { error: err, result: null }
+    return { error: err, result: null };
   }
 }
 
@@ -65,21 +74,21 @@ export async function getChatById(id: string): AsyncSafeResult<ChatDB> {
     const chat = await ChatModel.findOne({ id });
 
     if (!chat) {
-      throw new NotFoundError("Chat with id " + id);
+      throw new NotFoundError('Chat with id ' + id);
     }
-    return { result: chat, error: null }
+    return { result: chat, error: null };
   } catch (err) {
-    return { error: err, result: null }
+    return { error: err, result: null };
   }
 }
 
 export async function changeStatus(id: string, stuatus: string): Promise<Error | null> {
   try {
-    const chat = await ChatModel.findByIdAndUpdate(id, { $set: { status: stuatus } })
+    const chat = await ChatModel.findByIdAndUpdate(id, { $set: { status: stuatus } });
     if (!chat) {
-      throw new NotFoundError("Chat wit id" + id)
+      throw new NotFoundError('Chat wit id' + id);
     }
-    return null
+    return null;
   } catch (err) {
     return err;
   }
@@ -87,26 +96,28 @@ export async function changeStatus(id: string, stuatus: string): Promise<Error |
 
 export async function acceptChat(adminId: string, chatId: string): Promise<Error | null> {
   try {
-    const chat = await ChatModel.findByIdAndUpdate(chatId, { $set: { status: 'active', admin: adminId } })
+    const chat = await ChatModel.findByIdAndUpdate(chatId, {
+      $set: { status: 'active', admin: adminId },
+    });
     if (!chat) {
-      throw new NotFoundError("Chat wit id" + chatId)
+      throw new NotFoundError('Chat wit id' + chatId);
     }
-    return null
+    return null;
   } catch (err) {
     return err;
   }
 }
 
-export async function isChatActiveWithId(id: string, chatId: string): Promise<Boolean | Error> {
+export async function isChatActiveWithId(userId: string, chatId: string): Promise<Boolean | Error> {
   try {
-    const chat = await ChatModel.findOne({
-      _id: chatId, status: 'active',
-      $or: [{ admin: id }, { user: id }]
-    })
+    const chat = await ChatModel.findById(chatId);
     if (!chat) {
-      return false;
+      throw new NotFoundError('Chat ');
     }
-    return true;
+    if (chat.user.toString() !== userId || chat.admin?.toString() !== userId) {
+      throw new UnauthorizedError();
+    }
+    return chat.status === ChatStatus.ACTIVE;
   } catch (err) {
     return err;
   }

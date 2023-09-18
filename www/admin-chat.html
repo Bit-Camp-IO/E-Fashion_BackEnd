@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Chat Test</title>
 </head>
+
 <body>
     <h1>Admin Chat Test</h1>
     <div>
@@ -28,9 +30,9 @@
     </div>
     <ul id="chatMessages"></ul>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
     <script>
-       const socket = io('http://localhost:8080/', { transports: ['websocket'] });
+        const socket = io('http://localhost:8080/', { transports: ['websocket'] });
 
         function joinChat() {
             const adminId = document.getElementById('adminId').value;
@@ -59,21 +61,23 @@
         });
         function acceptChat() {
             const authToken = document.getElementById('token').value;
+            console.log(authToken)
             const chatId = document.getElementById('chatId').value;
             fetch(`http://localhost:8080/admin/accept-chat/${chatId}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization:
-          `Bearer ${authToken}`,
-      },
-      method: 'POST',
-    })
-      .then(r => r.json())
-      .then(console.log)
-      .catch(err => {
-        console.log(err);
-      });
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization:
+                        `Bearer ${authToken}`,
+                },
+                method: 'POST',
+            })
+                .then(r => r.json())
+                .then(console.log)
+                .catch(err => {
+                    console.log(err);
+                });
         }
     </script>
 </body>
+
 </html>
