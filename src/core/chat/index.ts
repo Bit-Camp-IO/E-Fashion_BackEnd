@@ -6,7 +6,7 @@ import { NotFoundError } from "../errors";
 export async function createChat(userId: string): AsyncSafeResult<ChatData> {
   try {
     const chatExists = await ChatModel.findOne({ status: { $in: ['active', 'waiting'] }, user: userId })
-  
+
     if (chatExists) {
       throw new Error("You have an active or waiting to respond chat")
     }
@@ -86,7 +86,7 @@ export async function changeStatus(id: string, stuatus: string): Promise<Error |
 }
 
 export async function acceptChat(adminId: string, chatId: string): Promise<Error | null> {
-   try {
+  try {
     const chat = await ChatModel.findByIdAndUpdate(chatId, { $set: { status: 'active', admin: adminId } })
     if (!chat) {
       throw new NotFoundError("Chat wit id" + chatId)
@@ -100,10 +100,9 @@ export async function acceptChat(adminId: string, chatId: string): Promise<Error
 export async function isChatActiveWithId(id: string, chatId: string): Promise<Boolean | Error> {
   try {
     const chat = await ChatModel.findOne({
-      chatId, $or: [
-        { user: id },
-        { admin: id }
-    ] }, { status: 'active' });
+      _id: chatId, status: 'active',
+      $or: [{ admin: id }, { user: id }]
+    })
     if (!chat) {
       return false;
     }

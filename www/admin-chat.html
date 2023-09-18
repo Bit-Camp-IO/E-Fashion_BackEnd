@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Chat Test</title>
+</head>
+<body>
+    <h1>Admin Chat Test</h1>
+    <div>
+        <label for="token">Token</label>
+        <input type="text" id="token">
+        <button onclick="acceptChat()">Accept Chat</button>
+    </div>
+    <div>
+        <label for="adminId">Admin ID:</label>
+        <input type="text" id="adminId">
+    </div>
+    <div>
+        <label for="chatId">Chat ID:</label>
+        <input type="text" id="chatId">
+        <button onclick="joinChat()">Join Chat</button>
+    </div>
+    <div>
+        <label for="message">Message:</label>
+        <input type="text" id="message">
+        <button onclick="sendMessage()">Send Message</button>
+    </div>
+    <ul id="chatMessages"></ul>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+    <script>
+       const socket = io('http://localhost:8080/', { transports: ['websocket'] });
+
+        function joinChat() {
+            const adminId = document.getElementById('adminId').value;
+            const chatId = document.getElementById('chatId').value;
+            socket.emit('join', adminId, chatId);
+        }
+
+        function sendMessage() {
+            const adminId = document.getElementById('adminId').value;
+            const chatId = document.getElementById('chatId').value;
+            const message = document.getElementById('message').value;
+
+            socket.emit('send-message', adminId, chatId, message);
+        }
+
+        socket.on('receive-message', (message) => {
+            const chatMessages = document.getElementById('chatMessages');
+            const li = document.createElement('li');
+            li.textContent = message;
+            chatMessages.appendChild(li);
+        });
+
+        socket.on('error', (error) => {
+            console.error(error);
+            alert(`Error: ${error}`);
+        });
+        function acceptChat() {
+            const authToken = document.getElementById('token').value;
+            const chatId = document.getElementById('chatId').value;
+            fetch(`http://localhost:8080/admin/accept-chat/${chatId}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization:
+          `Bearer ${authToken}`,
+      },
+      method: 'POST',
+    })
+      .then(r => r.json())
+      .then(console.log)
+      .catch(err => {
+        console.log(err);
+      });
+        }
+    </script>
+</body>
+</html>
