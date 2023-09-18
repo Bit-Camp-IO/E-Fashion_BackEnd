@@ -1,51 +1,53 @@
-import { isChatActiveWithId, saveMessageToChat } from "@/core/chat";
-import { Server, Socket } from "socket.io";
+// import { isChatActiveWithId, saveMessageToChat } from '@/core/chat';
+// import { randomUUID } from 'crypto';
+import { connectAdmin, connectUser, saveMessageToChat } from '@/core/chat';
+import { Server, Socket } from 'socket.io';
 
 export async function chatSocket(io: Server) {
-  const usersInChats = new Map();
+  const users = new Map<string, string>();
 
-  io.on('connection', (socket: Socket) => {
-    socket.on('send-message', async (senderId, chatId, message) => {
-      try {
-        if (usersInChats.get(senderId) === chatId) {
-          await saveMessageToChat(chatId, senderId, message);
-          io.to(chatId).emit('receive-message', message);
-        } else {
-          socket.emit('error', 'You are not part of this chat');
-        }
-      } catch (err) {
-        socket.emit('error', err);
-      }
-    });
+  io.on('connection', async (socket: Socket) => {
+    const token = socket.handshake.auth.token;
+    const chatId = socket.handshake.query.chatId?.toString();
+    const isAdmin = socket.handshake.query.isAdmin || false;
 
-    socket.on('join', async (userId, chatId) => {
-      try {
-        const chat = await isChatActiveWithId(userId, chatId);
-        if (chat) {
-          usersInChats.set(userId, chatId);
-          socket.join(chatId);
-        } else {
-          socket.emit('error', 'Chat not found or not active');
-        }
-      } catch (err) {
-        socket.emit('error', err);
-      }
-    });
-
-    socket.on('disconnect', () => {
-      const userId = getUserIdBySocketId(socket.id);
-      if (userId) {
-        usersInChats.delete(userId);
-      }
-    });
-
-    function getUserIdBySocketId(socketId: string) {
-      for (const [userId, chatId] of usersInChats.entries()) {
-        if (io.sockets.sockets.get(socketId)?.rooms.has(chatId)) {
-          return userId;
-        }
-      }
-      return null;
+    if (!chatId || !token) {
+      // TODO: ERROR
+      socket.disconnect(true);
+      return;
     }
+
+    const chat = chatId.toString();
+
+    let { result, error } = isAdmin
+      ? await connectAdmin(token, chatId)
+      : await connectUser(token, chatId);
+
+    if (error) {
+      // TODO: ERROR
+      socket.disconnect(true);
+      return;
+    }
+    users.set(socket.id, result!);
+
+    socket.join(chat);
+
+    socket.on('send-message', async (message: string | undefined) => {
+      // TODO: Error
+      if (!message) return;
+      message = message.trim();
+      if (message.length === 0) {
+        // TODO: Error
+        return;
+      }
+      const messageObject = await saveMessageToChat(chatId, users.get(socket.id)!, message);
+      // TODO: Errors
+      if (messageObject.error) {
+        return;
+      }
+      socket.to(chat).except(socket.id).emit('new-message', messageObject.result);
+    });
+
+    // TODO: ERROR EVENT
   });
 }

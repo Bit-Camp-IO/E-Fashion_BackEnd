@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat Test</title>
 </head>
+
 <body>
     <h1>Chat Test</h1>
     <div>
         <label for="token">Token</label>
-        <input type="text" id="token">
+        <input type="text" id="token"
+            value="eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZmY4MjA5ZTdjNTVjZTBhZDUyZTE4MiIsImlhdCI6MTY5NTA1MzUzMSwiZXhwIjoxNjk3NjQ1NTMxfQ.RXREmyfAeeXS1jrG1JVIokqaP6M-fdwAqYANG8nxXdc4bYVRA_Yuyw3_hKOmSOEMsYu38XCLWeTERwjaxZlyxnGPlfJneon-QMwKKvt34dLJwKx1mKXJbmC4nTiYKQCShMRbomGdGcuhUywEuN6jeyi53uGsxFEj8BmkkIQPodwklckr9UbOt0MonJCj3ZDFfLxbyykwTcDWkrquNhWiRPz4UgFQPuhP4EWgemdORLhtwix6RyQe9J9WfOiGiNZ1e1KGX3wdiguKK-WhEH37I842-SZoSvu3nViiQjADwQJG3KvKcjlGbDSmROrRT8KdAJYIBzZ320WykveehWAzWw">
         <button onclick="createChat()">CreateChat</button>
     </div>
     <div>
@@ -18,7 +21,7 @@
     </div>
     <div>
         <label for="chatId">Chat ID:</label>
-        <input type="text" id="chatId">
+        <input type="text" id="chatId" value="650880f3de90254eefb5d312">
         <button onclick="joinChat()">Join Chat</button>
     </div>
     <div>
@@ -30,50 +33,74 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
     <script>
-        const socket = io('http://localhost:8080/',  { transports : ['websocket'] });
-
-        function joinChat() {
-            const userId = document.getElementById('userId').value;
-            const chatId = document.getElementById('chatId').value;
-            socket.emit('join', userId, chatId);
+        // user -> chat
+        // ws://localhost:8080/socket.io
+        let socket;
+        function joinChat(chatId) {
+            socket = io('http://localhost:8080/', {
+                transports: ['websocket'], auth: {
+                    token: document.getElementById('token').value
+                },
+                query: {
+                    "chatId": document.getElementById('chatId').value
+                }
+            });
+            socket.on('new-message', (message) => {
+                console.log(message)
+                document.body.innerHTML += `<h3>me: ${message.content}</h3> date: ${message.date} `
+            })
+            // socket.emit('join', chatId)
         }
 
         function sendMessage() {
-            const userId = document.getElementById('userId').value;
-            const chatId = document.getElementById('chatId').value;
-            const message = document.getElementById('message').value;
-
-            socket.emit('send-message', userId, chatId, message);
+            let message = document.getElementById("message").value
+            socket.emit('send-message', message)
+            document.body.innerHTML += `<h3>${message}</h3>`
         }
 
-        socket.on('receive-message', (message) => {
-            const chatMessages = document.getElementById('chatMessages');
-            const li = document.createElement('li');
-            li.textContent = message;
-            chatMessages.appendChild(li);
-        });
+        // function joinChat() {
+        //     const userId = document.getElementById('userId').value;
+        //     const chatId = document.getElementById('chatId').value;
+        //     socket.emit('join', userId, chatId);
+        // }
 
-        socket.on('error', (error) => {
-            console.error(error);
-            alert(`Error: ${error}`);
-        });
+        // function sendMessage() {
+        //     const userId = document.getElementById('userId').value;
+        //     const chatId = document.getElementById('chatId').value;
+        //     const message = document.getElementById('message').value;
 
-        function createChat() {
-            const authToken = document.getElementById('token').value;
-            fetch('http://localhost:8080/api/user/new-chat', {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization:
-          `Bearer ${authToken}`,
-      },
-      method: 'POST',
-    })
-      .then(r => r.json())
-      .then(console.log)
-      .catch(err => {
-        console.log(err);
-      });
-        }
+        //     socket.emit('send-message', userId, chatId, message);
+        // }
+
+        // socket.on('receive-message', (message) => {
+        //     const chatMessages = document.getElementById('chatMessages');
+        //     const li = document.createElement('li');
+        //     li.textContent = message;
+        //     chatMessages.appendChild(li);
+        // });
+
+        // socket.on('error', (error) => {
+        //     console.error(error);
+        //     alert(`Error: ${error}`);
+        // });
+
+        // function createChat() {
+        //     const authToken = document.getElementById('token').value;
+        //     fetch('http://localhost:8080/api/user/new-chat', {
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //             Authorization:
+        //                 `Bearer ${authToken}`,
+        //         },
+        //         method: 'POST',
+        //     })
+        //         .then(r => r.json())
+        //         .then(console.log)
+        //         .catch(err => {
+        //             console.log(err);
+        //         });
+        // }
     </script>
 </body>
+
 </html>

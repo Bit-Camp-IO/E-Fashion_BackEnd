@@ -11,7 +11,8 @@
     <h1>Admin Chat Test</h1>
     <div>
         <label for="token">Token</label>
-        <input type="text" id="token">
+        <input type="text" id="token"
+            value="eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YTllMjZmNmI0NzU2M2NhNzVmMGE4YiIsImlhdCI6MTY5MjU2NTA5MCwiZXhwIjoxNjk1MTU3MDkwfQ.c0n0_MiaLxMl-HKDbpypbiaNlKgVHHiGeow9VjByOM178rHdmy5l9Au8V5iajUgzUxO4e1q8NDMyL8XgjZhXACVeyjSZEQWSUAcNJxXfPcEo4tH-IzkgOc-l7quGaIHughcCRKpavZYlqRL0eVENjLPg_-X82BD8d7Kf1reomf04GP16fKVHajYNA55HHrSI-dXVRteUhs7gGx_8C4fvbas87qyahe-dRIubVkd_V9jdZfzqzCyAyUKIqCv2dsGEYkmvJsTlNfS8195xGriF-FRuWp411xpEfvd8H22do8lDFpYeuCHjXyXAfHGFC847LIi0F8-Oxu7l7dFVKplj9g">
         <button onclick="acceptChat()">Accept Chat</button>
     </div>
     <div>
@@ -20,7 +21,7 @@
     </div>
     <div>
         <label for="chatId">Chat ID:</label>
-        <input type="text" id="chatId">
+        <input type="text" id="chatId" value="650880f3de90254eefb5d312">>
         <button onclick="joinChat()">Join Chat</button>
     </div>
     <div>
@@ -32,51 +33,71 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
     <script>
-        const socket = io('http://localhost:8080/', { transports: ['websocket'] });
-
-        function joinChat() {
-            const adminId = document.getElementById('adminId').value;
-            const chatId = document.getElementById('chatId').value;
-            socket.emit('join', adminId, chatId);
-        }
-
-        function sendMessage() {
-            const adminId = document.getElementById('adminId').value;
-            const chatId = document.getElementById('chatId').value;
-            const message = document.getElementById('message').value;
-
-            socket.emit('send-message', adminId, chatId, message);
-        }
-
-        socket.on('receive-message', (message) => {
-            const chatMessages = document.getElementById('chatMessages');
-            const li = document.createElement('li');
-            li.textContent = message;
-            chatMessages.appendChild(li);
-        });
-
-        socket.on('error', (error) => {
-            console.error(error);
-            alert(`Error: ${error}`);
-        });
-        function acceptChat() {
-            const authToken = document.getElementById('token').value;
-            console.log(authToken)
-            const chatId = document.getElementById('chatId').value;
-            fetch(`http://localhost:8080/admin/accept-chat/${chatId}`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization:
-                        `Bearer ${authToken}`,
+        // const socket = io('http://localhost:8080/', { transports: ['websocket'] });
+        let socket;
+        function joinChat(chatId) {
+            socket = io('http://localhost:8080/', {
+                transports: ['websocket'], auth: {
+                    token: document.getElementById('token').value
                 },
-                method: 'POST',
+                query: {
+                    "chatId": document.getElementById('chatId').value,
+                    "isAdmin": true
+                }
+            });
+            socket.on('new-message', (message) => {
+                document.body.innerHTML += `<h3>me: ${message.content}</h3> date: ${message.date} `
             })
-                .then(r => r.json())
-                .then(console.log)
-                .catch(err => {
-                    console.log(err);
-                });
+            // socket.emit('join', chatId)
         }
+        function sendMessage() {
+            let message = document.getElementById("message").value
+            socket.emit('send-message', message)
+            document.body.innerHTML += `<h3>me: ${message}</h3>`
+        }
+        // function joinChat() {
+        //     const adminId = document.getElementById('adminId').value;
+        //     const chatId = document.getElementById('chatId').value;
+        //     socket.emit('join', adminId, chatId);
+        // }
+
+        // function sendMessage() {
+        //     const adminId = document.getElementById('adminId').value;
+        //     const chatId = document.getElementById('chatId').value;
+        //     const message = document.getElementById('message').value;
+
+        //     socket.emit('send-message', adminId, chatId, message);
+        // }
+
+        // socket.on('receive-message', (message) => {
+        //     const chatMessages = document.getElementById('chatMessages');
+        //     const li = document.createElement('li');
+        //     li.textContent = message;
+        //     chatMessages.appendChild(li);
+        // });
+
+        // socket.on('error', (error) => {
+        //     console.error(error);
+        //     alert(`Error: ${error}`);
+        // });
+        // function acceptChat() {
+        //     const authToken = document.getElementById('token').value;
+        //     console.log(authToken)
+        //     const chatId = document.getElementById('chatId').value;
+        //     fetch(`http://localhost:8080/admin/accept-chat/${chatId}`, {
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //             Authorization:
+        //                 `Bearer ${authToken}`,
+        //         },
+        //         method: 'POST',
+        //     })
+        //         .then(r => r.json())
+        //         .then(console.log)
+        //         .catch(err => {
+        //             console.log(err);
+        //         });
+        // }
     </script>
 </body>
 
