@@ -8,6 +8,8 @@ export interface FavItem {
 
 export interface CartItemData {
   id: string;
+  title: string;
+  price: string;
   quantity: number;
   size: string;
   color: string;
@@ -15,7 +17,7 @@ export interface CartItemData {
 
 export interface CartItem extends Omit<CartItemData, 'id'> {
   productId: string;
-  imageUrl: string;
+  imagesUrl: string;
 }
 
 export interface CartResult {

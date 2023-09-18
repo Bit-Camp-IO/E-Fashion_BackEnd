@@ -103,9 +103,11 @@ export class Cart {
       items: this.cart.items.map(i => ({
         color: i.color,
         productId: i.product._id,
+        title: i.product.title,
         quantity: i.quantity,
+        price: i.product.price,
         size: i.size,
-        imageUrl: i.product.imageURL,
+        imagesUrl: i.product.imagesURL,
       })),
       subtotal: totalPrice,
       totalQuantity: this.cart.totalQuantity,
