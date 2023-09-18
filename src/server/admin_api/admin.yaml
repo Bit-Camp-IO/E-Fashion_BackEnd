@@ -1,0 +1,498 @@
+paths:
+  /admin/create-manager:
+    post:
+      tags:
+        - Admin
+      summary: Create a new manager.
+      description: Create a new manager with restricted administrative privileges. This endpoint allows the creation of only one manager for the entire application.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminInput'
+  /admin/create-super:
+    post:
+      tags:
+        - Admin
+      summary: Create a superadmin user.
+      description: Register a superadmin user with full administrative access. Superadmins have unrestricted control over the application.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminInput'
+      security:
+        - bearerAuth: []
+  /admin/create:
+    post:
+      tags:
+        - Admin
+      summary: Create an admin.
+      description: Register an admin user with elevated administrative privileges.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminInput'
+      security:
+        - bearerAuth: []
+  /admin/auth/login:
+    post:
+      tags:
+        - Admin
+      summary: Authenticate admins.
+      description: Authenticate admins to provide access to the application.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginInput'
+  /admin/{admin_id}/remove:
+    delete:
+      tags:
+        - Admin
+      summary: Remove an admin.
+      description: Remove an admin user from the application, revoking their administrative privileges.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: admin_id
+          required: true
+          schema:
+          type: string
+  /admin/list:
+    get:
+      tags:
+        - Admin
+      summary: Get a list of admins.
+      description: This endpoint returns a list of admin users within the application. Admins typically have elevated privileges for managing the system.
+      security:
+        - bearerAuth: []
+  /admin/user/list:
+    get:
+      tags:
+        - Admin
+      summary: Get a list of users.
+      description: Retrieve a list of regular users in the application. This endpoint provides information about all registered users who do not have administrative privileges.
+      security:
+        - bearerAuth: []
+  /admin/user/{user_id}:
+    get:
+      tags:
+        - Admin
+      summary: Get user data by ID.
+      description: This API endpoint allows you to fetch user data by specifying the user's unique identifier (user_id). It returns detailed information about the user associated with the provided ID.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+          type: string
+  /admin/user/{user_id}/ban:
+    post:
+      tags:
+        - Admin
+      summary: Ban a user.
+      description: Ban a user by specifying their unique identifier (user_id). Banning a user typically restricts their access to certain functionalities or areas of the application as per your application's rules and policies.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+          type: string
+  /admin/user/{user_id}/unban:
+    post:
+      tags:
+        - Admin
+      summary: Unban a user.
+      description: Unban a previously banned user by specifying their unique identifier (user_id). This action restores the user's access to the application, reversing any previous bans.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+          type: string
+  /admin/product/create:
+    post:
+      tags:
+        - Admin
+        - Product
+      summary: Create a new product.
+      description: This API endpoint allows administrators to create a new product in the application's inventory. Provide the necessary product details, such as name, description, and price, to add a new item.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductInput'
+      security:
+        - bearerAuth: []
+  /admin/product/{product_id}/edit:
+    put:
+      tags:
+        - Admin
+      summary: Edit a product by ID.
+      description: Use this endpoint to edit an existing product by specifying its unique identifier (product_id). Update product details, such as name, description, and price, to modify the item's information.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProductInput'
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: product_id
+          required: true
+          schema:
+          type: string
+  /admin/product/{product_id}/remove:
+    get:
+      tags:
+        - Admin
+      summary: emove a product by ID.
+      description: Remove a product from the inventory by providing its unique identifier (product_id). This action deletes the specified product from the application.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: product_id
+          required: true
+          schema:
+          type: string
+  /admin/product/{product_id}/discount:
+    post:
+      tags:
+        - Admin
+      summary: Add a discount for a product.
+      description: This API endpoint allows administrators to add a discount to a specific product. Specify the product's unique identifier (product_id) and the discount details, such as the discount amount or percentage.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DiscountInput'
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: product_id
+          required: true
+          schema:
+          type: string
+    delete:
+      tags:
+        - Admin
+      summary: Remove a product discount.
+      description: Remove an existing discount from a product by specifying the product's unique identifier (product_id). This action revokes the discount associated with the product.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: product_id
+          required: true
+          schema:
+          type: string
+  /admin/category/create:
+    post:
+      tags:
+        - Admin
+      summary: Create a new category.
+      description: This API endpoint allows administrators to create a new category within the application's product categorization system. Provide the necessary category details, such as name and description, to add a new category.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryInput'
+      security:
+        - bearerAuth: []
+  /admin/category/{category_id}/edit:
+    put:
+      tags:
+        - Admin
+      summary: Edit a category by ID.
+      description: Use this endpoint to edit an existing category by specifying its unique identifier (category_id). Update category details, such as name and description, to modify the category's information.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCategoryInput'
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: category_id
+          required: true
+          schema:
+          type: string
+  /admin/category/{category_id}/remove:
+    delete:
+      tags:
+        - Admin
+      summary: Remove a category by ID.
+      description: Remove a category from the application's categorization system by providing its unique identifier (category_id). This action deletes the specified category and may affect product associations with it.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: category_id
+          required: true
+          schema:
+          type: string
+  /admin/category/{category_id}/add_products:
+    post:
+      tags:
+        - Admin
+      summary: Add products to a category.
+      description: This API endpoint allows administrators to add products to a specific category. Specify the category's unique identifier (category_id) and provide product identifiers to associate products with the category.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: category_id
+          required: true
+          schema:
+          type: string
+  /admin/category/{category_id}/remove_products:
+    delete:
+      tags:
+        - Admin
+      summary: Remove products from a category.
+      description: Remove products from a category by specifying the category's unique identifier (category_id) and providing product identifiers to disassociate products from the category. This action removes the specified products from the category's association.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: category_id
+          required: true
+          schema:
+          type: string
+  /admin/brand/create:
+    post:
+      tags:
+        - Admin
+      summary: Create a new brand.
+      description: Use this API endpoint to create a new brand within your application. Provide the necessary brand details, such as name and description, to add a new brand.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BrandInput'
+      security:
+        - bearerAuth: []
+  /admin/brand/{brand_id}/edit:
+    put:
+      tags:
+        - Admin
+      summary: Edit a brand by ID.
+      description: This endpoint allows you to edit an existing brand by specifying its unique identifier (brand_id). Update brand details, such as name and description, to modify the brand's information.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateBrandInput'
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: brand_id
+          required: true
+          schema:
+          type: string
+  /admin/brand/{brand_id}/remove:
+    delete:
+      tags:
+        - Admin
+      summary: Remove a brand by ID.
+      description: Remove a brand from your application by providing its unique identifier (brand_id). This action deletes the specified brand, which may impact the association of products with that brand.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: brand_id
+          required: true
+          schema:
+          type: string
+  /admin/brand/{brand_id}/add_products:
+    post:
+      tags:
+        - Admin
+      summary: Add products to a brand.
+      description: This API endpoint enables administrators to add products to a specific brand. Specify the brand's unique identifier (brand_id) and provide product identifiers to associate products with the brand.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: brand_id
+          required: true
+          schema:
+          type: string
+  /admin/brand/{brand_id}/remove_products:
+    delete:
+      tags:
+        - Admin
+      summary: Remove products from a brand.
+      description: Remove products from a brand by specifying the brand's unique identifier (brand_id) and providing product identifiers to disassociate products from the brand. This action removes the specified products from the brand's association.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: brand_id
+          required: true
+          schema:
+          type: string
+
+components:
+  schemas:
+    AdminInput:
+      type: object
+      properties:
+        email:
+          type: string
+          required: true
+        password:
+          type: string
+          required: true
+        confirmPassword:
+          type: string
+          required: true
+        name:
+          type: string
+          required: true
+        phone:
+          type: string
+          required: true
+        address:
+          type: string
+    LoginInput:
+      type: object
+      properties:
+        email:
+          type: string
+          required: true
+        password:
+          type: string
+          required: true
+    ProductInput:
+      type: object
+      properties:
+        title:
+          type: string
+          required: true
+        description:
+          type: string
+          required: true
+        price:
+          type: number
+          required: true
+        size:
+          type: array
+          items:
+            type: string
+        colors:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                required: true
+              hex:
+                type: string
+                required: true
+        imagesUrl:
+          type: array
+          items:
+            type: string
+          required: true
+        gender:
+          type: number
+          required: true
+        brandId:
+          type: string
+        categoryId:
+          type: strin
+    UpdateProductInput:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        size:
+          type: array
+          items:
+            type: string
+        gender:
+          type: number
+    DiscountInput:
+      type: object
+      properties:
+        discount:
+          type: number
+          required: true
+    CategoryInput:
+      type: object
+      properties:
+        name:
+          type: string
+          required: true
+        description:
+          type: string
+        image:
+          type: string
+          required: true
+        gender:
+          type: number
+          required: true
+    UpdateCategoryInput:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+    BrandInput:
+      type: object
+      properties:
+        name:
+          type: string
+          required: true
+        description:
+          type: string
+          required: true
+        link:
+          type: string
+          required: true
+        logo:
+          type: string
+          required: true
+    UpdateBrandInput:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        link:
+          type: string
+        logo:
+          type: string

@@ -66,7 +66,7 @@ const colorItem = Joi.object({
 export const createProductSchema = Joi.object<CreateProductSchema>({
   title: Joi.string().min(2).required(),
   description: Joi.string().max(500).required(),
-  price: Joi.number().required(),
+  price: Joi.number().min(0).required(),
   colors: Joi.array().items(colorItem).default([]),
   sizes: Joi.array().items(Joi.string()).default([]),
   imagesUrl: Joi.array().items(Joi.string()).min(1).required(),

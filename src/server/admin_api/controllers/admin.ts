@@ -45,7 +45,7 @@ class AdminController {
   }
 
   public async removeAdmin(req: Request, res: Response) {
-    const { id } = req.body;
+    const id = req.params['id'].toString();
     if (!id) {
       throw new RequestError('Require admin id to remove', HttpStatus.BadRequest);
     }
