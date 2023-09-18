@@ -186,6 +186,19 @@ router.get('/list/info', controller.listInfo);
  *        description: ID of the product in url
  *        required: true
  *        type: string
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              comment:
+ *                type: string
+ *              rate:
+ *                type: number
+ *                required: true
+ *                example: 4
  *    responses:
  *      200:
  *        description: successful operation
