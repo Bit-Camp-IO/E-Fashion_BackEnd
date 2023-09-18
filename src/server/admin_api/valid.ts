@@ -92,6 +92,7 @@ export const createCategorySchema = Joi.object({
 export const updateCategorySchema = Joi.object({
   name: Joi.string(),
   description: Joi.string().allow(''),
+  image: Joi.string().uri(),
 });
 
 export interface CreateBrandSchema {

@@ -52,6 +52,7 @@ class CategoryController {
     const productData: Partial<CategoryData> = {
       name: body.name,
       description: body.description,
+      image: body.image,
     };
     const product = await admin.editCategory(productData, id);
     if (product.error) {
