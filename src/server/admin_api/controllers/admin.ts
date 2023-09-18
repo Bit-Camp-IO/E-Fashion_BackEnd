@@ -142,8 +142,8 @@ class AdminController {
     const admin = req.admin as Admin;
     const error = await admin.acceptChat(id);
     if (error) {
-      if (error instanceof UnauthorizedError) {
-        throw new RequestError(error.message, HttpStatus.Unauthorized);
+      if (error instanceof NotFoundError) {
+        throw new RequestError(error.message, HttpStatus.NotFound);
       }
       throw RequestError._500();
     }
