@@ -48,6 +48,10 @@
             socket.on('new-message', (message) => {
                 document.body.innerHTML += `<h3>me: ${message.content}</h3> date: ${message.date} `
             })
+
+            socket.on('error', (error) => {
+                console.log(error)
+            })
             // socket.emit('join', chatId)
         }
         function sendMessage() {

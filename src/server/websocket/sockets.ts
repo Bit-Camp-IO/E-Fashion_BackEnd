@@ -12,7 +12,7 @@ export async function chatSocket(io: Server) {
     const isAdmin = socket.handshake.query.isAdmin || false;
 
     if (!chatId || !token) {
-      // TODO: ERROR
+      socket.emit('error', "Chat id or token are not valid")
       socket.disconnect(true);
       return;
     }
@@ -24,7 +24,7 @@ export async function chatSocket(io: Server) {
       : await connectUser(token, chatId);
 
     if (error) {
-      // TODO: ERROR
+      socket.emit('error', error.message)
       socket.disconnect(true);
       return;
     }
@@ -33,21 +33,25 @@ export async function chatSocket(io: Server) {
     socket.join(chat);
 
     socket.on('send-message', async (message: string | undefined) => {
-      // TODO: Error
-      if (!message) return;
+      if (!message) {
+        socket.emit('error', "Invalid message object")
+        return;
+      }
       message = message.trim();
       if (message.length === 0) {
-        // TODO: Error
+        socket.emit('error', "Empty message") //Should we emit an error on this case or just a return ?
         return;
       }
       const messageObject = await saveMessageToChat(chatId, users.get(socket.id)!, message);
-      // TODO: Errors
       if (messageObject.error) {
+        socket.emit("error", error?.message)
         return;
       }
-      socket.to(chat).except(socket.id).emit('new-message', messageObject.result);
+      socket.to(chat).emit('new-message', messageObject.result);
     });
 
-    // TODO: ERROR EVENT
+    socket.on('error', (err) => {
+      console.log(err)
+    })
   });
 }
