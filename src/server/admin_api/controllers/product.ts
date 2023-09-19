@@ -47,15 +47,7 @@ class ProductController {
     const admin = req.admin as Admin;
     const { id } = req.params;
     const body: UpdateProductSchema = req.body;
-    const productData: UpdateProductSchema = {
-      colors: body.colors,
-      description: body.description,
-      price: body.price,
-      sizes: body.sizes,
-      title: body.title,
-      gender: body.gender,
-    };
-    const product = await admin.editProduct(id, productData);
+    const product = await admin.editProduct(id, body);
     if (product.error) {
       throw RequestError._500();
     }

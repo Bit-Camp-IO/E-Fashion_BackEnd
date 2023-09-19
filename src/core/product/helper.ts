@@ -25,6 +25,7 @@ export function _formatProduct(pDoc: ProductDB): T.ProductResponse {
     colors: pDoc.colors || [],
     sizes: pDoc.sizes || [],
     gender: pDoc.gender,
+    stock: pDoc.stock || 0,
   };
 }
 

@@ -90,7 +90,16 @@ export async function updateProduct(
   productData: Partial<T.ProductData>,
 ): AsyncSafeResult<T.ProductData> {
   try {
-    const product = await ProductModel.findByIdAndUpdate(id, { $set: productData }, { new: true });
+    const product = await ProductModel.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          imagesURL: productData.imagesUrl,
+          ...productData,
+        },
+      },
+      { new: true },
+    );
     if (!product) throw new NotFoundError('Product with' + id);
     return { result: Helper._formatProduct(product), error: null };
   } catch (err) {

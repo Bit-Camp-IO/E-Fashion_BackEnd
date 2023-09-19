@@ -424,6 +424,9 @@ components:
         gender:
           type: number
           required: true
+        stock:
+          type: number
+          required: true
         brandId:
           type: string
         categoryId:
@@ -443,6 +446,26 @@ components:
             type: string
         gender:
           type: number
+        colors:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                required: true
+              hex:
+                type: string
+        imagesUrl:
+          type: array
+          items:
+            type: string
+        stock:
+          type: number
+        brandId:
+          type: string
+        categoryId:
+          type: strin
     DiscountInput:
       type: object
       properties:

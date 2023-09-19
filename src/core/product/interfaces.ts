@@ -25,6 +25,7 @@ export interface ProductResponse extends Omit<ProductItemApi, 'imageUrl'> {
   brand: string;
   description: string;
   gender: number;
+  stock: number;
 }
 
 export interface ProductItemsApiList {
