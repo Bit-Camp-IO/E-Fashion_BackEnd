@@ -18,7 +18,7 @@ const objectIdSchema = Joi.string().custom((value, helpers) => {
   return value;
 });
 const passwordValidate = Joi.string().trim().min(8).max(30).required();
-const genderValidate = Joi.number().min(0).max(2).required();
+const genderValidate = Joi.number().min(0).max(2);
 const confirmPasswordValidate = Joi.string().valid(Joi.ref('password')).required();
 
 export const adminSchema = Joi.object({
@@ -70,7 +70,7 @@ export const createProductSchema = Joi.object<CreateProductSchema>({
   colors: Joi.array().items(colorItem).default([]),
   sizes: Joi.array().items(Joi.string()).default([]),
   imagesUrl: Joi.array().items(Joi.string()).min(1).required(),
-  gender: genderValidate,
+  gender: genderValidate.required(),
   brandId: objectIdSchema,
   categoryId: objectIdSchema,
 });
@@ -86,13 +86,14 @@ export const createCategorySchema = Joi.object({
   name: Joi.string().required(),
   description: Joi.string().allow('').optional(),
   image: Joi.string().required().allow(),
-  gender: genderValidate,
+  gender: genderValidate.required(),
 });
 
 export const updateCategorySchema = Joi.object({
   name: Joi.string(),
   description: Joi.string().allow(''),
   image: Joi.string().uri(),
+  gender: genderValidate,
 });
 
 export interface CreateBrandSchema {

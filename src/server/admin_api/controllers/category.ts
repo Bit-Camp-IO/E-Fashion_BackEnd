@@ -53,6 +53,7 @@ class CategoryController {
       name: body.name,
       description: body.description,
       image: body.image,
+      gender: body.gender,
     };
     const product = await admin.editCategory(productData, id);
     if (product.error) {
