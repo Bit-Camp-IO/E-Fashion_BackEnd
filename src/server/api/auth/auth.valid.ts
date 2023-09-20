@@ -126,3 +126,8 @@ export const resetPasswordSchema = Joi.object<ResetPasswordSchema>({
   newPassword: passwordValidate,
   otp: Joi.string().length(6).required(),
 });
+
+export const verifyOTPSchema = Joi.object<Omit<ResetPasswordSchema, 'newPassword'>>({
+  email: Joi.string().email().required(),
+  otp: Joi.string().length(6).required(),
+});

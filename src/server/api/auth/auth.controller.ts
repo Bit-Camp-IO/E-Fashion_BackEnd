@@ -11,11 +11,13 @@ import {
   loginSchema,
   registerSchema,
   resetPasswordSchema,
+  verifyOTPSchema,
 } from './auth.valid';
 import { HttpStatus } from '@server/utils/status';
 import {
   JWTAuthService,
   OAuthAuthService,
+  OTPVerification,
   createEmailVerificationOTP,
   createForgotPasswordOTP,
   resetPassword,
@@ -32,6 +34,7 @@ import {
 import RequestError from '@server/utils/errors';
 import { User } from '@/core/user';
 import emails from '@/core/emails';
+import { OTPType } from '@/database/models/OTP';
 // import emails from '@/core/emails';
 
 interface IAuth {
@@ -182,6 +185,15 @@ class AuthController implements IAuth {
       throw RequestError._500();
     }
     res.JSON(HttpStatus.Ok);
+  }
+  @Validate(verifyOTPSchema)
+  public async verifyPasswordOTP(req: Request, res: Response) {
+    const body: Omit<ResetPasswordSchema, 'newPassword'> = req.body;
+    const isVerified = await OTPVerification(body.email, body.otp, OTPType.FORGOT_PASSWORD);
+    if (isVerified.error) {
+      throw RequestError._500();
+    }
+    res.JSON(HttpStatus.Ok, { ok: isVerified.result });
   }
 }
 

@@ -465,7 +465,7 @@ components:
         brandId:
           type: string
         categoryId:
-          type: strin
+          type: string
     DiscountInput:
       type: object
       properties:

@@ -189,6 +189,39 @@ router.get('/verify-email/:otp', isAuth, controller.verifyEmail);
 router.get('/forgot-password', controller.forgotPassword);
 /**
  * @openapi
+ * /api/auth/verify-password-otp:
+ *  get:
+ *    tags:
+ *      - Auth
+ *    summary: Verify otp
+ *    description: Verify otp for forget password
+ *    requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *              email:
+ *                type: string
+ *                description: User email
+ *              otp:
+ *                type: string
+ *                description: otp code
+ *    responses:
+ *      200:
+ *        description: Sucessful operation
+ *        content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *              ok:
+ *                type: boolean
+ */
+router.get('/verify-password-otp', controller.verifyPasswordOTP);
+/**
+ * @openapi
  * /api/auth/reset-password:
  *   post:
  *     tags:
