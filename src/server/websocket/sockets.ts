@@ -50,6 +50,16 @@ export async function chatSocket(io: Server) {
       socket.to(chat).emit('new-message', messageObject.result);
     });
 
+    socket.on('close', () => {
+       socket.emit('chat-closed')
+       users.delete(socket.id)
+       socket.disconnect(true)
+    })
+
+    socket.on('disconnect', () => {
+      users.delete(socket.id)
+    })
+
     socket.on('error', (err) => {
       console.log(err)
     })
