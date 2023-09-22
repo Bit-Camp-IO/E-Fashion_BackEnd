@@ -7,6 +7,7 @@ import initBrand from './brand';
 import initUser from './user';
 import initOrder from './order';
 import { initVersion } from './version/index.router';
+import initCollection from './collection';
 
 const initApi: InitRouterFunc = app => {
   const router = Router();
@@ -17,6 +18,7 @@ const initApi: InitRouterFunc = app => {
   initCategory(router);
   initBrand(router);
   initOrder(router);
+  initCollection(router);
   app.use('/api', router);
 };
 

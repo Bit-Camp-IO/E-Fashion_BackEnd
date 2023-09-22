@@ -1,0 +1,53 @@
+paths:
+  /api/collection:
+    get:
+      tags:
+        - Collection
+      summary: Get All collections.
+      description: Use this API endpoint to get all collections.
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionListResult'
+  /api/collection/{collection_id}:
+    get:
+      tags:
+        - Collection
+      summary: Get a collection.
+      description: Use this API endpoint to get a collection by id.
+      parameters:
+        - in: path
+          name: collection_id
+          required: true
+          schema:
+          type: string
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionResult'
+
+components:
+  schemas:
+    CollectionListResult:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+          title:
+            type: string
+          description:
+            type: string
+          image:
+            type: string
+          price:
+            type: number
+          discount:
+            type: number

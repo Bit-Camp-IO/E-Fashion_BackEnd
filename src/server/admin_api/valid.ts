@@ -1,3 +1,4 @@
+import { CollectionInput, EditCollectionInput } from '@/core/collection';
 import { Gender } from '@/core/gender';
 import { validateId } from '@/core/utils';
 import Joi from 'joi';
@@ -143,4 +144,39 @@ export const updateProductSchema = Joi.object({
 
 export const productDiscount = Joi.object({
   discount: Joi.number().min(1).required(),
+});
+
+export const createCollectionSchema = Joi.object<CollectionInput>({
+  title: Joi.string().trim().min(3).required(),
+  description: Joi.string().trim().min(3),
+  discount: Joi.number().min(0),
+  price: Joi.number().min(1).required(),
+  image: Joi.string().uri().required(),
+  items: Joi.array()
+    .items(
+      Joi.object({
+        title: Joi.string().trim().min(3).required(),
+        description: Joi.string().trim().min(3),
+        image: Joi.string().uri().required(),
+      }),
+    )
+    .min(1)
+    .required(),
+});
+
+export const editCollectionSchema = Joi.object<EditCollectionInput>({
+  title: Joi.string().trim().min(3),
+  description: Joi.string().trim().min(3),
+  discount: Joi.number().min(0),
+  price: Joi.number().min(1),
+  image: Joi.string().uri(),
+  items: Joi.array()
+    .items(
+      Joi.object({
+        title: Joi.string().trim().min(3).required(),
+        description: Joi.string().trim().min(3),
+        image: Joi.string().uri().required(),
+      }),
+    )
+    .min(1),
 });

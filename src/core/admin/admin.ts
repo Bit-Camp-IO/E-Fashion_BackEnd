@@ -18,6 +18,7 @@ import {
   removeProductsFromBrand,
 } from '../brand';
 import { addDiscount, removeDiscount } from '../product';
+import collection, { CollectionInput, CollectionResult, EditCollectionInput } from '../collection';
 interface AdminService {
   addProduct(data: ProductData): AsyncSafeResult<ProductResponse>;
   removeProduct(id: string): void;
@@ -73,10 +74,6 @@ export class Admin implements AdminService {
   async removeProductsFromCategory(catId: string, proIds: string[]): Promise<Error | null> {
     return Category.removeProductFromCategory(catId, proIds);
   }
-
-  // async addSubCategory(data: CategoryData, id: string): AsyncSafeResult<CategoryResult> {
-  //   return Category.addSubCategory(data, id, this._id);
-  // }
 
   async editCategory(data: Partial<CategoryData>, id: string): AsyncSafeResult<CategoryResult> {
     return Category.updateCategory(id, data);
@@ -146,6 +143,20 @@ export class Admin implements AdminService {
 
   async removeDiscount(productId: string): Promise<Error | null> {
     return removeDiscount(productId);
+  }
+
+  async createCollection(collectionData: CollectionInput): AsyncSafeResult<CollectionResult> {
+    return collection.create(collectionData);
+  }
+
+  async editCollection(
+    collectionId: string,
+    collectionData: EditCollectionInput,
+  ): AsyncSafeResult<CollectionResult> {
+    return collection.edit(collectionId, collectionData);
+  }
+  async removeCollection(collectionId: string): Promise<Error | null> {
+    return collection.remove(collectionId);
   }
 }
 

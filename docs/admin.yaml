@@ -127,7 +127,6 @@ paths:
     post:
       tags:
         - Admin
-        - Product
       summary: Create a new product.
       description: This API endpoint allows administrators to create a new product in the application's inventory. Provide the necessary product details, such as name, description, and price, to add a new item.
       requestBody:
@@ -357,6 +356,68 @@ paths:
           required: true
           schema:
           type: string
+  /admin/collection/create:
+    post:
+      tags:
+        - Admin
+      summary: Create a new collection.
+      description: Use this API endpoint to create a new collection within your application. Provide the necessary collection details, such as title and description, to add a new collection.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollectionInput'
+      security:
+        - bearerAuth: []
+      responses:
+        201:
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionResult'
+  /admin/collection/{collection_id}/edit:
+    put:
+      tags:
+        - Admin
+      summary: Update collection.
+      description: Use this API endpoint to edit a collection within your application.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollectionInput'
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: collection_id
+          required: true
+          schema:
+          type: string
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionResult'
+  /admin/collection/{collection_id}/remove:
+    delete:
+      tags:
+        - Admin
+      summary: Delete collection.
+      description: Use this API endpoint to delete a collection within your application.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: collection_id
+          required: true
+          schema:
+          type: string
 
 components:
   schemas:
@@ -519,3 +580,53 @@ components:
           type: string
         logo:
           type: string
+    CollectionInput:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        image:
+          type: string
+        price:
+          type: number
+        discount:
+          type: number
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+              description:
+                type: string
+              image:
+                type: string
+    CollectionResult:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        image:
+          type: string
+        price:
+          type: number
+        discount:
+          type: number
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+              description:
+                type: string
+              image:
+                type: string

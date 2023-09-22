@@ -6,51 +6,61 @@ import { isAuth } from '@server/middleware/isAuth';
 import productController from './controllers/product';
 import categoryController from './controllers/category';
 import brandController from './controllers/brand';
+import collectionController from './controllers/collection';
 import { UplaodCategoryPic, UplaodProductsPics } from '@server/middleware/upload';
 
 const router = Router();
 
 router.post('/create-manager', managerController.create);
-
-router.post('/create-super', isAuth, managerController.createSuper); // *
-
 router.post('/auth/login', authController.login); // *
 
-router.post('/create', isAuth, adminController.createAdmin); // *
+const adminRouters = Router();
+adminRouters.use(isAuth);
 
-router.delete('/:id/remove', isAuth, adminController.removeAdmin); // *
+adminRouters.post('/create-super', managerController.createSuper); // *
 
-router.get('/list', isAuth, adminController.getAllAdmins); // *
+adminRouters.post('/create', adminController.createAdmin); // *
 
-router.get('/user/list', isAuth, adminController.getAllUsers); // *
+adminRouters.delete('/:id/remove', adminController.removeAdmin); // *
 
-router.get('/user/:id', isAuth, adminController.getOneUser); // *
+adminRouters.get('/list', adminController.getAllAdmins); // *
 
-router.post('/user/:id/ban', isAuth, adminController.banUser);
-router.post('/user/:id/unban', isAuth, adminController.unBanUser);
+adminRouters.get('/user/list', adminController.getAllUsers); // *
 
-router.post('/product/create', isAuth, UplaodProductsPics(), productController.create);
-router.put('/product/:id/edit', isAuth, productController.editProduct);
-router.delete('/product/:id/remove', isAuth, productController.remove);
+adminRouters.get('/user/:id', adminController.getOneUser); // *
 
-router.post('/product/:id/discount', isAuth, productController.addDiscount);
-router.delete('/product/:id/discount', isAuth, productController.removeDiscount);
+adminRouters.post('/user/:id/ban', adminController.banUser);
+adminRouters.post('/user/:id/unban', adminController.unBanUser);
+
+adminRouters.post('/product/create', UplaodProductsPics(), productController.create);
+adminRouters.put('/product/:id/edit', productController.editProduct);
+adminRouters.delete('/product/:id/remove', productController.remove);
+
+adminRouters.post('/product/:id/discount', productController.addDiscount);
+adminRouters.delete('/product/:id/discount', productController.removeDiscount);
 
 const categoryRouter = Router();
-categoryRouter.post('/create', isAuth, UplaodCategoryPic(), categoryController.create);
-// categoryRouter.post('/:id/add-sub', isAuth, categoryController.createSub);
-categoryRouter.put('/:id/edit', isAuth, categoryController.editCategory);
-categoryRouter.delete('/:id/remove', isAuth, categoryController.remove);
-categoryRouter.post('/:id/add-products', isAuth, categoryController.addProducts);
-categoryRouter.delete('/:id/remove-products', isAuth, categoryController.removeProducts);
-router.use('/category', categoryRouter);
+categoryRouter.post('/create', UplaodCategoryPic(), categoryController.create);
+// categoryRouter.post('/:id/add-sub', categoryController.createSub);
+categoryRouter.put('/:id/edit', categoryController.editCategory);
+categoryRouter.delete('/:id/remove', categoryController.remove);
+categoryRouter.post('/:id/add-products', categoryController.addProducts);
+categoryRouter.delete('/:id/remove-products', categoryController.removeProducts);
+adminRouters.use('/category', categoryRouter);
 
 const brandRouter = Router();
-brandRouter.post('/create', isAuth, brandController.create);
-brandRouter.put('/:id/edit', isAuth, brandController.editBrand);
-brandRouter.delete('/:id/remove', isAuth, brandController.remove);
-brandRouter.post('/:id/add-products', isAuth, brandController.addProducts);
-brandRouter.delete('/:id/remove-products', isAuth, brandController.removeProducts);
-router.use('/brand', brandRouter);
+brandRouter.post('/create', brandController.create);
+brandRouter.put('/:id/edit', brandController.editBrand);
+brandRouter.delete('/:id/remove', brandController.remove);
+brandRouter.post('/:id/add-products', brandController.addProducts);
+brandRouter.delete('/:id/remove-products', brandController.removeProducts);
+adminRouters.use('/brand', brandRouter);
 
+const collectionRouter = Router();
+collectionRouter.post('/create', collectionController.create);
+collectionRouter.put('/:id/edit', collectionController.edit);
+collectionRouter.delete('/:id/remove', collectionController.delete);
+adminRouters.use('/collection', collectionRouter);
+
+router.use(adminRouters);
 export default router;
