@@ -81,6 +81,7 @@ export async function getProductsList(
     };
     return { result, error: null };
   } catch (error) {
+    console.log(error);
     return { result: null, error };
   }
 }

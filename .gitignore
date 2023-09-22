@@ -12,3 +12,4 @@ scripts
 uploads
 dist/
 scripts/
+push.sh

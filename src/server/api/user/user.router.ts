@@ -389,6 +389,8 @@ export default router;
  *           type: string
  *         color:
  *           type: string
+ *         quantity:
+ *           type: number
  *       required:
  *         - id
  *         - quantity

@@ -29,6 +29,8 @@ export async function validateOTP(otp: string, email: string, type: OTPType): Pr
     const otpDoc = await OTPModel.findOne({
       $and: [{ email }, { otpType: type }, { code: otp }],
     });
+    console.log(otpDoc);
+
     if (!otpDoc) {
       return false;
     }

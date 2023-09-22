@@ -56,7 +56,7 @@ export function _filterProduct(options?: T.ProductFilterOptions) {
     filter.category = { $in: options.category };
   }
   if (options.search) {
-    filter.$or = [{ $text: { $search: options.search } }];
+    filter.$or = [{ title: { $regex: options.search, $options: 'i' } }];
   }
   if (options.brands && options.brands.length > 0) {
     filter.brand = { $in: options.brands };

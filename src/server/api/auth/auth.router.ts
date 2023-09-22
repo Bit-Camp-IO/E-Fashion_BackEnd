@@ -167,7 +167,7 @@ router.get('/verify-email/:otp', isAuth, controller.verifyEmail);
 /**
  * @openapi
  * /api/auth/forgot-password:
- *   get:
+ *   post:
  *     tags:
  *       - Auth
  *     summary: Forgot Password
@@ -186,11 +186,12 @@ router.get('/verify-email/:otp', isAuth, controller.verifyEmail);
  *         204:
  *           description: Successful operation
  */
-router.get('/forgot-password', controller.forgotPassword);
+router.post('/forgot-password', controller.forgotPassword);
+
 /**
  * @openapi
  * /api/auth/verify-password-otp:
- *  get:
+ *  post:
  *    tags:
  *      - Auth
  *    summary: Verify otp
@@ -219,7 +220,7 @@ router.get('/forgot-password', controller.forgotPassword);
  *              ok:
  *                type: boolean
  */
-router.get('/verify-password-otp', controller.verifyPasswordOTP);
+router.post('/verify-password-otp', controller.verifyPasswordOTP);
 /**
  * @openapi
  * /api/auth/reset-password:
