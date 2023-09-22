@@ -24,15 +24,21 @@ export async function createOTP(email: string, type: OTPType): Promise<string> {
   return otpDoc.code;
 }
 
-export async function validateOTP(otp: string, email: string, type: OTPType): Promise<boolean> {
+export async function validateOTP(
+  otp: string,
+  email: string,
+  type: OTPType,
+  remove?: boolean,
+): Promise<boolean> {
   try {
     const otpDoc = await OTPModel.findOne({
       $and: [{ email }, { otpType: type }, { code: otp }],
     });
-    console.log(otpDoc);
-
     if (!otpDoc) {
       return false;
+    }
+    if (remove) {
+      await OTPModel.findByIdAndRemove(otpDoc._id);
     }
     return true;
   } catch {

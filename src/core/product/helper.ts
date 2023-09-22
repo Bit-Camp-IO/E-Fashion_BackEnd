@@ -105,3 +105,20 @@ export function _formatReviewList(reviews: ReviewDB[]): T.ReviewsResponse {
     reviews: reviewsResponse,
   };
 }
+
+export function _formatReview(r: ReviewDB): T.ReviewUserResponse {
+  const user = r.user._id
+    ? {
+        id: r.user._id.toString() as string,
+        fullName: r.user.fullName as string,
+        profileImage: r.user.profileImage as string,
+      }
+    : { id: '0', fullName: 'Deleted User' };
+  return {
+    id: r._id,
+    rate: r.rate,
+    user: user,
+    createdAt: r.createdAt,
+    updatedAt: r.updatedAt,
+  };
+}

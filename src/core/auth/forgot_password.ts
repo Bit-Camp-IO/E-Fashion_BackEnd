@@ -16,7 +16,7 @@ export async function resetPassword(data: ResetPasswordData): Promise<Error | nu
     if (!user) {
       throw new NotFoundError('Email ');
     }
-    const isValidated = validateOTP(data.otp, user.email, OTPType.EMAIL_VERIFICATION);
+    const isValidated = await validateOTP(data.otp, user.email, OTPType.FORGOT_PASSWORD, true);
     if (!isValidated) {
       throw new InvalidDataError('Invalid OTP');
     }

@@ -25,16 +25,9 @@ export async function userRateOnProduct(
   try {
     const review = await ReviewModel.findOne({
       $and: [{ user: userId }, { product: productId }],
-    });
+    }).populate('user');
     if (!review) throw new NotFoundError('Rate');
-    const result: ReviewUserResponse = {
-      id: review._id,
-      user: review.user,
-      rate: review.rate,
-      comment: review.comment,
-      createdAt: review.createdAt,
-      updatedAt: review.updatedAt,
-    };
+    const result: ReviewUserResponse = Helper._formatReview(review);
     return { result, error: null };
   } catch (error) {
     return { error, result: null };
@@ -65,6 +58,7 @@ export async function addReviewToProduct(
       });
     }
     await review.save();
+    await review.populate('user');
     const productReviews = await ReviewModel.find({ product: reviewData.productId });
     const rate = Helper._calculateProductRate(productReviews);
 
@@ -73,14 +67,7 @@ export async function addReviewToProduct(
       { $set: { rate: rate } },
       { new: true },
     );
-    const userReview: ReviewUserResponse = {
-      id: review._id,
-      user: review.user,
-      rate: review.rate,
-      comment: review.comment,
-      createdAt: review.createdAt,
-      updatedAt: review.updatedAt,
-    };
+    const userReview: ReviewUserResponse = Helper._formatReview(review);
     return { result: userReview, error: null };
   } catch (err) {
     return { error: err, result: null };
