@@ -94,6 +94,7 @@ export function _formatReviewList(reviews: ReviewDB[]): T.ReviewsResponse {
     reviewsResponse.push({
       id: r._id,
       rate: r.rate,
+      comment: r.comment || "",
       user: user,
       createdAt: r.createdAt,
       updatedAt: r.updatedAt,
@@ -117,6 +118,7 @@ export function _formatReview(r: ReviewDB): T.ReviewUserResponse {
   return {
     id: r._id,
     rate: r.rate,
+    comment: r.comment || "",
     user: user,
     createdAt: r.createdAt,
     updatedAt: r.updatedAt,
