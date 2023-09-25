@@ -76,7 +76,6 @@ export async function addReviewToProduct(
 
 export async function removeReview(reviewId: string, userId: string): Promise<Error | null> {
   try {
-    console.log(reviewId);
     const review = await ReviewModel.findById(reviewId);
     if (!review) {
       throw new NotFoundError('Review with id ' + reviewId);

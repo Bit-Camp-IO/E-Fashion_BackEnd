@@ -133,7 +133,7 @@ export const updateProductSchema = Joi.object({
   title: Joi.string(),
   description: Joi.string(),
   price: Joi.number(),
-  colors: Joi.array().items(colorItem).default([]),
+  colors: Joi.array().items(colorItem),
   sizes: Joi.array().items(Joi.string()),
   imagesUrl: Joi.array().items(Joi.string()).min(1),
   gender: genderValidate,

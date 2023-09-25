@@ -55,6 +55,7 @@ export function _filterProduct(options?: T.ProductFilterOptions) {
   if (options.category && options.category.length > 0) {
     filter.category = { $in: options.category };
   }
+  if (options.gender) filter.gender = options.gender;
   if (options.search) {
     filter.$or = [{ title: { $regex: options.search, $options: 'i' } }];
   }
@@ -94,7 +95,7 @@ export function _formatReviewList(reviews: ReviewDB[]): T.ReviewsResponse {
     reviewsResponse.push({
       id: r._id,
       rate: r.rate,
-      comment: r.comment || "",
+      comment: r.comment || '',
       user: user,
       createdAt: r.createdAt,
       updatedAt: r.updatedAt,
@@ -118,7 +119,7 @@ export function _formatReview(r: ReviewDB): T.ReviewUserResponse {
   return {
     id: r._id,
     rate: r.rate,
-    comment: r.comment || "",
+    comment: r.comment || '',
     user: user,
     createdAt: r.createdAt,
     updatedAt: r.updatedAt,
