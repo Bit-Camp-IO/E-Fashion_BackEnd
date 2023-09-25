@@ -12,7 +12,7 @@ export async function chatSocket(io: Server) {
     const isAdmin = socket.handshake.query.isAdmin || false;
 
     if (!chatId || !token) {
-      socket.emit('error', "Chat id or token are not valid")
+      socket.emit('error', 'Chat id or token are not valid');
       socket.disconnect(true);
       return;
     }
@@ -24,7 +24,7 @@ export async function chatSocket(io: Server) {
       : await connectUser(token, chatId);
 
     if (error) {
-      socket.emit('error', error.message)
+      socket.emit('error', error.message);
       socket.disconnect(true);
       return;
     }
@@ -34,34 +34,34 @@ export async function chatSocket(io: Server) {
 
     socket.on('send-message', async (message: string | undefined) => {
       if (!message) {
-        socket.emit('error', "Invalid message object")
+        socket.emit('error', 'Invalid message object');
         return;
       }
       message = message.trim();
       if (message.length === 0) {
-        socket.emit('error', "Empty message") //Should we emit an error on this case or just a return ?
+        socket.emit('error', 'Empty message'); // Should we emit an error on this case or just a return ?
         return;
       }
       const messageObject = await saveMessageToChat(chatId, users.get(socket.id)!, message);
       if (messageObject.error) {
-        socket.emit("error", error?.message)
+        socket.emit('error', error?.message);
         return;
       }
       socket.to(chat).emit('new-message', messageObject.result);
     });
 
     socket.on('close', () => {
-       socket.emit('chat-closed')
-       users.delete(socket.id)
-       socket.disconnect(true)
-    })
+      socket.emit('chat-closed');
+      users.delete(socket.id);
+      socket.disconnect(true);
+    });
 
     socket.on('disconnect', () => {
-      users.delete(socket.id)
-    })
+      users.delete(socket.id);
+    });
 
-    socket.on('error', (err) => {
-      console.log(err)
-    })
+    // socket.on('error', err => {
+    //   console.log(err);
+    // });
   });
 }
