@@ -4,7 +4,7 @@ import { HttpStatus } from '@server/utils/status';
 import { Request, Response } from 'express';
 import { AdminBody, adminSchema } from '../valid';
 import { AdminRole, getAdminServices } from '@/core/admin';
-import { DuplicateError, PermissionError, UnauthorizedError } from '@/core/errors';
+import { DuplicateError, NotFoundError, PermissionError, UnauthorizedError } from '@/core/errors';
 import { Admin, SuperAdmin } from '@/core/admin/admin';
 
 @Controller()
@@ -134,6 +134,44 @@ class AdminController {
       throw new RequestError(result.message, HttpStatus.BadRequest);
     }
     res.JSON(HttpStatus.Ok, result);
+  }
+
+  @Guard(AdminRole.ADMIN)
+  public async acceptChat(req: Request, res: Response) {
+    const { id } = req.params;
+    const admin = req.admin as Admin;
+    const error = await admin.acceptChat(id);
+    if (error) {
+      if (error instanceof NotFoundError) {
+        throw new RequestError(error.message, HttpStatus.NotFound);
+      }
+      throw RequestError._500();
+    }
+    res.JSON(HttpStatus.Accepted, null);
+  }
+
+  @Guard(AdminRole.ADMIN)
+  public async getChats(req: Request, res: Response) {
+    const admin = req.admin as Admin;
+    const result = await admin.getActiveChats();
+    if (result instanceof Error) {
+      throw new RequestError(result.message, HttpStatus.BadGateway);
+    }
+    res.JSON(HttpStatus.Ok, result);
+  }
+
+  @Guard(AdminRole.ADMIN)
+  public async closeChat(req: Request, res: Response) {
+    const { id } = req.params;
+    const admin = req.admin as Admin;
+    const error = await admin.closeChat(id);
+    if (error) {
+      if (error instanceof NotFoundError) {
+        throw new RequestError(error.message, HttpStatus.NotFound);
+      }
+      throw new RequestError(error.message, HttpStatus.BadRequest);
+    }
+    res.JSON(HttpStatus.Accepted, null);
   }
 }
 

@@ -18,6 +18,7 @@ import {
   removeProductsFromBrand,
 } from '../brand';
 import { addDiscount, removeDiscount } from '../product';
+import { acceptChat, changeStatus, getChats } from '../chat';
 import collection, { CollectionInput, CollectionResult, EditCollectionInput } from '../collection';
 interface AdminService {
   addProduct(data: ProductData): AsyncSafeResult<ProductResponse>;
@@ -29,7 +30,8 @@ interface AdminService {
 }
 
 export class Admin implements AdminService {
-  constructor(protected _id: string, protected _role: string) {}
+  constructor(protected _id: string, protected _role: string) { }
+
   async addProduct(data: ProductData): AsyncSafeResult<ProductResponse> {
     return await Product.createProduct(data, this._id);
   }
@@ -143,6 +145,18 @@ export class Admin implements AdminService {
 
   async removeDiscount(productId: string): Promise<Error | null> {
     return removeDiscount(productId);
+  }
+
+  async acceptChat(chatId: string): Promise<Error | null> {
+    return acceptChat(this._id, chatId)
+  }
+
+  async getActiveChats(): AsyncSafeResult<any> {
+    return getChats('active')
+  }
+
+  async closeChat(id: string): Promise<Error | null> {
+    return changeStatus(id, 'closed')
   }
 
   async createCollection(collectionData: CollectionInput): AsyncSafeResult<CollectionResult> {

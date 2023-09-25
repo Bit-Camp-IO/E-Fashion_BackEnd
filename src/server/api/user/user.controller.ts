@@ -6,6 +6,7 @@ import RequestError from '@server/utils/errors';
 import { HttpStatus } from '@server/utils/status';
 import { Request, Response } from 'express';
 import { EditUserSchem, addressSchema, editUserSchema } from './user.valid';
+import { createChat } from '@/core/chat';
 
 @Controller()
 class UserController {
@@ -105,6 +106,15 @@ class UserController {
     const error = await user.removeAddress(id);
     if (error) throw RequestError._500();
     res.JSON(HttpStatus.Ok);
+  }
+
+  async newChat(req: Request, res: Response) {
+    const userId = req.userId!;
+    const chat = await createChat(userId);
+    if (chat.error) {
+      throw new RequestError(chat.error.message, HttpStatus.BadRequest)
+    }
+    res.JSON(HttpStatus.Created, chat.result);
   }
 }
 

@@ -74,7 +74,7 @@ export class JWTAuthService {
       }
 
       const accessToken = createToken(
-        { id: user.id },
+        { id: user._id },
         Config.ACCESS_TOKEN_PRIVATE_KEY,
         Config.ACCESS_TOKEN_EXP,
       );
