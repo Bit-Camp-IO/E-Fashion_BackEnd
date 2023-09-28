@@ -146,9 +146,10 @@ async function _getAddress(addressData: string): GetAddress {
   const addressDB = await AddressModel.findById(addressData);
   if (!addressDB) throw new InvalidDataError('Invalid Address data!');
   return {
-    city: addressDB.city,
-    postalCode: addressDB.postalCode,
-    state: addressDB.state,
+    location: {
+      latitude: addressDB.latitude,
+      longitude: addressDB.longitude
+    }
   };
 }
 

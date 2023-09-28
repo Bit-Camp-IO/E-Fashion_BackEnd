@@ -1,12 +1,12 @@
 import AddressModel, { AddressDB } from '@/database/models/address';
-import { AddressData } from './interfaces';
+import { AddAddressData, AddressData } from './interfaces';
 import UserModel from '@/database/models/user';
 import { AsyncSafeResult } from '@type/common';
 import { NotFoundError } from '../errors';
 
 export async function addAddress(
   id: string,
-  addressData: AddressData,
+  addressData: AddAddressData,
 ): AsyncSafeResult<AddressResult> {
   try {
     const address = await AddressModel.create(addressData);
@@ -53,9 +53,10 @@ export async function removeAddress(id: string, addressId: string): Promise<null
 function _formatAddress(add: AddressDB): AddressResult {
   return {
     id: add._id,
-    city: add.city,
-    postalCode: add.postalCode,
-    state: add.state,
     isPrimary: add.isPrimary,
+    location: {
+      latitude: add.latitude,
+      longitude: add.longitude
+    }
   };
 }

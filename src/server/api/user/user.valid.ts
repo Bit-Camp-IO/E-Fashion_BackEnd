@@ -32,10 +32,9 @@ export interface AddressSchema {
 }
 
 export const addressSchema = Joi.object({
-  city: Joi.string().required(),
-  state: Joi.string().required(),
-  postalCode: Joi.number().integer().required(),
   isPrimary: Joi.boolean().default(false),
+  latitude: Joi.number().min(-90).max(90).required(),
+  longitude: Joi.number().min(-180).max(180).required(),
 });
 
 /**

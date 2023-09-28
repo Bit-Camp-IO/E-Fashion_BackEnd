@@ -6,7 +6,7 @@ import { FavItem, UserResult } from './interfaces';
 import { Cart } from './cart';
 import { CartDB } from '@/database/models/cart';
 import { removeFile } from '../utils';
-import { AddressData } from '../address/interfaces';
+import { AddAddressData } from '../address/interfaces';
 import { AddressResult, addAddress, getUserAddresses, removeAddress } from '../address';
 import { join } from 'path';
 import Config from '@/config';
@@ -146,7 +146,7 @@ export class User implements UserServices {
     return getUserAddresses(this._id);
   }
 
-  async addNewAddress(addressData: AddressData): AsyncSafeResult<any> {
+  async addNewAddress(addressData: AddAddressData): AsyncSafeResult<any> {
     return addAddress(this._id, addressData);
   }
 
@@ -165,10 +165,11 @@ function _formatUser(user: UserDB): UserResult {
     profile: user.profileImage,
     addresses: user.addresses?.map(a => ({
       id: a._id,
-      state: a.state,
-      postalCode: a.postalCode,
-      city: a.city,
       isPrimary: a.isPrimary,
+      location: {
+        latitude: a.latitude,
+        longitude: a.longitude
+      }
     })),
     phoneNumber: user.phoneNumber,
   };
