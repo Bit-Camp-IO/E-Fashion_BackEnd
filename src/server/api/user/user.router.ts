@@ -276,15 +276,10 @@ router.patch('/cart', isAuth, cartController.editItemQ);
  *           schema:
  *             type: object
  *             properties:
- *               city:
- *                 type: string
- *                 example: cairo
- *               state:
- *                 type: string
- *                 example: cairo
- *               postalCode:
+ *               latitude:
  *                 type: number
- *                 example: 15412
+ *               longitude:
+ *                 type: number
  *     responses:
  *       201:
  *         description: Successful operation.
@@ -316,7 +311,7 @@ router.post('/address', isAuth, userController.addAddress);
  */
 router.delete('/address/:id', isAuth, controller.removeAddress);
 
-router.post('/new-chat', isAuth, controller.newChat)
+router.post('/new-chat', isAuth, controller.newChat);
 
 export default router;
 
@@ -361,15 +356,13 @@ export default router;
  *         id:
  *           type: string
  *           example: 64cc5f196c2d6e86439c8c67
- *         city:
- *           type: string
- *           example: cairo
- *         state:
- *           type: string
- *           example: cairo
- *         postalCode:
- *           type: number
- *           example: 12154
+ *         location:
+ *           type: object
+ *           properties:
+ *               latitude:
+ *                 type: number
+ *               longitude:
+ *                 type: number
  *         isPrimary:
  *           type: boolean
  *           example: false
