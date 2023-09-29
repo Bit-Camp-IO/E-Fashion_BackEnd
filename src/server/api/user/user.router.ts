@@ -293,7 +293,7 @@ router.patch('/cart', isAuth, cartController.editItemQ);
  *             schema:
  *               $ref: '#/components/schemas/Address'
  */
-router.get('/address', isAuth, userController.getAddresses);
+router.get('/address', isAuth, userController.getAddress);
 router.post('/address', isAuth, userController.addAddress);
 
 /**

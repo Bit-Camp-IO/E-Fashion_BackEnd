@@ -34,5 +34,5 @@ export interface UserResult {
   isVerified: boolean;
   settings: any;
   profile?: string;
-  addresses: AddressData[];
+  address: AddressData;
 }

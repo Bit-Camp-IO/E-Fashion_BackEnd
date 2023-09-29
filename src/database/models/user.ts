@@ -16,7 +16,7 @@ export interface UserDB extends mongoose.Document {
   settings: SettingsDB;
   banned: boolean;
   isVerified: boolean;
-  addresses: RelationList<AddressDB>;
+  address: Relation<AddressDB>;
   cart: Relation<CartDB>;
   payments: RelationList<PaymentDB>;
   favorites: RelationList<ProductDB>;
@@ -72,7 +72,7 @@ const userSchema = new Schema<UserDB>(
       _id: false,
       default: defaultSetting,
     },
-    addresses: [{ type: ObjectId, ref: 'Address' }],
+    address: { type: ObjectId, ref: 'Address' },
     cart: { type: ObjectId, ref: 'Cart' },
     payments: [{ type: ObjectId, ref: 'Payment' }],
     isVerified: {

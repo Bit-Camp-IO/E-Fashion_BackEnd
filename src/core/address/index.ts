@@ -10,11 +10,10 @@ export async function addAddress(
 ): AsyncSafeResult<AddressResult> {
   try {
     const address = await AddressModel.create(addressData);
-    const user = await UserModel.findByIdAndUpdate(id, { $addToSet: { addresses: address } });
+    const user = await UserModel.findByIdAndUpdate(id, { $set: { address: address } }, { new: true });
     if (!user) {
       throw new NotFoundError('User with id' + id);
     }
-
     return { result: _formatAddress(address), error: null };
   } catch (err) {
     return { error: err, result: null };
@@ -25,13 +24,14 @@ export interface AddressResult extends AddressData {
   id: string;
 }
 
-export async function getUserAddresses(userId: string): AsyncSafeResult<AddressResult[]> {
+export async function getUserAddress(userId: string): AsyncSafeResult<AddressResult> {
   try {
-    const user = await UserModel.findById(userId, { addresses: 1 }).populate<{
-      addresses: AddressDB[];
-    }>('addresses');
+    const user = await UserModel.findById(userId, { address: 1 }).populate<{
+      address: AddressDB;
+    }>('address');
     if (!user) throw new NotFoundError('User');
-    return { error: null, result: user.addresses.map(_formatAddress) };
+    if (!user.address) throw new NotFoundError('Address')
+    return { error: null, result: _formatAddress(user.address) };
   } catch (error) {
     return { error, result: null };
   }
@@ -39,7 +39,7 @@ export async function getUserAddresses(userId: string): AsyncSafeResult<AddressR
 
 export async function removeAddress(id: string, addressId: string): Promise<null | Error> {
   try {
-    const user = await UserModel.findByIdAndUpdate(id, { $pull: { addresses: addressId } });
+    const user = await UserModel.findByIdAndUpdate(id, { $unset: { address: 1 } });
     if (!user) {
       throw new NotFoundError('User with id' + id);
     }
