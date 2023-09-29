@@ -165,11 +165,11 @@ class AuthController implements IAuth {
       if (otp.error instanceof InvalidDataError) {
         throw new RequestError(otp.error.message, HttpStatus.BadRequest);
       }
-      throw RequestError._500();
+      throw new RequestError(otp.error.message, HttpStatus.BadRequest)
     }
     const isSended = emails.sendOTPPassword(otp.result.otp, otp.result.user);
     if (!isSended) {
-      throw RequestError._500();
+      throw new RequestError('Email sending faied', HttpStatus.Gone)
     }
     res.JSON(HttpStatus.Ok);
   }
