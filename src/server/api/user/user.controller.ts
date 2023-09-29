@@ -73,16 +73,16 @@ class UserController {
     res.JSON(HttpStatus.Accepted, image.result);
   }
 
-  async getAddresses(req: Request, res: Response) {
+  async getAddress(req: Request, res: Response) {
     const user = new User(req.userId!);
-    const addresses = await user.getAddresses();
-    if (addresses.error) {
-      if (addresses.error instanceof NotFoundError) {
-        throw new RequestError(addresses.error.message, HttpStatus.BadRequest);
+    const address = await user.getAddress();
+    if (address.error) {
+      if (address.error instanceof NotFoundError) {
+        throw new RequestError(address.error.message, HttpStatus.BadRequest);
       }
       throw RequestError._500();
     }
-    res.JSON(HttpStatus.Ok, addresses.result);
+    res.JSON(HttpStatus.Ok, address.result);
   }
 
   @Validate(addressSchema)

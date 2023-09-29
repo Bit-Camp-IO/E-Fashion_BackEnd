@@ -7,7 +7,7 @@ import { Cart } from './cart';
 import { CartDB } from '@/database/models/cart';
 import { removeFile } from '../utils';
 import { AddAddressData } from '../address/interfaces';
-import { AddressResult, addAddress, getUserAddresses, removeAddress } from '../address';
+import { AddressResult, addAddress, getUserAddress, removeAddress } from '../address';
 import { join } from 'path';
 import Config from '@/config';
 import bcrypt from 'bcrypt';
@@ -142,8 +142,8 @@ export class User implements UserServices {
     }
   }
 
-  async getAddresses(): AsyncSafeResult<AddressResult[]> {
-    return getUserAddresses(this._id);
+  async getAddress(): AsyncSafeResult<AddressResult> {
+    return getUserAddress(this._id);
   }
 
   async addNewAddress(addressData: AddAddressData): AsyncSafeResult<any> {
@@ -163,14 +163,7 @@ function _formatUser(user: UserDB): UserResult {
     provider: user.provider,
     settings: user.settings,
     profile: user.profileImage,
-    addresses: user.addresses?.map(a => ({
-      id: a._id,
-      isPrimary: a.isPrimary,
-      location: {
-        latitude: a.latitude,
-        longitude: a.longitude
-      }
-    })),
+    address: user.address,
     phoneNumber: user.phoneNumber,
   };
 }
