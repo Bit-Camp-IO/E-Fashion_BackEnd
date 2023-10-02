@@ -259,8 +259,6 @@ router.patch('/cart', isAuth, cartController.editItemQ);
  *         content:
  *           application/json:
  *             schema:
- *              type: array
- *              items:
  *                $ref: '#/components/schemas/Address'
  *   post:
  *     tags:

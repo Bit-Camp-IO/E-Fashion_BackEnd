@@ -165,11 +165,11 @@ class AuthController implements IAuth {
       if (otp.error instanceof InvalidDataError) {
         throw new RequestError(otp.error.message, HttpStatus.BadRequest);
       }
-      throw new RequestError(otp.error.message, HttpStatus.BadRequest)
+      throw new RequestError(otp.error.message, HttpStatus.BadRequest);
     }
     const isSended = emails.sendOTPPassword(otp.result.otp, otp.result.user);
     if (!isSended) {
-      throw new RequestError('Email sending faied', HttpStatus.Gone)
+      throw new RequestError('Email sending faied', HttpStatus.Gone);
     }
     res.JSON(HttpStatus.Ok);
   }
@@ -191,6 +191,9 @@ class AuthController implements IAuth {
     const body: Omit<ResetPasswordSchema, 'newPassword'> = req.body;
     const isVerified = await OTPVerification(body.email, body.otp, OTPType.FORGOT_PASSWORD);
     if (isVerified.error) {
+      if (isVerified.error instanceof NotFoundError) {
+        throw new RequestError(isVerified.error.message, HttpStatus.BadRequest);
+      }
       throw RequestError._500();
     }
     res.JSON(HttpStatus.Ok, { ok: isVerified.result });

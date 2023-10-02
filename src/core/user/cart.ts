@@ -28,7 +28,7 @@ export class Cart {
     try {
       const product = await ProductModel.findById(item.id);
       if (!product) {
-        return { error: new NotFoundError('Product'), result: null };
+        throw new NotFoundError('Product');
       }
       const itemIndex = this.cart.items.findIndex(
         i =>
@@ -52,6 +52,7 @@ export class Cart {
       await this.cart.save();
       return { result: await this._formatCart(), error: null };
     } catch (err) {
+      console.log(err);
       return { error: err, result: null };
     }
   }
