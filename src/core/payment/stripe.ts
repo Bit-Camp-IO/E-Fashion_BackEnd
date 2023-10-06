@@ -6,11 +6,9 @@ const stripe = new Stripe(Config.STRIPE_PRIVATE_KEY, {
 });
 
 export type StripeMetadata = {
-  cartId: string;
   userId: string;
-  addressId: string;
   totalPrice: number;
-  phoneNumber: string;
+  collectionId?: string;
 };
 
 export async function createPaymnetIntents(d: StripeMetadata): Promise<null | string> {
@@ -33,7 +31,7 @@ type StripeCallback = (m: StripeMetadata) => Promise<any>;
 export async function stripeEventsHook(event: Stripe.Event, successCB: StripeCallback) {
   switch (event.type) {
     case 'payment_intent.succeeded':
-      //@ts-ignore
+      // @ts-ignore
       await successCB(event.data.object.metadata);
       return;
     default:

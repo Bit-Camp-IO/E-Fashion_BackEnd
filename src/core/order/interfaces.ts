@@ -1,15 +1,13 @@
 export interface OrderData {
   userId: string;
-  addressId: string;
   phoneNumber: string;
 }
 
 export interface OrderResult {
   id: string;
   address: {
-    city: string;
-    state: string;
-    postalCode: number;
+    longitude: number;
+    latitude: number;
   };
   paymentMethod: string;
   totalPrice: number;

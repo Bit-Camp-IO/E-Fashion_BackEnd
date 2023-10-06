@@ -16,6 +16,7 @@ export interface CartItemData {
 export interface CartItem extends Omit<CartItemData, 'id'> {
   productId: string;
   imageUrl: string;
+  title: string;
 }
 
 export interface CartResult {
