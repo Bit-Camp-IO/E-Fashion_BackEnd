@@ -386,6 +386,10 @@ export default router;
  *           type: number
  *         stock:
  *           type: number
+ *         title:
+ *           type: string
+ *         imageUrl:
+ *           type: string
  *       required:
  *         - id
  *         - quantity

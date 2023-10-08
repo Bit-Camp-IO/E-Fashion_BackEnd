@@ -2,6 +2,7 @@ import mongoose, { Schema } from 'mongoose';
 import { UserDB } from './user';
 import { ProductDB } from './product';
 import { ObjectId, Relation } from '@type/database';
+import { CollectionDB } from './collection';
 
 export interface OrderDB extends mongoose.Document {
   items: {
@@ -12,11 +13,15 @@ export interface OrderDB extends mongoose.Document {
     size: string;
     color: string;
   }[];
+  collection_item?: {
+    name: string;
+    price: number;
+    collectionId: Relation<CollectionDB>;
+  };
   user: Relation<UserDB>;
   address: {
-    city: string;
-    state: string;
-    postalCode: number;
+    longitude: number;
+    latitude: number;
   };
   phoneNumber: string;
   paymentMethod: string;
@@ -24,31 +29,33 @@ export interface OrderDB extends mongoose.Document {
   totalQuantity: number;
   price: number;
   tax: number;
+  item_type: 'collection' | 'cart';
 }
 
 const orderSchema = new Schema<OrderDB>(
   {
     items: [
       {
-        product: { type: ObjectId, ref: 'Product' },
-        name: { type: String, required: true },
-        price: { type: Number, required: true },
-        quantity: { type: Number, required: true },
-        size: { type: String },
-        color: { type: String },
+        type: {
+          product: { type: ObjectId, ref: 'Product' },
+          name: { type: String, required: true },
+          price: { type: Number, required: true },
+          quantity: { type: Number, required: true },
+          size: { type: String },
+          color: { type: String },
+        },
+        required: function (this: OrderDB) {
+          return this.item_type === 'cart';
+        },
       },
     ],
     user: { type: ObjectId, ref: 'User' },
     address: {
-      city: {
-        type: String,
+      longitude: {
+        type: Number,
         required: true,
       },
-      state: {
-        type: String,
-        required: true,
-      },
-      postalCode: {
+      latitude: {
         type: Number,
         required: true,
       },
@@ -59,6 +66,31 @@ const orderSchema = new Schema<OrderDB>(
     price: { type: Number, required: true },
     tax: { type: Number, required: true },
     paymentMethod: { type: String, enum: ['CASH', 'STRIPE'] },
+    collection_item: {
+      type: {
+        name: {
+          type: String,
+          required: true,
+        },
+        price: {
+          type: Number,
+          required: true,
+        },
+        collectionId: {
+          type: ObjectId,
+          ref: 'Collection',
+          required: true,
+        },
+      },
+      required: function (this: OrderDB) {
+        this.item_type === 'collection';
+      },
+    },
+    item_type: {
+      default: 'cart',
+      enum: ['cart', 'collection'],
+      type: String,
+    },
   },
   { timestamps: true },
 );

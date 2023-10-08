@@ -1,5 +1,6 @@
-import { createStripeOrder } from '@/core/order';
-import { getStripeEvent, stripeEventsHook } from '@/core/payment/stripe';
+// import { createStripeOrder } from '@/core/order';
+import orderServicers from '@/core/order';
+import { StripeMetadata, getStripeEvent, stripeEventsHook } from '@/core/payment/stripe';
 import { HttpStatus } from '@server/utils/status';
 import express from 'express';
 
@@ -17,6 +18,14 @@ function stripeMiddleware(req: express.Request, res: express.Response) {
   }
   stripeEventsHook(event, createStripeOrder);
   res.json({ received: true });
+}
+
+async function createStripeOrder(m: StripeMetadata) {
+  const order = orderServicers.orderPaymnet(m.collectionId ? 'collection' : 'cart', {
+    userId: m.userId,
+    collectionId: m.collectionId,
+  });
+  await order.stripe();
 }
 
 export function stripeWebhook(app: express.Express) {
