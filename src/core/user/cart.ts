@@ -106,6 +106,7 @@ export class Cart {
         quantity: i.quantity,
         size: i.size,
         imageUrl: i.product.imageURL,
+        stock: i.product.stock,
       })),
       subtotal: totalPrice,
       totalQuantity: this.cart.totalQuantity,
