@@ -105,6 +105,7 @@ export class Cart {
         productId: i.product._id,
         quantity: i.quantity,
         size: i.size,
+        price: i.product.price,
         stock: i.product.stock,
         imageUrl: i.product.imagesURL[0],
         title: i.product.title,

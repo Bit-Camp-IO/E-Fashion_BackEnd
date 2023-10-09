@@ -384,6 +384,8 @@ export default router;
  *           type: string
  *         quantity:
  *           type: number
+ *         price:
+ *           type: number
  *         stock:
  *           type: number
  *         title:
