@@ -42,11 +42,11 @@ class UserController {
     const id: string = req.body['id'];
     if (!validateId(id)) throw new RequestError(`id '${id}' is not valid`, HttpStatus.BadRequest);
     const cart = await getUserCart(req.userId!);
-    const error = await cart.removeItem(id);
+    const { result, error } = await cart.removeItem(id);
     if (error) {
       throw RequestError._500();
     }
-    res.JSON(HttpStatus.Ok);
+    res.JSON(HttpStatus.Ok, result);
   }
   async getMyCart(req: Request, res: Response) {
     const cart = await getUserCart(req.userId!);

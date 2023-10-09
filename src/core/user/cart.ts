@@ -42,10 +42,10 @@ export class Cart {
       return { error: err, result: null };
     }
   }
-  async removeItem(id: string): Promise<Error | null> {
+  async removeItem(id: string): AsyncSafeResult<CartResult> {
     try {
       const item = this.cart.items.find(i => i.product.toString() === id);
-      if (!item) return new NotFoundError('Product with id ' + id);
+      if (!item) throw new NotFoundError('Product with id ' + id);
       (this.cart.items as Types.DocumentArray<any>).pull({ product: id });
       if (this.cart.items.length === 1) {
         this.cart.totalQuantity = 0;
@@ -53,9 +53,9 @@ export class Cart {
         this.cart.totalQuantity -= item.quantity;
       }
       await this.cart.save();
-      return null;
+      return { result: await this._formatCart(), error: null };
     } catch (err) {
-      return err;
+      return { error: err, result: null };
     }
   }
 
@@ -85,14 +85,18 @@ export class Cart {
     const { totalPrice } = getCartItemsInfo(this.cart);
     return {
       items: this.cart.items.map(i => ({
-        color: i.color,
         productId: i.product._id,
-        quantity: i.quantity,
-        size: i.size,
-        price: i.product.price,
-        stock: i.product.stock,
-        imageUrl: i.product.imagesURL[0],
         title: i.product.title,
+        color: i.color,
+        size: i.size,
+        imageUrl: i.product.imagesURL[0],
+        stock: i.product.stock,
+
+        quantity: i.quantity,
+        price: i.product.price - (i.product.discount || 0 * i.product.price),
+        totalPrice: (i.product.price - (i.product.discount || 0 * i.product.price)) * i.quantity,
+        oldPrice: i.product.price,
+        oldTotalPrice: i.product.price * i.quantity,
       })),
       subtotal: totalPrice,
       totalQuantity: this.cart.totalQuantity,
@@ -106,7 +110,7 @@ export function getCartItemsInfo(cart: CartDB) {
   let result: { totalPrice: number } = { totalPrice: 0 };
   for (const i of cart.items) {
     if (typeof i.product === 'string') continue;
-    result.totalPrice += i.product.price * i.quantity;
+    result.totalPrice += (i.product.price - (i.product.discount || 0)) * i.quantity;
   }
   return result;
 }

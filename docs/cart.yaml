@@ -1,0 +1,147 @@
+paths:
+  /api/user/cart:
+    post:
+      tags:
+        - Cart
+      summary: Add to Cart
+      description: Adds a product to the user's cart.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CartInput'
+      responses:
+        '200':
+          description: Product added to cart successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartResult'
+    delete:
+      tags:
+        - Cart
+      summary: Remove from Cart
+      description: Removes a product from the user's cart.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+              required:
+                - id
+      responses:
+        '200':
+          description: Product removed from cart successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartResult'
+    patch:
+      tags:
+        - Cart
+      summary: Edit product quantity in Cart
+      description: Edit product quantity in the user's cart.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                quantity:
+                  type: number
+              required:
+                - id
+                - quantity
+      responses:
+        '200':
+          description: Product quantity edited in cart successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartResult'
+    get:
+      tags:
+        - Cart
+      summary: Get products in Cart
+      description: Get all Products in the user's cart.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Products List in cart successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartResult'
+components:
+  schemas:
+    CartInput:
+      type: object
+      properties:
+        id:
+          type: number
+        size:
+          type: string
+        color:
+          type: string
+        quantity:
+          type: number
+    CartItemData:
+      type: object
+      properties:
+        productId:
+          type: number
+        title:
+          type: string
+        imageUrl:
+          type: string
+        size:
+          type: string
+        color:
+          type: string
+        quantity:
+          type: number
+        stock:
+          type: number
+        price:
+          type: number
+        totalPrice:
+          type: number
+        oldPrice:
+          type: number
+        oldToalPrice:
+          type: number
+      required:
+        - id
+        - quantity
+        - size
+        - color
+    CartResult:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CartItemData'
+        subtotal:
+          type: number
+        tax:
+          type: number
+        total:
+          type: number
+        totalQuantity:
+          type: number

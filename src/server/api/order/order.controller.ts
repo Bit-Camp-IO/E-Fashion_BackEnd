@@ -6,7 +6,6 @@ import { Request, Response } from 'express';
 import { OrderSchema, orderSchema } from './order.valid';
 import { validateId } from '@/core/utils';
 import { InvalidDataError, NotFoundError } from '@/core/errors';
-// import { createCheckoutSessionURL } from '@/core/payment/stripe';
 
 @Controller()
 class OrderController {
