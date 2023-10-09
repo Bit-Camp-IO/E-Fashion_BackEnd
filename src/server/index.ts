@@ -10,8 +10,8 @@ import { stripeWebhook } from './middleware/stripe_webhook';
 import { staticFileMiddleware } from './middleware/staticFile';
 import { parseJsonMiddleware } from './middleware/parseJson';
 import { createDocs } from './docs/swagger';
-import * as socketio from "socket.io";
-import * as http from "http";
+import * as socketio from 'socket.io';
+import * as http from 'http';
 import { chatSocket } from './websocket/sockets';
 
 function createServer(): express.Express {
@@ -31,11 +31,11 @@ function createServer(): express.Express {
 }
 
 function initMiddleware(app: express.Express) {
+  stripeWebhook(app);
   cors(app);
   staticFileMiddleware(app);
   parseJsonMiddleware(app);
   JSONMiddleware(app);
-  stripeWebhook(app);
   createDocs(app);
 }
 

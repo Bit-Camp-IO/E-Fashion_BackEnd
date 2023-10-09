@@ -5,18 +5,6 @@ import ProductModel from '@/database/models/product';
 import { NotFoundError } from '../errors';
 import { Types } from 'mongoose';
 
-// export async function addItemToCart(cart: CartDB, item: CartItem): AsyncSafeResult<CartResult> {
-//   try {
-//     cart.items.push(item);
-//     cart.totalQuantity += item.quantity;
-//     cart.totalPrice += item.quantity * item.price;
-//     await cart.save();
-//     return { result: _formatCart(cart), error: null };
-//   } catch (err) {
-//     return { error: err, result: null };
-//   }
-// }
-
 export class Cart {
   constructor(private cart: CartDB) {}
 
@@ -48,7 +36,6 @@ export class Cart {
         this.cart.items.push(cartItem);
       }
       this.cart.totalQuantity += item.quantity;
-      // this.cart.totalPrice += Number((item.quantity * product.price).toFixed(2));
       await this.cart.save();
       return { result: await this._formatCart(), error: null };
     } catch (err) {
@@ -62,10 +49,8 @@ export class Cart {
       (this.cart.items as Types.DocumentArray<any>).pull({ product: id });
       if (this.cart.items.length === 1) {
         this.cart.totalQuantity = 0;
-        // this.cart.totalPrice = 0;
       } else {
         this.cart.totalQuantity -= item.quantity;
-        // this.cart.totalPrice -= Number((item.price * item.quantity).toFixed(2));
       }
       await this.cart.save();
       return null;
@@ -84,7 +69,6 @@ export class Cart {
       newItem.quantity = newQ;
       (this.cart.items as Types.DocumentArray<any>).set(itemIndex, newItem);
       this.cart.totalQuantity += qdi;
-      // this.cart.totalPrice += Number((qdi * newItem.price).toFixed(2));
       await this.cart.save();
       return { result: await this._formatCart(), error: null };
     } catch (err) {

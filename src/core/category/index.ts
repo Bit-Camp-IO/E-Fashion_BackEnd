@@ -19,7 +19,6 @@ export async function createCategory(
       name: data.name,
       imageURL: data.image,
       gender: data.gender,
-      // isMain: true,
     });
     return { result: _formatCategory(category), error: null };
   } catch (err) {
@@ -41,32 +40,6 @@ export async function getCategoryForUser(id: string): AsyncSafeResult<CategoryRe
     return { error: err, result: null };
   }
 }
-
-// export async function addSubCategory(
-//   data: CategoryData,
-//   id: string,
-//   adminId: string,
-// ): AsyncSafeResult<CategoryResult> {
-//   try {
-//     const subCategory = await CategoryModel.create({
-//       addedBy: adminId,
-//       description: data.description,
-//       isMain: false,
-//       name: data.name,
-//       imageURL: data.image,
-//     });
-//     const category = await CategoryModel.findByIdAndUpdate(id, {
-//       $push: { subCategories: subCategory },
-//     });
-//     if (!category) {
-//       throw new NotFoundError('Category with id' + id);
-//     }
-
-//     return { result: _formatCategory(category), error: null };
-//   } catch (err) {
-//     return { error: err, result: null };
-//   }
-// }
 
 export async function getAllCategories(gender?: Gender): AsyncSafeResult<CategoryResult[]> {
   try {
@@ -147,8 +120,5 @@ function _formatCategory(cDoc: CategorieDB): CategoryResult {
     description: cDoc.description || '',
     imageURL: cDoc.imageURL,
     gender: cDoc.gender,
-    // subCategories: cDoc.subCategories
-    //   ? cDoc.subCategories.map(category => _formatCategory(category))
-    //   : [],
   };
 }

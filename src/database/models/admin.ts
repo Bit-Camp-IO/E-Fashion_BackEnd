@@ -7,7 +7,6 @@ export interface AdminDB {
   fullName: string;
   email: string;
   password: string;
-  // TODO: Create admin roles enum
   role: string;
   phone: string;
   address: string;

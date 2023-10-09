@@ -1,21 +1,8 @@
-// import Product from '@/core/product';
 import { NotFoundError } from '@/core/errors';
-import {
-  ProductOptions,
-  ProductReviewData,
-  Sort,
-  addReviewToProduct,
-  getProductForUser,
-  getProductsList,
-  listReviews,
-  productsInfo,
-  removeReview,
-  userRateOnProduct,
-} from '@/core/product';
+import * as ProductServices from '@/core/product';
 import { validateId } from '@/core/utils';
 import { Controller, Validate } from '@server/decorator';
 import RequestError from '@server/utils/errors';
-// import {wrappResponse} from '@server/utils/response';
 import { HttpStatus } from '@server/utils/status';
 import { Request, RequestHandler, Response } from 'express';
 import { ReviewSchema, reviewSchema } from './product.valid';
@@ -41,7 +28,7 @@ function queryToListId(q?: any): string[] | null {
   return listId;
 }
 
-function queryToSort(q?: any): Sort | null {
+function queryToSort(q?: any): ProductServices.Sort | null {
   if (!q) return null;
   q = (q.toString() as string).toLowerCase();
   if (q === 'asc' || q === '1') {
@@ -58,7 +45,7 @@ class ProductController implements ProductHandler {
   public async getList(req: Request, res: Response) {
     const limit = req.query['limit'] ? Number(req.query['limit']) : 20;
     const page = req.query['page'] ? Number(req.query['page']) : 1;
-    const options: ProductOptions = {
+    const options: ProductServices.ProductOptions = {
       limit,
       page,
       filter: {},
@@ -86,19 +73,16 @@ class ProductController implements ProductHandler {
     const _sortWithRate = queryToSort(req.query['sort-popularity']);
     if (_sortWithRate) options.sort.popularity = _sortWithRate;
 
-    const products = await getProductsList(options);
+    const products = await ProductServices.getProductsList(options);
     if (products.error) {
       throw RequestError._500();
     }
     res.JSON(HttpStatus.Ok, products.result);
-    // const products = await Product.getAll();
-    // res.status(HttpStatus.Ok).json(wrappResponse(products, HttpStatus.Ok));
   }
 
   async getOne(req: Request, res: Response) {
-    // TODO: Implement the logic to retrieve a specific product
     const productId = req.params.id;
-    const product = await getProductForUser(productId);
+    const product = await ProductServices.getProductForUser(productId);
     if (product.error) {
       if (product.error instanceof NotFoundError) {
         throw new RequestError(product.error.message, HttpStatus.NotFound);
@@ -109,7 +93,7 @@ class ProductController implements ProductHandler {
   }
 
   async listInfo(_: Request, res: Response) {
-    const info = await productsInfo();
+    const info = await ProductServices.productsInfo();
     if (info.error) {
       throw RequestError._500();
     }
@@ -121,13 +105,13 @@ class ProductController implements ProductHandler {
     const productId = req.params.id;
     if (!validateId(productId)) throw new RequestError('invalid product id', HttpStatus.BadRequest);
     const body: ReviewSchema = req.body;
-    const reviewData: ProductReviewData = {
+    const reviewData: ProductServices.ProductReviewData = {
       userId: req.userId!,
       productId: productId,
       rate: body.rate,
       comment: body.comment,
     };
-    const review = await addReviewToProduct(reviewData);
+    const review = await ProductServices.addReviewToProduct(reviewData);
     if (review.error) {
       if (review.error instanceof NotFoundError) {
         throw new RequestError(review.error.message, HttpStatus.BadRequest);
@@ -140,7 +124,7 @@ class ProductController implements ProductHandler {
   async removeReview(req: Request, res: Response) {
     const reviewId = req.params['id'];
     if (!validateId(reviewId)) throw new RequestError('invalid review id', HttpStatus.BadRequest);
-    const error = await removeReview(reviewId, req.userId!);
+    const error = await ProductServices.removeReview(reviewId, req.userId!);
     if (error) {
       if (error instanceof NotFoundError) {
         throw new RequestError(error.message, HttpStatus.BadRequest);
@@ -153,7 +137,7 @@ class ProductController implements ProductHandler {
   async listReviews(req: Request, res: Response) {
     const productId = req.params.id;
     if (!validateId(productId)) throw new RequestError('invalid product id', HttpStatus.BadRequest);
-    const reviews = await listReviews(productId);
+    const reviews = await ProductServices.listReviews(productId);
     if (reviews.error) {
       if (reviews.error instanceof NotFoundError) {
         throw new RequestError(reviews.error.message, HttpStatus.NotFound);
@@ -166,7 +150,7 @@ class ProductController implements ProductHandler {
   async myRate(req: Request, res: Response) {
     const productId = req.params.id;
     if (!validateId(productId)) throw new RequestError('invalid product id', HttpStatus.BadRequest);
-    const review = await userRateOnProduct(req.userId!, productId);
+    const review = await ProductServices.userRateOnProduct(req.userId!, productId);
     if (review.error) {
       if (review.error instanceof NotFoundError) {
         throw new RequestError(review.error.message, HttpStatus.NotFound);

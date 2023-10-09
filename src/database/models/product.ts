@@ -46,19 +46,6 @@ const productSchema = new Schema<ProductDB>(
   { timestamps: true },
 );
 
-// productSchema.pre('save', function (next) {
-//   const product = this as ProductDB;
-
-//   if (product.reviews && product.reviews.length > 0) {
-//     const totalRate = product.reviews.reduce((sum, review) => sum + (review as ReviewDB).rate, 0);
-//     product.rate = totalRate / product.reviews.length;
-//   } else {
-//     product.rate = 0;
-//   }
-
-//   next();
-// });
-
 productSchema.index({ title: 'text' });
 
 const ProductModel = mongoose.model('Product', productSchema);

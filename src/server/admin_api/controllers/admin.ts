@@ -9,20 +9,6 @@ import { Admin, SuperAdmin } from '@/core/admin/admin';
 
 @Controller()
 class AdminController {
-  // @Validate(createProductSchema)
-  // public async addProduct(req: Request, res: Response) {
-  //   const {result: admin, error} = await getAdminServices(req.userId!, AdminRole.ADMIN);
-  //   if (error) {
-  //     // TODO: Hadnle Errors
-  //     throw RequestError._500();
-  //   }
-  //   const product = await admin.addProduct(req.body);
-  //   if (product.error) {
-  //     // TODO: Hadnle Errors
-  //     throw RequestError._500();
-  //   }
-  //   res.status(HttpStatus.Created).json(wrappResponse(product.result, HttpStatus.Created));
-  // }
   @Validate(adminSchema)
   @Guard(AdminRole.SUPER_ADMIN)
   public async createAdmin(req: Request, res: Response) {

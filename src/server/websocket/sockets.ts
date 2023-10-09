@@ -1,5 +1,3 @@
-// import { isChatActiveWithId, saveMessageToChat } from '@/core/chat';
-// import { randomUUID } from 'crypto';
 import { connectAdmin, connectUser, saveMessageToChat } from '@/core/chat';
 import { Server, Socket } from 'socket.io';
 
@@ -59,9 +57,5 @@ export async function chatSocket(io: Server) {
     socket.on('disconnect', () => {
       users.delete(socket.id);
     });
-
-    // socket.on('error', err => {
-    //   console.log(err);
-    // });
   });
 }

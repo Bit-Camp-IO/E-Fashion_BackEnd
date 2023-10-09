@@ -35,7 +35,6 @@ import RequestError from '@server/utils/errors';
 import { User } from '@/core/user';
 import emails from '@/core/emails';
 import { OTPType } from '@/database/models/OTP';
-// import emails from '@/core/emails';
 
 interface IAuth {
   login: RequestHandler;

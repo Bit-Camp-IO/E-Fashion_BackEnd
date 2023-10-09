@@ -13,7 +13,6 @@ import Config from '@/config';
 import bcrypt from 'bcrypt';
 
 interface UserServices {
-  // addToCart(id: string): Promise<Error | null>;
   addToFav(prId: string): AsyncSafeResult<FavItem[]>;
 }
 

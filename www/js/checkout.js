@@ -24,7 +24,7 @@ async function initialize() {
   //   body: JSON.stringify({ items }),
   // });
   // const { clientSecret } = await response.json();
-  const clientSecret = 'pi_3NbXn8F3PbDnuPn4068IGKda_secret_kaVYgAGiZOKOHOCdrJGemqi4r';
+  const clientSecret = 'pi_3NzKWSF3PbDnuPn41rczBbDO_secret_kFG4eBxVCm1ivmUg53cq96yav';
   console.log(clientSecret);
 
   const appearance = {

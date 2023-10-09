@@ -25,24 +25,6 @@ class CategoryController {
     res.JSON(HttpStatus.Created, category.result);
   }
 
-  // @Validate(createCategorySchema)
-  // @Guard(AdminRole.ADMIN)
-  // public async createSub(req: Request, res: Response) {
-  //   const admin = req.admin as Admin;
-  //   const { id } = req.params;
-  //   const body: CreateCategorySchema = req.body;
-  //   const categoryData: CategoryData = {
-  //     name: body.name,
-  //     description: body.description,
-  //     image: body.image,
-  //   };
-  //   const category = await admin.addSubCategory(categoryData, id);
-  //   if (category.error) {
-  //     throw RequestError._500();
-  //   }
-  //   res.JSON(HttpStatus.Created, category.result);
-  // }
-
   @Validate(updateCategorySchema)
   @Guard(AdminRole.ADMIN)
   async editCategory(req: Request, res: Response) {

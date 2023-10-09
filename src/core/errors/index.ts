@@ -22,8 +22,6 @@ export class UnauthorizedGoogleError extends Error {
   }
 }
 
-// ----------------------------------------------------------------------
-
 export class ManagerExistError extends Error {
   constructor() {
     super('Manager aleady exists');

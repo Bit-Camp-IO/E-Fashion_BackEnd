@@ -3,7 +3,6 @@ import { ProductDB } from './product';
 import { ObjectId, Relation } from '@type/database';
 
 export interface CartDB extends Document {
-  // totalPrice: number;
   totalQuantity: number;
   items: { product: Relation<ProductDB>; quantity: number; color: string; size: string }[];
 }

@@ -13,22 +13,22 @@ import admin from './controllers/admin';
 const router = Router();
 
 router.post('/create-manager', managerController.create);
-router.post('/auth/login', authController.login); // *
+router.post('/auth/login', authController.login);
 
 const adminRouters = Router();
 adminRouters.use(isAuth);
 
-adminRouters.post('/create-super', managerController.createSuper); // *
+adminRouters.post('/create-super', managerController.createSuper);
 
-adminRouters.post('/create', adminController.createAdmin); // *
+adminRouters.post('/create', adminController.createAdmin);
 
-adminRouters.delete('/:id/remove', adminController.removeAdmin); // *
+adminRouters.delete('/:id/remove', adminController.removeAdmin);
 
-adminRouters.get('/list', adminController.getAllAdmins); // *
+adminRouters.get('/list', adminController.getAllAdmins);
 
-adminRouters.get('/user/list', adminController.getAllUsers); // *
+adminRouters.get('/user/list', adminController.getAllUsers);
 
-adminRouters.get('/user/:id', adminController.getOneUser); // *
+adminRouters.get('/user/:id', adminController.getOneUser);
 
 adminRouters.post('/user/:id/ban', adminController.banUser);
 adminRouters.post('/user/:id/unban', adminController.unBanUser);
@@ -40,13 +40,12 @@ adminRouters.delete('/product/:id/remove', productController.remove);
 adminRouters.post('/product/:id/discount', productController.addDiscount);
 adminRouters.delete('/product/:id/discount', productController.removeDiscount);
 
-router.post('/accept-chat/:id', isAuth, admin.acceptChat)
-router.get('/chats', isAuth, admin.getChats)
-router.put('/chat/:id/close', isAuth, admin.closeChat)
+router.post('/accept-chat/:id', isAuth, admin.acceptChat);
+router.get('/chats', isAuth, admin.getChats);
+router.put('/chat/:id/close', isAuth, admin.closeChat);
 
 const categoryRouter = Router();
 categoryRouter.post('/create', UplaodCategoryPic(), categoryController.create);
-// categoryRouter.post('/:id/add-sub', categoryController.createSub);
 categoryRouter.put('/:id/edit', categoryController.editCategory);
 categoryRouter.delete('/:id/remove', categoryController.remove);
 categoryRouter.post('/:id/add-products', categoryController.addProducts);

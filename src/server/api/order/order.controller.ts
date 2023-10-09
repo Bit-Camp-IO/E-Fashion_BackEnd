@@ -13,13 +13,7 @@ class OrderController {
   @Validate(orderSchema)
   async createCashOrder(req: Request, res: Response) {
     const body: OrderSchema = req.body;
-    // const orderPayload: OrderData = {
-    //   addressId: body.addressId,
-    //   phoneNumber: body.phoneNumber,
-    //   userId: req.userId!,
-    // };
     const type = req.query.type?.toString().toLowerCase();
-    // const order = await createCashOrder(orderPayload);
     let orderSevices: OrderPayment = orderServices.orderPaymnet(type, {
       userId: req.userId!,
       ...body,

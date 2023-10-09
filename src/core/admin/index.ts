@@ -69,7 +69,6 @@ export async function getAdminServices(id: string, role: AdminRole) {
     if (role === AdminRole.MANAGER && adminDB.role === 'manager') {
       return { result: new Manager(adminDB.id.toString(), adminDB.role), error: null };
     }
-    // Throw new Error Unauth
     throw new UnauthorizedError();
   } catch (err) {
     return { error: err, result: null };

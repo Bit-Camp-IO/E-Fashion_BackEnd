@@ -6,8 +6,6 @@ export interface CategorieDB extends mongoose.Document {
   name: string;
   description?: string;
   imageURL: string;
-  // isMain: boolean;
-  // subCategories: RelationList<CategorieDB>;
   addedBy: Relation<AdminDB>;
   gender: number;
 }
@@ -25,16 +23,6 @@ const categorySchema = new Schema<CategorieDB>(
     imageURL: {
       type: String,
     },
-    // isMain: {
-    //   type: Boolean,
-    //   default: true,
-    // },
-    // subCategories: [
-    //   {
-    //     type: ObjectId,
-    //     ref: 'Category',
-    //   },
-    // ],
 
     gender: {
       type: Number,
