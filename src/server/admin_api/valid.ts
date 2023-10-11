@@ -180,3 +180,7 @@ export const editCollectionSchema = Joi.object<EditCollectionInput>({
     )
     .min(1),
 });
+
+export const orderStatusSchema = Joi.object({
+  status: Joi.number().required().min(1).max(3),
+});

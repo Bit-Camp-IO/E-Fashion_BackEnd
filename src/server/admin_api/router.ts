@@ -5,8 +5,9 @@ import adminController from './controllers/admin';
 import { isAuth } from '@server/middleware/isAuth';
 import productController from './controllers/product';
 import categoryController from './controllers/category';
-import brandController from './controllers/brand';
 import collectionController from './controllers/collection';
+import brandController from './controllers/brand';
+import orderController from './controllers/order';
 import { UplaodCategoryPic, UplaodProductsPics } from '@server/middleware/upload';
 import admin from './controllers/admin';
 
@@ -40,9 +41,9 @@ adminRouters.delete('/product/:id/remove', productController.remove);
 adminRouters.post('/product/:id/discount', productController.addDiscount);
 adminRouters.delete('/product/:id/discount', productController.removeDiscount);
 
-router.post('/accept-chat/:id', isAuth, admin.acceptChat);
-router.get('/chats', isAuth, admin.getChats);
-router.put('/chat/:id/close', isAuth, admin.closeChat);
+router.post('/accept-chat/:id', admin.acceptChat);
+router.get('/chats', admin.getChats);
+router.put('/chat/:id/close', admin.closeChat);
 
 const categoryRouter = Router();
 categoryRouter.post('/create', UplaodCategoryPic(), categoryController.create);
@@ -65,6 +66,8 @@ collectionRouter.post('/create', collectionController.create);
 collectionRouter.put('/:id/edit', collectionController.edit);
 collectionRouter.delete('/:id/remove', collectionController.delete);
 adminRouters.use('/collection', collectionRouter);
+
+adminRouters.patch('/order/:id/status', orderController.changeOrderStatus);
 
 router.use(adminRouters);
 export default router;

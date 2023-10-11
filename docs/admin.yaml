@@ -284,6 +284,7 @@ paths:
     post:
       tags:
         - Admin
+        - Brand
       summary: Create a new brand.
       description: Use this API endpoint to create a new brand within your application. Provide the necessary brand details, such as name and description, to add a new brand.
       requestBody:
@@ -298,6 +299,7 @@ paths:
     put:
       tags:
         - Admin
+        - Brand
       summary: Edit a brand by ID.
       description: This endpoint allows you to edit an existing brand by specifying its unique identifier (brand_id). Update brand details, such as name and description, to modify the brand's information.
       requestBody:
@@ -318,6 +320,7 @@ paths:
     delete:
       tags:
         - Admin
+        - Brand
       summary: Remove a brand by ID.
       description: Remove a brand from your application by providing its unique identifier (brand_id). This action deletes the specified brand, which may impact the association of products with that brand.
       security:
@@ -346,6 +349,7 @@ paths:
     delete:
       tags:
         - Admin
+        - Brand
       summary: Remove products from a brand.
       description: Remove products from a brand by specifying the brand's unique identifier (brand_id) and providing product identifiers to disassociate products from the brand. This action removes the specified products from the brand's association.
       security:
@@ -360,6 +364,7 @@ paths:
     post:
       tags:
         - Admin
+        - Collection
       summary: Create a new collection.
       description: Use this API endpoint to create a new collection within your application. Provide the necessary collection details, such as title and description, to add a new collection.
       requestBody:
@@ -381,6 +386,7 @@ paths:
     put:
       tags:
         - Admin
+        - Collection
       summary: Update collection.
       description: Use this API endpoint to edit a collection within your application.
       requestBody:
@@ -408,6 +414,7 @@ paths:
     delete:
       tags:
         - Admin
+        - Collection
       summary: Delete collection.
       description: Use this API endpoint to delete a collection within your application.
       security:
@@ -418,6 +425,27 @@ paths:
           required: true
           schema:
           type: string
+  /admin/order/{order_id}/status:
+    patch:
+      tags:
+        - Admin
+        - Order
+      summary: Change order status.
+      description: Use this API endpoint to change order status.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: order_id
+          required: true
+          schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderStatusInput'
 
 components:
   schemas:
@@ -630,3 +658,9 @@ components:
                 type: string
               image:
                 type: string
+    OrderStatusInput:
+      type: object
+      properties:
+        status:
+          type: number
+          description: Number Between 1..3 -> 1 = On Progress, 2 = On it's way, 3 = Delivered

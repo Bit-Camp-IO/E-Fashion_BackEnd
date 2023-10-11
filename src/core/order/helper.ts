@@ -10,5 +10,6 @@ export function _formatOrder(order: OrderDB): OrderResult {
     tax: order.tax,
     totalPrice: order.totalPrice,
     totalQuantity: order.totalPrice,
+    status: order.status,
   };
 }

@@ -1,5 +1,5 @@
 import orderServicers from '@/core/order';
-import { StripeMetadata, getStripeEvent, stripeEventsHook } from '@/core/payment/stripe';
+import { StripeMetadata, stripeEventsHook } from '@/core/payment/stripe';
 import { HttpStatus } from '@server/utils/status';
 import express from 'express';
 
@@ -10,7 +10,9 @@ function stripeMiddleware(req: express.Request, res: express.Response) {
     return;
   }
 
-  const event = getStripeEvent(req.body, signature);
+  // TODO: Validate stripe request in production
+  // const event = getStripeEvent(req.body, signature);
+  const event = req.body;
   if (!event) {
     res.JSON(HttpStatus.BadRequest);
     return;
@@ -28,5 +30,7 @@ async function createStripeOrder(m: StripeMetadata) {
 }
 
 export function stripeWebhook(app: express.Express) {
-  app.use('/stripe-webhook', express.raw({ type: 'application/json' }), stripeMiddleware);
+  // TODO: Use express.raw middleware
+  app.use('/stripe-webhook', express.json(), stripeMiddleware);
+  // app.use('/stripe-webhook', express.raw({ type: 'application/json' }), stripeMiddleware);
 }

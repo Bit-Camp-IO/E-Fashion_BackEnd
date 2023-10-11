@@ -1,6 +1,6 @@
 import { OrderResult } from './interfaces';
 import { AsyncSafeResult } from '@type/common';
-import { InvalidDataError, UnauthorizedError } from '../errors';
+import { InvalidDataError, NotFoundError, UnauthorizedError } from '../errors';
 import OrderModel, { OrderDB } from '@/database/models/order';
 import { CartOrder } from './cart_order';
 import { validateId } from '../utils';
@@ -17,6 +17,12 @@ type OrderFactoryData = {
 };
 
 type OrderType = 'cart' | 'collection' | string | undefined;
+
+export enum OrderStatus {
+  PROGRESS = 1,
+  WAY,
+  DELIVERED,
+}
 export class OrderServices {
   async getAllOrder(userId: string): AsyncSafeResult<OrderResult[]> {
     try {
@@ -65,6 +71,18 @@ export class OrderServices {
       return new CollectionOrder(o.userId!, o.collectionId);
     } else {
       throw new InvalidDataError('Invalid order type');
+    }
+  }
+
+  async changeOrderStatus(id: string, status: OrderStatus): AsyncSafeResult<OrderDB> {
+    try {
+      const order = await OrderModel.findByIdAndUpdate(id, { status }, { new: true });
+      if (!order) {
+        throw new NotFoundError('Order');
+      }
+      return { error: null, result: order.toJSON() };
+    } catch (error) {
+      return { error, result: null };
     }
   }
 }

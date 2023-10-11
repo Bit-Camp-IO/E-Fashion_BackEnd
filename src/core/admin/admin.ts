@@ -20,6 +20,7 @@ import {
 import { addDiscount, removeDiscount } from '../product';
 import { acceptChat, changeStatus, getChats } from '../chat';
 import collection, { CollectionInput, CollectionResult, EditCollectionInput } from '../collection';
+import { OrderServices, OrderStatus } from '../order';
 
 interface AdminService {
   addProduct(data: ProductData): AsyncSafeResult<ProductResponse>;
@@ -172,6 +173,11 @@ export class Admin implements AdminService {
   }
   async removeCollection(collectionId: string): Promise<Error | null> {
     return collection.remove(collectionId);
+  }
+
+  async chnageOrderStatus(id: string, status: OrderStatus) {
+    const os = new OrderServices();
+    return os.changeOrderStatus(id, status);
   }
 }
 

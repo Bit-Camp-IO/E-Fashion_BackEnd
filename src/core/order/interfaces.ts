@@ -14,6 +14,7 @@ export interface OrderResult {
   totalQuantity: number;
   price: number;
   tax: number;
+  status: number;
 }
 
 export type OrderPaymentMethod = 'CASH' | 'STRIPE';

@@ -30,6 +30,7 @@ export interface OrderDB extends mongoose.Document {
   price: number;
   tax: number;
   item_type: 'collection' | 'cart';
+  status: number;
 }
 
 const orderSchema = new Schema<OrderDB>(
@@ -90,6 +91,11 @@ const orderSchema = new Schema<OrderDB>(
       default: 'cart',
       enum: ['cart', 'collection'],
       type: String,
+    },
+    status: {
+      type: Number,
+      default: 1,
+      enum: [1, 2, 3],
     },
   },
   { timestamps: true },
