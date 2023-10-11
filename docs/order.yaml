@@ -151,6 +151,9 @@ components:
         tax:
           type: number
           description: The tax applied to the order
+        status:
+          type: number
+          description: Number to describes order status -> 1 = On Progress, 2 = On it's way, 3 = Delivered
     PaymentIntents:
       type: object
       properties:
