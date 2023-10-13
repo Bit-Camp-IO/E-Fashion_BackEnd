@@ -9,7 +9,7 @@ export function _formatOrder(order: OrderDB): OrderResult {
     price: order.price,
     tax: order.tax,
     totalPrice: order.totalPrice,
-    totalQuantity: order.totalPrice,
+    totalQuantity: order.totalQuantity,
     status: order.status,
   };
 }
