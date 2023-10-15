@@ -156,6 +156,7 @@ export class User implements UserServices {
 
 function _formatUser(user: UserDB): UserResult {
   return {
+    id: user._id,
     email: user.email,
     fullName: user.fullName,
     isVerified: user.isVerified,

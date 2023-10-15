@@ -28,6 +28,7 @@ export interface CartResult {
 }
 
 export interface UserResult {
+  id: string;
   email: string;
   fullName: string;
   phoneNumber?: string;

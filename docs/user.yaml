@@ -1,0 +1,240 @@
+paths:
+  /api/user/me:
+    get:
+      tags:
+        - User
+      summary: User Data
+      description: Returns user data if they are logged in.
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  /api/user/me/edit:
+    patch:
+      tags:
+        - User
+      summary: Update User
+      description: Update user data
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditUserData'
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  /api/user/profile-image:
+    post:
+      tags:
+        - User
+      summary: Upload Profile Image
+      description: Uploads a profile image for the authenticated user.
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                profileImage:
+                  type: string
+                  format: binary
+      responses:
+        200:
+          description: Profile image uploaded successfully.
+
+  /api/user/favorites:
+    post:
+      tags:
+        - Favorites
+      summary: Add to Favorites
+      description: Adds a product to the user's favorites list.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: Product Id
+              required:
+                - id
+      responses:
+        '200':
+          description: Product added to favorites successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FavItem'
+    delete:
+      tags:
+        - Favorites
+      summary: Delete From Favorites
+      description: Delete a product from the user's favorites list.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: Product Id
+              required:
+                - id
+      responses:
+        '204':
+          description: Product deleted from favorites successfully.
+    get:
+      tags:
+        - Favorites
+      summary: Get Favorites List
+      description: Get all products in user's favorites list.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Products in favorites list.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FavItem'
+
+  /api/user/address:
+    get:
+      tags:
+        - User
+      summary: Get Users Addresses
+      description: Returns list of user's addresses if they are logged in.
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Address'
+    post:
+      tags:
+        - User
+      summary: Add new Address
+      description: Add new address for user addresses list.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                latitude:
+                  type: number
+                longitude:
+                  type: number
+      responses:
+        201:
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Address'
+
+  /api/user/address/{address_id}:
+    delete:
+      tags:
+        - User
+      summary: Remove Address
+      description: Remove address for user addresses list.
+      parameters:
+        - name: address_id
+          in: path
+          description: ID of the address in url
+          required: true
+          type: string
+      responses:
+        204:
+          description: Successful operation.
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 64bc9cea76944a21267274a9
+        fullName:
+          type: string
+          example: Mahmoud Khaled
+        profile:
+          type: string
+          example: /profile_imge.png
+        provider:
+          type: string
+          example: LOCAL
+        isVerified:
+          type: boolean
+          example: false
+        settings:
+          type: object
+          properties:
+            darkmode:
+              type: string
+              exmple: dark
+            language:
+              type: string
+              exmple: en
+            address:
+              $ref: '#/components/schemas/Address'
+    Address:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 64cc5f196c2d6e86439c8c67
+        location:
+          type: object
+          properties:
+            latitude:
+              type: number
+            longitude:
+              type: number
+        isPrimary:
+          type: boolean
+          example: false
+    FavItem:
+      type: object
+      properties:
+        title:
+          type: string
+        price:
+          type: number
+        id:
+          type: string
