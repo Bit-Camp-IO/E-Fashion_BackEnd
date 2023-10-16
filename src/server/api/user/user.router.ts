@@ -28,8 +28,6 @@ router.post('/address', isAuth, userController.addAddress);
 router.delete('/address/:id', isAuth, controller.removeAddress);
 
 router.post('/new-chat', isAuth, controller.newChat);
-
-// TODO: 
-router.get('/chat');
+router.get('/chat', isAuth, controller.getChat);
 
 export default router;

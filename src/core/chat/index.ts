@@ -91,6 +91,18 @@ export async function getChatById(id: string): AsyncSafeResult<ChatDB> {
   }
 }
 
+export async function getUserChat(id: string): AsyncSafeResult<ChatDB> {
+  try {
+    const chat = await ChatModel.findOne({ user: id, status: ['active', 'waiting'] })
+    if (!chat) {
+      throw new NotFoundError('Chats ')
+    }
+    return { result: chat, error: null }
+  } catch (err) { 
+    return { error: err, result: null}
+  }
+}
+
 export async function changeStatus(id: string, stuatus: string): Promise<Error | null> {
   try {
     const chat = await ChatModel.findByIdAndUpdate(id, { $set: { status: stuatus } });
