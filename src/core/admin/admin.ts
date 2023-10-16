@@ -18,9 +18,10 @@ import {
   removeProductsFromBrand,
 } from '../brand';
 import { addDiscount, removeDiscount } from '../product';
-import { acceptChat, changeStatus, getChats } from '../chat';
+import { acceptChat, changeStatus, getChatById, getChats } from '../chat';
 import collection, { CollectionInput, CollectionResult, EditCollectionInput } from '../collection';
 import { OrderServices, OrderStatus } from '../order';
+import { ChatData } from '../chat/interfaces';
 
 interface AdminService {
   addProduct(data: ProductData): AsyncSafeResult<ProductResponse>;
@@ -153,8 +154,12 @@ export class Admin implements AdminService {
     return acceptChat(this._id, chatId);
   }
 
-  async getActiveChats(): AsyncSafeResult<any> {
+  async getActiveChats(): AsyncSafeResult<ChatData[]> {
     return getChats();
+  }
+
+  async getChatById(id: string): AsyncSafeResult<ChatData> {
+    return getChatById(id);
   }
 
   async closeChat(id: string): Promise<Error | null> {

@@ -150,6 +150,20 @@ class AdminController {
   }
 
   @Guard(AdminRole.ADMIN)
+  public async getChatByID(req: Request, res: Response) {
+    const admin = req.admin as Admin;
+    const { id } = req.params;
+    const chat = await admin.getChatById(id);
+    if (chat.error) {
+      if (chat.error instanceof NotFoundError) {
+        throw new RequestError(chat.error.message, HttpStatus.NotFound);
+      }
+      throw RequestError._500();
+    }
+    res.JSON(HttpStatus.Ok, chat.result)
+  }
+
+  @Guard(AdminRole.ADMIN)
   public async closeChat(req: Request, res: Response) {
     const { id } = req.params;
     const admin = req.admin as Admin;
