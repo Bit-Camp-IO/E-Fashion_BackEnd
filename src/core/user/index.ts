@@ -1,6 +1,11 @@
 import UserModel, { UserDB } from '@/database/models/user';
 import { AsyncSafeResult } from '@type/common';
-import { InvalidCredentialsError, InvalidDataError, NotFoundError } from '../errors';
+import {
+  InvalidCredentialsError,
+  InvalidDataError,
+  NotFoundError,
+  UnauthorizedError,
+} from '../errors';
 import ProductModel, { ProductDB } from '@/database/models/product';
 import { FavItem, UserResult } from './interfaces';
 import { Cart } from './cart';
@@ -151,6 +156,34 @@ export class User implements UserServices {
 
   async removeAddress(addressId: string): Promise<Error | null> {
     return await removeAddress(this._id, addressId);
+  }
+  async addDevice(devId: string): Promise<Error | null> {
+    try {
+      const user = await UserModel.findByIdAndUpdate(this._id, { $addToSet: { devices: devId } });
+      if (!user) {
+        throw new UnauthorizedError();
+      }
+      return null;
+    } catch (err) {
+      return err;
+    }
+  }
+  async removeDevice(devId: string): Promise<Error | null> {
+    try {
+      let u: any;
+      if (devId === 'all') {
+        u = { $unset: { devices: [] } };
+      } else {
+        u = { $pull: { devices: devId } };
+      }
+      const user = await UserModel.findByIdAndUpdate(this._id, u);
+      if (!user) {
+        throw new UnauthorizedError();
+      }
+      return null;
+    } catch (err) {
+      return err;
+    }
   }
 }
 

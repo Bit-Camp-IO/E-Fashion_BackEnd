@@ -22,6 +22,7 @@ import { acceptChat, changeStatus, getChatById, getChats } from '../chat';
 import collection, { CollectionInput, CollectionResult, EditCollectionInput } from '../collection';
 import { OrderServices, OrderStatus } from '../order';
 import { ChatData } from '../chat/interfaces';
+import Notification, { AllUsers, NotificationMessage, NotificationType } from '../notification';
 
 interface AdminService {
   addProduct(data: ProductData): AsyncSafeResult<ProductResponse>;
@@ -183,6 +184,10 @@ export class Admin implements AdminService {
   async chnageOrderStatus(id: string, status: OrderStatus) {
     const os = new OrderServices();
     return os.changeOrderStatus(id, status);
+  }
+  async pushNotification(message: NotificationMessage): Promise<boolean> {
+    const noti = new Notification(NotificationType.GENERAL, AllUsers);
+    return await noti.push(message);
   }
 }
 

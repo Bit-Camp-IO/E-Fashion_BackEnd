@@ -21,14 +21,17 @@ export interface UserDB extends mongoose.Document {
   payments: RelationList<PaymentDB>;
   favorites: RelationList<ProductDB>;
   profileImage: string;
+  devices: string[];
 }
 
 interface SettingsDB {
   language: 'en' | 'ar';
+  notification: boolean;
 }
 
 const defaultSetting: SettingsDB = {
   language: 'en',
+  notification: true,
 };
 
 const userSchema = new Schema<UserDB>(
@@ -68,6 +71,9 @@ const userSchema = new Schema<UserDB>(
           enum: ['en', 'ar'],
           default: 'en',
         },
+        notification: {
+          type: Boolean,
+        },
       },
       _id: false,
       default: defaultSetting,
@@ -81,6 +87,7 @@ const userSchema = new Schema<UserDB>(
     },
     favorites: [{ type: ObjectId, ref: 'Product', default: [] }],
     profileImage: String,
+    devices: [{ type: String }],
   },
   { timestamps: true },
 );

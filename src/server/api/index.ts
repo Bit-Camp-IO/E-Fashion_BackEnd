@@ -8,6 +8,7 @@ import initUser from './user';
 import initOrder from './order';
 import { initVersion } from './version/index.router';
 import initCollection from './collection';
+import initNotification from './notification';
 
 const initApi: InitRouterFunc = app => {
   const router = Router();
@@ -19,6 +20,7 @@ const initApi: InitRouterFunc = app => {
   initBrand(router);
   initOrder(router);
   initCollection(router);
+  initNotification(router);
   app.use('/api', router);
 };
 

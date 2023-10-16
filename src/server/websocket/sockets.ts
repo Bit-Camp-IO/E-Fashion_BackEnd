@@ -1,4 +1,5 @@
 import { connectAdmin, connectUser, saveMessageToChat } from '@/core/chat';
+import Notification, { NotificationType } from '@/core/notification';
 import { Server, Socket } from 'socket.io';
 
 /**
@@ -13,6 +14,7 @@ import { Server, Socket } from 'socket.io';
 
 export async function chatSocket(io: Server) {
   const users = new Map<string, string>();
+  const activeUsers = new Set<string>();
 
   io.on('connection', async (socket: Socket) => {
     const token = socket.handshake.auth.token;
@@ -37,7 +39,7 @@ export async function chatSocket(io: Server) {
       return;
     }
     users.set(socket.id, result!);
-
+    activeUsers.add(result!);
     socket.join(chat);
 
     socket.on('send-message', async (message: string | undefined) => {
@@ -55,7 +57,17 @@ export async function chatSocket(io: Server) {
         socket.emit('error', error?.message);
         return;
       }
-      socket.to(chat).emit('new-message', messageObject.result);
+      socket.to(chat).emit('new-message', messageObject.result.message);
+      const resiver =
+        messageObject.result.chat.user === users.get(socket.id)
+          ? messageObject.result.chat.user
+          : messageObject.result.chat.admin;
+      if (!Array.from(users.values()).includes(resiver)) {
+        await new Notification(NotificationType.NEW_MESSAGE, resiver).push({
+          title: 'New Message',
+          body: message,
+        });
+      }
     });
 
     socket.on('close', () => {

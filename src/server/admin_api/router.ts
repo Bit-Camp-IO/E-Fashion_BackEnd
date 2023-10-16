@@ -7,8 +7,9 @@ import productController from './controllers/product';
 import categoryController from './controllers/category';
 import collectionController from './controllers/collection';
 import brandController from './controllers/brand';
-import orderController from './controllers/order';
 import { UplaodCategoryPic, UplaodProductsPics } from '@server/middleware/upload';
+import orderController from './controllers/order';
+import notifController from './controllers/notification';
 import admin from './controllers/admin';
 
 const router = Router();
@@ -69,6 +70,8 @@ collectionRouter.delete('/:id/remove', collectionController.delete);
 adminRouters.use('/collection', collectionRouter);
 
 adminRouters.patch('/order/:id/status', orderController.changeOrderStatus);
+
+adminRouters.post('/notif/push', notifController.push);
 
 router.use(adminRouters);
 export default router;

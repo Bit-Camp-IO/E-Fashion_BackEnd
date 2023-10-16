@@ -5,7 +5,7 @@ import { NotFoundError, UnauthorizedError } from '../errors';
 import AdminModel from '@/database/models/admin';
 import { verifyToken } from '../auth/token';
 import Config from '@/config';
-import UserModel from '@/database/models/user';;
+import UserModel from '@/database/models/user';
 
 export async function createChat(userId: string): AsyncSafeResult<ChatData> {
   try {
@@ -32,7 +32,7 @@ export async function saveMessageToChat(
   chatID: string,
   senderId: string,
   content: string,
-): AsyncSafeResult<any> {
+): AsyncSafeResult<{ chat: ChatDB; message: any }> {
   try {
     const chat = await ChatModel.findByIdAndUpdate(
       chatID,
@@ -55,7 +55,7 @@ export async function saveMessageToChat(
       content: lastMessage.content,
       date: lastMessage.createdAt,
     };
-    return { result, error: null };
+    return { result: { message: result, chat: chat }, error: null };
   } catch (err) {
     return { error: err, result: null };
   }
@@ -88,13 +88,13 @@ export async function getChatById(id: string): AsyncSafeResult<ChatData> {
 
 export async function getUserChat(id: string): AsyncSafeResult<ChatData> {
   try {
-    const chat = await ChatModel.findOne({ user: id, status: ['active', 'waiting'] })
+    const chat = await ChatModel.findOne({ user: id, status: ['active', 'waiting'] });
     if (!chat) {
-      throw new NotFoundError('Chats ')
+      throw new NotFoundError('Chats ');
     }
-    return { result: _formatChat(chat), error: null }
-  } catch (err) { 
-    return { error: err, result: null}
+    return { result: _formatChat(chat), error: null };
+  } catch (err) {
+    return { error: err, result: null };
   }
 }
 
@@ -184,11 +184,12 @@ function _formatChat(chat: ChatDB): ChatData {
     id: chat._id.toString(),
     status: chat.status,
     user: chat.user._id.toString(),
-    admin: chat.admin?._id?.toString() || "",
-    messages: chat.messages?.map(msg => ({
-      content: msg.content,
-      sender: msg.sender,
-      createdAt: msg.createdAt
-    })) || []
-  }
+    admin: chat.admin?._id?.toString() || '',
+    messages:
+      chat.messages?.map(msg => ({
+        content: msg.content,
+        sender: msg.sender,
+        createdAt: msg.createdAt,
+      })) || [],
+  };
 }

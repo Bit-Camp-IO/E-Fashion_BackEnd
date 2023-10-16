@@ -184,3 +184,9 @@ export const editCollectionSchema = Joi.object<EditCollectionInput>({
 export const orderStatusSchema = Joi.object({
   status: Joi.number().required().min(1).max(3),
 });
+
+export const notificationMessageSchema = Joi.object({
+  title: Joi.string().trim().min(3).max(55).required(),
+  body: Joi.string().trim().min(3).max(255).required(),
+  imageUrl: Joi.string().trim().uri(),
+});
