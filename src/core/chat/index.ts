@@ -5,7 +5,7 @@ import { NotFoundError, UnauthorizedError } from '../errors';
 import AdminModel from '@/database/models/admin';
 import { verifyToken } from '../auth/token';
 import Config from '@/config';
-import UserModel from '@/database/models/user';
+import UserModel from '@/database/models/user';;
 
 export async function createChat(userId: string): AsyncSafeResult<ChatData> {
   try {
@@ -21,13 +21,8 @@ export async function createChat(userId: string): AsyncSafeResult<ChatData> {
       user: userId,
       status: 'waiting',
     });
-    const result: ChatData = {
-      user: chat.user._id,
-      id: chat._id,
-      status: chat.status,
-    };
 
-    return { result, error: null };
+    return { result: _formatChat(chat), error: null };
   } catch (err) {
     return { error: err, result: null };
   }
@@ -66,38 +61,38 @@ export async function saveMessageToChat(
   }
 }
 
-export async function getChats(): AsyncSafeResult<any> {
+export async function getChats(): AsyncSafeResult<ChatData[]> {
   try {
     const chats = await ChatModel.find();
     if (!chats) {
       throw new NotFoundError('No chats specefied with status: ' + status);
     }
-    return { result: chats, error: null };
+    return { result: chats.map(chat => _formatChat(chat)), error: null };
   } catch (err) {
     return { error: err, result: null };
   }
 }
 
-export async function getChatById(id: string): AsyncSafeResult<ChatDB> {
+export async function getChatById(id: string): AsyncSafeResult<ChatData> {
   try {
     const chat = await ChatModel.findOne({ id });
 
     if (!chat) {
       throw new NotFoundError('Chat with id ' + id);
     }
-    return { result: chat, error: null };
+    return { result: _formatChat(chat), error: null };
   } catch (err) {
     return { error: err, result: null };
   }
 }
 
-export async function getUserChat(id: string): AsyncSafeResult<ChatDB> {
+export async function getUserChat(id: string): AsyncSafeResult<ChatData> {
   try {
     const chat = await ChatModel.findOne({ user: id, status: ['active', 'waiting'] })
     if (!chat) {
       throw new NotFoundError('Chats ')
     }
-    return { result: chat, error: null }
+    return { result: _formatChat(chat), error: null }
   } catch (err) { 
     return { error: err, result: null}
   }
@@ -181,5 +176,19 @@ export async function connectAdmin(token: string, chatId: string): AsyncSafeResu
     return { result: adminId, error: null };
   } catch (error) {
     return { result: null, error };
+  }
+}
+
+function _formatChat(chat: ChatDB): ChatData {
+  return {
+    id: chat._id.toString(),
+    status: chat.status,
+    user: chat.user._id.toString(),
+    admin: chat.admin?._id?.toString() || "",
+    messages: chat.messages?.map(msg => ({
+      content: msg.content,
+      sender: msg.sender,
+      createdAt: msg.createdAt
+    })) || []
   }
 }
