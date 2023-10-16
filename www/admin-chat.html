@@ -56,6 +56,7 @@
         }
         function sendMessage() {
             let message = document.getElementById("message").value
+            // message -> string
             socket.emit('send-message', message)
             document.body.innerHTML += `<h3>me: ${message}</h3>`
         }

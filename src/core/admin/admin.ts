@@ -154,7 +154,7 @@ export class Admin implements AdminService {
   }
 
   async getActiveChats(): AsyncSafeResult<any> {
-    return getChats('active');
+    return getChats();
   }
 
   async closeChat(id: string): Promise<Error | null> {

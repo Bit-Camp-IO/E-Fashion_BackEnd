@@ -139,11 +139,14 @@ class AdminController {
   @Guard(AdminRole.ADMIN)
   public async getChats(req: Request, res: Response) {
     const admin = req.admin as Admin;
-    const result = await admin.getActiveChats();
-    if (result instanceof Error) {
-      throw new RequestError(result.message, HttpStatus.BadGateway);
+    const chats = await admin.getActiveChats();
+    if (chats.error) {
+      if (chats.error instanceof NotFoundError) {
+        throw new RequestError(chats.error.message, HttpStatus.NotFound);
+      }
+      throw RequestError._500();
     }
-    res.JSON(HttpStatus.Ok, result);
+    res.JSON(HttpStatus.Ok, chats.result);
   }
 
   @Guard(AdminRole.ADMIN)

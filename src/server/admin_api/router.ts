@@ -41,9 +41,10 @@ adminRouters.delete('/product/:id/remove', productController.remove);
 adminRouters.post('/product/:id/discount', productController.addDiscount);
 adminRouters.delete('/product/:id/discount', productController.removeDiscount);
 
-router.post('/accept-chat/:id', admin.acceptChat);
-router.get('/chats', admin.getChats);
-router.put('/chat/:id/close', admin.closeChat);
+//  TODO:
+adminRouters.post('/accept-chat/:id', admin.acceptChat);
+adminRouters.get('/chats', admin.getChats);
+adminRouters.put('/chat/:id/close', admin.closeChat);
 
 const categoryRouter = Router();
 categoryRouter.post('/create', UplaodCategoryPic(), categoryController.create);

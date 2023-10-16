@@ -66,9 +66,9 @@ export async function saveMessageToChat(
   }
 }
 
-export async function getChats(status: string): AsyncSafeResult<any> {
+export async function getChats(): AsyncSafeResult<any> {
   try {
-    const chats = await ChatModel.find({ status });
+    const chats = await ChatModel.find();
     if (!chats) {
       throw new NotFoundError('No chats specefied with status: ' + status);
     }

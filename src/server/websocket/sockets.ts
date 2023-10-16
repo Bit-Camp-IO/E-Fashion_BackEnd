@@ -1,6 +1,16 @@
 import { connectAdmin, connectUser, saveMessageToChat } from '@/core/chat';
 import { Server, Socket } from 'socket.io';
 
+/**
+ *
+ * io.connection("http://localhost:8080")
+ *
+ * io.emit("send-message", "message content") // send message
+ *
+ * io.emit("close") // close
+ *
+ */
+
 export async function chatSocket(io: Server) {
   const users = new Map<string, string>();
 
