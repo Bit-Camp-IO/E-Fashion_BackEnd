@@ -172,7 +172,7 @@ class AdminController {
       if (error instanceof NotFoundError) {
         throw new RequestError(error.message, HttpStatus.NotFound);
       }
-      throw new RequestError(error.message, HttpStatus.BadRequest);
+      throw RequestError._500()
     }
     res.JSON(HttpStatus.Accepted, null);
   }
