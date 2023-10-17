@@ -53,6 +53,7 @@ export async function saveMessageToChat(
     const lastMessage = chat.messages[chat.messages.length - 1];
     const result = {
       content: lastMessage.content,
+      senderId: lastMessage.sender.toString(),
       date: lastMessage.createdAt,
     };
     return { result: { message: result, chat: chat }, error: null };
