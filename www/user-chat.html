@@ -5,26 +5,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat Test</title>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+
+        #error {
+            padding: 5px 20px;
+            border: 1px solid red;
+            color: red;
+            background-color: #ff210040;
+            display: none;
+        }
+
+        #chat_id {
+            padding: 5px 20px;
+            border: 1px solid green;
+            color: green;
+            background-color: #00ff0040;
+            display: none;
+        }
+
+        .chat_buttons {
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid black;
+        }
+
+        .message_input {
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Chat Test</h1>
-    <div>
-        <label for="token">Token</label>
-        <input type="text" id="token"
-            value="eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZmY4MjA5ZTdjNTVjZTBhZDUyZTE4MiIsImlhdCI6MTY5NTA1MzUzMSwiZXhwIjoxNjk3NjQ1NTMxfQ.RXREmyfAeeXS1jrG1JVIokqaP6M-fdwAqYANG8nxXdc4bYVRA_Yuyw3_hKOmSOEMsYu38XCLWeTERwjaxZlyxnGPlfJneon-QMwKKvt34dLJwKx1mKXJbmC4nTiYKQCShMRbomGdGcuhUywEuN6jeyi53uGsxFEj8BmkkIQPodwklckr9UbOt0MonJCj3ZDFfLxbyykwTcDWkrquNhWiRPz4UgFQPuhP4EWgemdORLhtwix6RyQe9J9WfOiGiNZ1e1KGX3wdiguKK-WhEH37I842-SZoSvu3nViiQjADwQJG3KvKcjlGbDSmROrRT8KdAJYIBzZ320WykveehWAzWw">
-        <button onclick="createChat()">CreateChat</button>
+    <h1>User Chat Test</h1>
+    <div class="chat_buttons">
+        <button onclick="createChat()">Create Chat</button>
+        <button onclick="getChat()">Get my Chat</button>
     </div>
-    <div>
-        <label for="userId">User ID:</label>
-        <input type="text" id="userId">
-    </div>
-    <div>
-        <label for="chatId">Chat ID:</label>
-        <input type="text" id="chatId" value="650880f3de90254eefb5d312">
-        <button onclick="joinChat()">Join Chat</button>
-    </div>
-    <div>
+
+    <h2 id="error"></h2>
+    <h3 id="chat_id"></h3>
+    <div class="message_input">
         <label for="message">Message:</label>
         <input type="text" id="message">
         <button onclick="sendMessage()">Send Message</button>
@@ -33,16 +56,21 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
     <script>
+        const errElement = document.getElementById('error');
+        const chatElemnt = document.getElementById('chat_id');
+        const input = document.getElementsByClassName('message_input')[0];
         // user -> chat
         // ws://localhost:8080/socket.io
+        const token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZmY4MjA5ZTdjNTVjZTBhZDUyZTE4MiIsImlhdCI6MTY5NzQ2MDAyMCwiZXhwIjoxNzAwMDUyMDIwfQ.sXUwcJTXxgUWdB_NA0UGJMCTCsnA4RhvdJYx9htV3-BEQIVbQj6w3k0SBZcqqsbcw8QjWMvhZLXrwhjYqqTEmQW3_Y1uspz8NF-lRE7CmNLAECJdKss3b-Jam1BCS0_2WG9tkqLdul6NPuholCIhER_gjrhnT93lEU3GrickGJcsnsNvdagNv5QUDtYrgS9EAy7R6Rkp4YGFia9J_Sb_GKPkxH_QJ9p1gqcd6XlEtlJcnkC8RVx0rYm7y7hIxnsx0NNxnaRWdoUFvgYdlfzGhmxHDHpsi28m4CXHRjfbhsG0Zmlowz6rEGLCdxcgs369AJ3GFy6DdYVP7irTdsnhYA"
+        let chatId = ""
         let socket;
         function joinChat(chatId) {
             socket = io('http://localhost:8080/', {
                 transports: ['websocket'], auth: {
-                    token: document.getElementById('token').value
+                    token
                 },
                 query: {
-                    "chatId": document.getElementById('chatId').value
+                    "chatId": chatId
                 }
             });
             socket.on('new-message', (message) => {
@@ -52,15 +80,99 @@
             socket.on('error', (error) => {
                 console.log(error)
             })
+            socket.on('accept_chat', () => console.log("Admin accept the chat"))
+            socket.on('disconnect', () => console.error("Disconnect"))
+            socket.on('new_message', (message) => {
+                renderMessage(message.content)
+            })
+            socket.on("close_chat", () => {
+                window.location.reload()
+            })
             // socket.emit('join', chatId)
         }
 
         function sendMessage() {
             let message = document.getElementById("message").value
-            socket.emit('send-message', message)
-            document.body.innerHTML += `<h3>me: ${message}</h3>`
+            fetch(`http://localhost:8080/api/chat/${chatId}/new-message`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-type": "application/json"
+                },
+                method: 'POST',
+                body: JSON.stringify({ content: message })
+            }).then((r) => r.json().then((r) => {
+                if (r.status == "error") {
+                    setError(r.error.message)
+                } else {
+                    console.log(r)
+                }
+            })).catch(e => console.log(e))
+            renderMessage("Me: " + message)
         }
 
+        function createChat() {
+            fetch("http://localhost:8080/api/chat/new-chat", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                method: 'POST'
+            }).then((r) => r.json().then((r) => {
+                if (r.status == "error") {
+                    setError(r.error.message)
+                } else {
+                    setChatId(r.data.id)
+                    joinChat(r.data.id)
+                }
+            })).catch(e => console.log(e))
+        }
+
+        function getChat() {
+            fetch("http://localhost:8080/api/chat", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }).then((r) => r.json().then((r) => {
+                if (r.status == "error") {
+                    setError(r.error.message)
+                } else {
+                    setChatId(r.data.id)
+                    getChatMessages()
+                    joinChat(r.data.id)
+                }
+            })).catch(e => console.log(e))
+        }
+        function setChatId(id) {
+            chatId = id
+            errElement.style.display = 'none'
+            chatElemnt.innerText = "Active Chat ID: " + id
+            chatElemnt.style.display = 'block'
+            document.getElementsByClassName("chat_buttons")[0].style.display = 'none'
+            input.style.display = 'block'
+
+        }
+        function setError(error) {
+            chatElemnt.style.display = 'none'
+            errElement.innerText = error
+            errElement.style.display = 'block'
+        }
+        function renderMessage(message) {
+            document.body.innerHTML += `<h3>${message}</h3>`
+        }
+        function getChatMessages() {
+            fetch(`http://localhost:8080/api/chat/${chatId}/messages`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }).then((r) => r.json().then((r) => {
+                if (r.status == "error") {
+                    setError(r.error.message)
+                } else {
+                    for (m of r.data) {
+                        renderMessage(m.me ? "Me: " + m.content : m.content)
+                    }
+                }
+            })).catch(e => console.log(e))
+        }
         // function joinChat() {
         //     const userId = document.getElementById('userId').value;
         //     const chatId = document.getElementById('chatId').value;

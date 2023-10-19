@@ -18,7 +18,6 @@ class OrderController {
     const admin = req.admin as Admin;
     const order = await admin.chnageOrderStatus(req.params['id'], req.body.status);
     if (order.error) {
-      console.log(order.error);
       if (order.error instanceof NotFoundError) {
         throw new RequestError(order.error.message, HttpStatus.BadRequest);
       }

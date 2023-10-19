@@ -5,43 +5,86 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Chat Test</title>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+
+        #error {
+            padding: 5px 20px;
+            border: 1px solid red;
+            color: red;
+            background-color: #ff210040;
+            display: none;
+        }
+
+
+        #chat_id {
+            padding: 5px 20px;
+            border: 1px solid green;
+            color: green;
+            background-color: #00ff0040;
+            display: none;
+        }
+
+
+        #chat_list p {
+            padding: 5px 10px;
+            /* border: 1px solid green; */
+            /* color: green; */
+            background-color: #00ff0040;
+            width: fit-content;
+            cursor: pointer;
+        }
+
+        #chat_list p:hover {
+            background-color: #00ff0070;
+        }
+
+        .chat_buttons {
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid black;
+        }
+
+        .message_input {
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
     <h1>Admin Chat Test</h1>
-    <div>
-        <label for="token">Token</label>
-        <input type="text" id="token"
-            value="eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YTllMjZmNmI0NzU2M2NhNzVmMGE4YiIsImlhdCI6MTY5MjU2NTA5MCwiZXhwIjoxNjk1MTU3MDkwfQ.c0n0_MiaLxMl-HKDbpypbiaNlKgVHHiGeow9VjByOM178rHdmy5l9Au8V5iajUgzUxO4e1q8NDMyL8XgjZhXACVeyjSZEQWSUAcNJxXfPcEo4tH-IzkgOc-l7quGaIHughcCRKpavZYlqRL0eVENjLPg_-X82BD8d7Kf1reomf04GP16fKVHajYNA55HHrSI-dXVRteUhs7gGx_8C4fvbas87qyahe-dRIubVkd_V9jdZfzqzCyAyUKIqCv2dsGEYkmvJsTlNfS8195xGriF-FRuWp411xpEfvd8H22do8lDFpYeuCHjXyXAfHGFC847LIi0F8-Oxu7l7dFVKplj9g">
-        <button onclick="acceptChat()">Accept Chat</button>
+    <div class="chat_buttons">
+        <button onclick="getChats()">Get list Chats</button>
     </div>
-    <div>
-        <label for="adminId">Admin ID:</label>
-        <input type="text" id="adminId">
-    </div>
-    <div>
-        <label for="chatId">Chat ID:</label>
-        <input type="text" id="chatId" value="650880f3de90254eefb5d312">>
-        <button onclick="joinChat()">Join Chat</button>
-    </div>
-    <div>
+
+    <h2 id="error"></h2>
+    <h3 id="chat_id"></h3>
+    <div id="chat_list"></div>
+    <div class="message_input">
         <label for="message">Message:</label>
         <input type="text" id="message">
         <button onclick="sendMessage()">Send Message</button>
     </div>
     <ul id="chatMessages"></ul>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
     <script>
+        const token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YTllMjZmNmI0NzU2M2NhNzVmMGE4YiIsImlhdCI6MTY5NzQ1OTA0NSwiZXhwIjoxNzAwMDUxMDQ1fQ.XYzT2FBiWgijzVwRgZNF6lq20lmJJTTfdi9YjSBo1sLn-vkIamPYYKgMfctquhYlntiiInyfTxD6_PMaakwCy89dCMCAXUGV_Sye9JZQBQJn--OJEYe_GQsjwplj7XbRRReJYu76Anssco_UhsWAJSi3e9Gz-qAZwVjFBONSmv0rQe_EuZmV44uPJhFj3OGcYeE_Mceey_PU9Vl3QLSaWMZ0sGjnWOca8LgTG3COLW3mdJW4IdoMWMbbKC_Z1eE0ox67eGDHqW7yrF5oO3T-NaTj4eQvBbuk4Wy9Yc83qjBl_4rCXicZ6jep-CL01kHK3LJspZfm5dQ8tUd9OEiD2A"
         // const socket = io('http://localhost:8080/', { transports: ['websocket'] });
+        const errElement = document.getElementById('error');
+        const chatElemnt = document.getElementById('chat_id');
+        const chatListElemnt = document.getElementById('chat_list');
+        const input = document.getElementsByClassName('message_input')[0];
         let socket;
+        let chatId = ""
         function joinChat(chatId) {
             socket = io('http://localhost:8080/', {
                 transports: ['websocket'], auth: {
-                    token: document.getElementById('token').value
+                    token: token
                 },
                 query: {
-                    "chatId": document.getElementById('chatId').value,
+                    "chatId": chatId,
                     "isAdmin": true
                 }
             });
@@ -52,13 +95,127 @@
             socket.on('error', (error) => {
                 console.log(error)
             })
+            socket.on('new_message', (message) => {
+                console.log(message)
+            })
+            socket.on('new_message', (message) => {
+                renderMessage(message.content)
+            })
             // socket.emit('join', chatId)
         }
         function sendMessage() {
             let message = document.getElementById("message").value
             // message -> string
-            socket.emit('send-message', message)
-            document.body.innerHTML += `<h3>me: ${message}</h3>`
+            fetch(`http://localhost:8080/api/chat/${chatId}/new-message`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-type": "application/json"
+                },
+                method: 'POST',
+                body: JSON.stringify({ content: message })
+            }).then((r) => r.json().then((r) => {
+                if (r.status == "error") {
+                    setError(r.error.message)
+                } else {
+                    console.log(r)
+                }
+            })).catch(e => console.log(e))
+            renderMessage("Me: " + message)
+        }
+
+        function getChats() {
+            fetch("http://localhost:8080/admin/chat/list", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }).then((r) => r.json().then((r) => {
+                if (r.status == "error") {
+                    setError(r.error.message)
+                } else {
+                    setChatList(r.data)
+                }
+            })).catch(err => {
+                setError(err)
+            })
+        }
+        function setChatList(chats) {
+            errElement.style.display = 'none'
+            chatListElemnt.style.display = 'block'
+            for (const i in chats) {
+                chatListElemnt.innerHTML += `<div onclick="acceptChat('${chats[i].id}', '${chats[i].status}')"><p>[${Number(i) + 1}] Chat ID: ${chats[i].id}\t [${chats[i].status}]</p></div>`
+            }
+            document.getElementsByClassName("chat_buttons")[0].style.display = 'none'
+
+        }
+        function setError(error) {
+            chatListElemnt.style.display = 'none'
+            errElement.innerText = error
+            errElement.style.display = 'block'
+        }
+
+        function setChatId(id) {
+            chatId = id
+            errElement.style.display = 'none'
+            chatElemnt.innerText = "Active Chat ID: " + id
+            chatElemnt.style.display = 'block'
+            document.getElementsByClassName("chat_buttons")[0].style.display = 'none'
+            input.style.display = 'block'
+            chatListElemnt.style.display = 'none'
+            document.body.innerHTML += `<button onclick="closeChat()">close chat</button>`
+        }
+        function acceptChat(chatId, status) {
+            if (status === "waiting") {
+                fetch(`http://localhost:8080/admin/chat/${chatId}/accept`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                    method: 'POST'
+                }).then((r) => r.json().then((r) => {
+                    if (r.status == "error") {
+                        setError(r.error.message)
+                        throw Error()
+                    } else {
+                        setChatId(chatId)
+                    }
+                })).catch((err) => { throw err })
+            }
+            // setChatId(chatId)
+            setChatId(chatId)
+            getChatMessages()
+            joinChat(chatId)
+        }
+        function closeChat() {
+            fetch(`http://localhost:8080/admin/chat/${chatId}/close`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                method: 'POST'
+            }).then((r) => r.json().then((r) => {
+                if (r.status == "error") {
+                    setError(r.error.message)
+                    throw Error()
+                } else {
+                    location.reload()
+                }
+            })).catch((err) => { throw err })
+        }
+        function renderMessage(message) {
+            document.body.innerHTML += `<h3>${message}</h3>`
+        }
+        function getChatMessages() {
+            fetch(`http://localhost:8080/api/chat/${chatId}/messages`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }).then((r) => r.json().then((r) => {
+                if (r.status == "error") {
+                    setError(r.error.message)
+                } else {
+                    for (m of r.data) {
+                        renderMessage(m.me ? "Me: " + m.content : m.content)
+                    }
+                }
+            })).catch(e => console.log(e))
         }
         // function joinChat() {
         //     const adminId = document.getElementById('adminId').value;

@@ -151,7 +151,7 @@ export class Admin implements AdminService {
     return removeDiscount(productId);
   }
 
-  async acceptChat(chatId: string): Promise<Error | null> {
+  async acceptChat(chatId: string): AsyncSafeResult<ChatData> {
     return acceptChat(this._id, chatId);
   }
 
@@ -163,7 +163,7 @@ export class Admin implements AdminService {
     return getChatById(id);
   }
 
-  async closeChat(id: string): Promise<Error | null> {
+  async closeChat(id: string): AsyncSafeResult<ChatData> {
     return changeStatus(id, 'closed');
   }
 

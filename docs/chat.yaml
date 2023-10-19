@@ -1,0 +1,161 @@
+paths:
+  /api/chat:
+    get:
+      tags:
+        - Chat
+      summary: Get Active or Wating chat for user.
+      description: Use this API endpoint to get Active chat after create new one.
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatResult'
+  /api/chat/new-chat:
+    post:
+      tags:
+        - Chat
+      summary: Ask for new support chat.
+      description: Use this API endpoint to create new chat with status wating
+      security:
+        - bearerAuth: []
+      responses:
+        201:
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatResult'
+  /api/chat/{chat_id}/messages:
+    get:
+      tags:
+        - Chat
+      summary: Get All messages in active chat.
+      description: Use this API endpoint to get chat messages
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: chat_id
+          required: true
+          schema:
+          type: string
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResult'
+  /api/chat/{chat_id}/new-message:
+    post:
+      tags:
+        - Chat
+      summary: Get All messages in active chat.
+      description: Use this API endpoint to get chat messages
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: chat_id
+          required: true
+          schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/messagesInput'
+      responses:
+        200:
+          description: Successful operation.
+
+  /admin/chat/{chat_id}/accept:
+    post:
+      tags:
+        - Chat
+        - Admin
+      summary: Accept chat.
+      description: Change Chat status from wating to active and start the chat
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: chat_id
+          required: true
+          schema:
+          type: string
+      responses:
+        200:
+          description: Successful operation.
+
+  /admin/chat/{chat_id}/close:
+    post:
+      tags:
+        - Chat
+        - Admin
+      summary: End chat.
+      description: Change Chat status to closed and close the chat
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: chat_id
+          required: true
+          schema:
+          type: string
+      responses:
+        200:
+          description: Successful operation.
+
+  /admin/chat/list:
+    post:
+      tags:
+        - Chat
+        - Admin
+      summary: Get list of chats.
+      description: get list of chats
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ChatResult'
+
+components:
+  schemas:
+    ChatResult:
+      type: object
+      properties:
+        id:
+          type: string
+        user:
+          type: string
+        status:
+          type: string
+    messagesInput:
+      type: object
+      properties:
+        content:
+          type: string
+          required: true
+    MessageResult:
+      type: array
+      items:
+        type: object
+        properties:
+          content:
+            type: string
+          date:
+            type: string
+          me:
+            type: boolean

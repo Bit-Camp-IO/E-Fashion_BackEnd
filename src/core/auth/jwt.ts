@@ -37,7 +37,11 @@ export class JWTAuthService {
         fullName: userData.fullName,
         provider: 'LOCAL',
       }).save();
-      const accessToken = createToken({ id: user._id }, Config.ACCESS_TOKEN_PRIVATE_KEY, '600s');
+      const accessToken = createToken(
+        { id: user._id },
+        Config.ACCESS_TOKEN_PRIVATE_KEY,
+        Config.ACCESS_TOKEN_EXP,
+      );
       const refreshToken = createToken(
         { id: user._id },
         Config.REFRESH_TOKEN_PRIVATE_KEY,

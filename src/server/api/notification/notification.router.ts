@@ -4,8 +4,10 @@ import { isAuth } from '@server/middleware/isAuth';
 
 const router = Router();
 
-router.get('/list', isAuth, controler.getAll);
-router.post('/subscribe', isAuth, controler.subscribe);
-router.delete('/unsubscribe', isAuth, controler.unsubscribe);
+router.use(isAuth);
+
+router.get('/list', controler.getAll);
+router.post('/subscribe', controler.subscribe);
+router.delete('/unsubscribe', controler.unsubscribe);
 
 export default router;

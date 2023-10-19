@@ -3,7 +3,6 @@ import controller from './user.controller';
 import cartController from './cart.controller';
 import { isAuth } from '@server/middleware/isAuth';
 import { UplaodProfilePic } from '@server/middleware/upload';
-import userController from './user.controller';
 
 const router = Router();
 
@@ -22,12 +21,9 @@ router.delete('/cart', isAuth, cartController.removeItem);
 router.get('/cart', isAuth, cartController.getMyCart);
 router.patch('/cart', isAuth, cartController.editItemQ);
 
-router.get('/address', isAuth, userController.getAddress);
-router.post('/address', isAuth, userController.addAddress);
+router.get('/address', isAuth, controller.getAddress);
+router.post('/address', isAuth, controller.addAddress);
 
 router.delete('/address/:id', isAuth, controller.removeAddress);
-
-router.post('/new-chat', isAuth, controller.newChat);
-router.get('/chat', isAuth, controller.getChat);
 
 export default router;

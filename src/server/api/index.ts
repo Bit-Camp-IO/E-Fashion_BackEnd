@@ -9,6 +9,7 @@ import initOrder from './order';
 import { initVersion } from './version/index.router';
 import initCollection from './collection';
 import initNotification from './notification';
+import initChat from './chat';
 
 const initApi: InitRouterFunc = app => {
   const router = Router();
@@ -21,6 +22,7 @@ const initApi: InitRouterFunc = app => {
   initOrder(router);
   initCollection(router);
   initNotification(router);
+  initChat(router);
   app.use('/api', router);
 };
 

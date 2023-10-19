@@ -4,7 +4,7 @@ import { HttpStatus } from '@server/utils/status';
 import { Request, Response } from 'express';
 import { AdminBody, adminSchema } from '../valid';
 import { AdminRole, getAdminServices } from '@/core/admin';
-import { DuplicateError, NotFoundError, PermissionError, UnauthorizedError } from '@/core/errors';
+import { DuplicateError, PermissionError, UnauthorizedError } from '@/core/errors';
 import { Admin, SuperAdmin } from '@/core/admin/admin';
 
 @Controller()
@@ -120,61 +120,6 @@ class AdminController {
       throw new RequestError(result.message, HttpStatus.BadRequest);
     }
     res.JSON(HttpStatus.Ok, result);
-  }
-
-  @Guard(AdminRole.ADMIN)
-  public async acceptChat(req: Request, res: Response) {
-    const { id } = req.params;
-    const admin = req.admin as Admin;
-    const error = await admin.acceptChat(id);
-    if (error) {
-      if (error instanceof NotFoundError) {
-        throw new RequestError(error.message, HttpStatus.NotFound);
-      }
-      throw RequestError._500();
-    }
-    res.JSON(HttpStatus.Accepted, null);
-  }
-
-  @Guard(AdminRole.ADMIN)
-  public async getChats(req: Request, res: Response) {
-    const admin = req.admin as Admin;
-    const chats = await admin.getActiveChats();
-    if (chats.error) {
-      if (chats.error instanceof NotFoundError) {
-        throw new RequestError(chats.error.message, HttpStatus.NotFound);
-      }
-      throw RequestError._500();
-    }
-    res.JSON(HttpStatus.Ok, chats.result);
-  }
-
-  @Guard(AdminRole.ADMIN)
-  public async getChatByID(req: Request, res: Response) {
-    const admin = req.admin as Admin;
-    const { id } = req.params;
-    const chat = await admin.getChatById(id);
-    if (chat.error) {
-      if (chat.error instanceof NotFoundError) {
-        throw new RequestError(chat.error.message, HttpStatus.NotFound);
-      }
-      throw RequestError._500();
-    }
-    res.JSON(HttpStatus.Ok, chat.result)
-  }
-
-  @Guard(AdminRole.ADMIN)
-  public async closeChat(req: Request, res: Response) {
-    const { id } = req.params;
-    const admin = req.admin as Admin;
-    const error = await admin.closeChat(id);
-    if (error) {
-      if (error instanceof NotFoundError) {
-        throw new RequestError(error.message, HttpStatus.NotFound);
-      }
-      throw RequestError._500()
-    }
-    res.JSON(HttpStatus.Accepted, null);
   }
 }
 
