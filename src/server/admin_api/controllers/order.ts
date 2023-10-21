@@ -29,7 +29,7 @@ class OrderController {
       title: `Order ${order.result.status}`,
       body: `Order Id ${order.result._id} now ${order.result.status}`,
     });
-    res.JSON(HttpStatus.Ok, order.result.toJSON());
+    res.JSON(HttpStatus.Ok, order.result);
   }
 }
 
