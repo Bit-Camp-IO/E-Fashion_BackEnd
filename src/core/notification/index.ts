@@ -79,7 +79,7 @@ class Notification {
   private async pushForAll(message: NotificationMessage) {
     await firebase.messaging().send({
       topic: this.to,
-      data: { ...message },
+      notification: { ...message },
     });
   }
   private async pushForUser(message: NotificationMessage) {
@@ -89,11 +89,11 @@ class Notification {
     }
     await firebase.messaging().sendEachForMulticast({
       tokens: user.devices,
-      data: { ...message },
+      notification: { ...message },
     });
   }
 }
 
-Notification.init();
+// Notification.init();
 
 export default Notification;
