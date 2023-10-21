@@ -7,6 +7,7 @@ import { NotFoundError } from '@/core/errors';
 import { Admin } from '@/core/admin/admin';
 import { orderStatusSchema } from '../valid';
 import { validateId } from '@/core/utils';
+import Notification, { NotificationType } from '@/core/notification';
 
 @Controller()
 class OrderController {
@@ -16,14 +17,19 @@ class OrderController {
     if (!validateId(req.params['id']))
       throw new RequestError('Invalid Order Id', HttpStatus.BadRequest);
     const admin = req.admin as Admin;
-    const order = await admin.chnageOrderStatus(req.params['id'], req.body.status);
+    const order = await admin.changeOrderStatus(req.params['id'], req.body.status);
     if (order.error) {
       if (order.error instanceof NotFoundError) {
         throw new RequestError(order.error.message, HttpStatus.BadRequest);
       }
       throw RequestError._500();
     }
-    res.JSON(HttpStatus.Ok, order.result);
+    const noti = new Notification(NotificationType.STATUS_ORDER, order.result.user);
+    await noti.push({
+      title: `Order ${order.result.status}`,
+      body: `Order Id ${order.result._id} now ${order.result.status}`,
+    });
+    res.JSON(HttpStatus.Ok, order.result.toJSON());
   }
 }
 

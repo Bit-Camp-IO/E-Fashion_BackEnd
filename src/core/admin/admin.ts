@@ -181,7 +181,7 @@ export class Admin implements AdminService {
     return collection.remove(collectionId);
   }
 
-  async chnageOrderStatus(id: string, status: OrderStatus) {
+  async changeOrderStatus(id: string, status: OrderStatus) {
     const os = new OrderServices();
     return os.changeOrderStatus(id, status);
   }

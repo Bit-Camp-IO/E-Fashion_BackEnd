@@ -62,7 +62,7 @@ export class OrderServices {
       return { error, result: null };
     }
   }
-  orderPaymnet(type: OrderType, o: OrderFactoryData): OrderPayment {
+  orderPayment(type: OrderType, o: OrderFactoryData): OrderPayment {
     if (type === 'cart') {
       return new CartOrder(o.userId!);
     } else if (type === 'collection') {

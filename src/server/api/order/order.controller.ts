@@ -13,11 +13,11 @@ class OrderController {
   async createCashOrder(req: Request, res: Response) {
     const body: OrderSchema = req.body;
     const type = req.query.type?.toString().toLowerCase();
-    let orderSevices: OrderPayment = orderServices.orderPaymnet(type, {
+    let os: OrderPayment = orderServices.orderPayment(type, {
       userId: req.userId!,
       ...body,
     });
-    const order = await orderSevices.cash();
+    const order = await os.cash();
     if (order.error) {
       if (order.error instanceof InvalidDataError)
         throw new RequestError(order.error.message, HttpStatus.BadRequest);
@@ -58,11 +58,11 @@ class OrderController {
   async paymentIntent(req: Request, res: Response) {
     const body: OrderSchema = req.body;
     const type = req.query.type?.toString().toLowerCase();
-    let orderSevices: OrderPayment = orderServices.orderPaymnet(type, {
+    let os: OrderPayment = orderServices.orderPayment(type, {
       userId: req.userId!,
       ...body,
     });
-    const payment = await orderSevices.getClientSecret();
+    const payment = await os.getClientSecret();
     if (payment.error) {
       if (payment.error instanceof NotFoundError || payment.error instanceof InvalidDataError) {
         throw new RequestError(payment.error.message, HttpStatus.BadRequest);

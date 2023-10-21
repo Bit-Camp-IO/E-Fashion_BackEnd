@@ -11,7 +11,7 @@ paths:
         200:
           description: Successful operation.
 
-  /api/notif/subscripe:
+  /api/notif/subscribe:
     post:
       tags:
         - Notification
@@ -33,7 +33,7 @@ paths:
         200:
           description: Successful operation.
 
-  /api/notif/unsubscripe:
+  /api/notif/unsubscribe:
     delete:
       tags:
         - Notification

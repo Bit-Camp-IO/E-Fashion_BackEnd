@@ -22,7 +22,7 @@ function stripeMiddleware(req: express.Request, res: express.Response) {
 }
 
 async function createStripeOrder(m: StripeMetadata) {
-  const order = orderServicers.orderPaymnet(m.collectionId ? 'collection' : 'cart', {
+  const order = orderServicers.orderPayment(m.collectionId ? 'collection' : 'cart', {
     userId: m.userId,
     collectionId: m.collectionId,
   });

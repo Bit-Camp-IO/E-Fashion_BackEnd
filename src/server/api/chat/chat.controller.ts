@@ -52,13 +52,10 @@ class UserController {
       }
       throw RequestError._500();
     }
-    // TODO: Emit Event New-Message
-    emitUserEvent(
-      req.app.get('io'),
-      message.result.to,
-      SocketEvent.NEW_MESSAGE,
-      message.result.message,
-    );
+    emitUserEvent(req.app.get('io'), message.result.to, SocketEvent.NEW_MESSAGE, {
+      ...message.result.message,
+      me: false,
+    });
     const notif = new Notification(NotificationType.NEW_MESSAGE, message.result.to);
     await notif.push({
       title: 'New Message',
