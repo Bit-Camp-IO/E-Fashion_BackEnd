@@ -13,6 +13,7 @@ import { createDocs } from './docs/swagger';
 import { Server as ServerIo } from 'socket.io';
 import * as http from 'http';
 import { initSocket } from './websocket/sockets';
+import morganMiddleware from '@server/middleware/morganMiddleware';
 
 function createServer(): express.Express {
   const app = express();
@@ -41,6 +42,7 @@ function initMiddleware(app: express.Express) {
   cors(app);
   staticFileMiddleware(app);
   parseJsonMiddleware(app);
+  morganMiddleware(app)
   JSONMiddleware(app);
   createDocs(app);
 }
