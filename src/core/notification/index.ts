@@ -94,6 +94,6 @@ class Notification {
   }
 }
 
-// Notification.init();
+Notification.init();
 
 export default Notification;
