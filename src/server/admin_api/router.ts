@@ -7,7 +7,7 @@ import productController from './controllers/product';
 import categoryController from './controllers/category';
 import collectionController from './controllers/collection';
 import brandController from './controllers/brand';
-import { UplaodCategoryPic, UplaodProductsPics } from '@server/middleware/upload';
+import { UploadCategoryPic, UploadProductsPics } from '@server/middleware/upload';
 import orderController from './controllers/order';
 import notifController from './controllers/notification';
 import chatController from './controllers/chat';
@@ -35,7 +35,7 @@ adminRouters.get('/user/:id', adminController.getOneUser);
 adminRouters.post('/user/:id/ban', adminController.banUser);
 adminRouters.post('/user/:id/unban', adminController.unBanUser);
 
-adminRouters.post('/product/create', UplaodProductsPics(), productController.create);
+adminRouters.post('/product/create', UploadProductsPics(), productController.create);
 adminRouters.put('/product/:id/edit', productController.editProduct);
 adminRouters.delete('/product/:id/remove', productController.remove);
 
@@ -49,7 +49,7 @@ chatRouter.post('/:id/close', chatController.closeChat);
 adminRouters.use('/chat', chatRouter);
 
 const categoryRouter = Router();
-categoryRouter.post('/create', UplaodCategoryPic(), categoryController.create);
+categoryRouter.post('/create', UploadCategoryPic(), categoryController.create);
 categoryRouter.put('/:id/edit', categoryController.editCategory);
 categoryRouter.delete('/:id/remove', categoryController.remove);
 categoryRouter.post('/:id/add-products', categoryController.addProducts);

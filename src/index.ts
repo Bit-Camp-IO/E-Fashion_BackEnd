@@ -1,15 +1,16 @@
 import './config/init';
+import './log';
 import { initDB } from './database/init';
+import { createServer } from './server/index';
 // import ProductModel from './database/models/product';
 // @ts-ignore
 // import products from '../DUMMY_DATA.json';
 // import cluster from 'cluster';
 // import path from 'path';
 
-// Dont touch
 async function main() {
   await initDB();
-  import('./server/index');
+  createServer();
   // for (const p of products) {
   //   await ProductModel.create(p);
   // }

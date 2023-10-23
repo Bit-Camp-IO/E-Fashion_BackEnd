@@ -1,7 +1,7 @@
 import { existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
 
-const Dirs = ['/uploads/profile', '/uploads/product', '/uploads/category'];
+const Dirs = ['/uploads/profile', '/uploads/product', '/uploads/category', 'logs'];
 
 export function CreateProDir() {
   for (const dir of Dirs) {

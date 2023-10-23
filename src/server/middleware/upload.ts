@@ -8,7 +8,7 @@ import path from 'path';
 
 const mimeImage = ['image/jpeg', 'image/png'];
 
-export function UplaodProfilePic(): RequestHandler {
+export function UploadProfilePic(): RequestHandler {
   return (req, _, next) => {
     try {
       const bb = busboy({ headers: req.headers, limits: { files: 300000 } });
@@ -44,8 +44,7 @@ export function UplaodProfilePic(): RequestHandler {
     }
   };
 }
-
-export function UplaodProductsPics(): RequestHandler {
+export function UploadProductsPics(): RequestHandler {
   return (req, _, next) => {
     const body: any = {
       imagesPath: [],
@@ -91,7 +90,7 @@ export function UplaodProductsPics(): RequestHandler {
   };
 }
 
-export function UplaodCategoryPic(): RequestHandler {
+export function UploadCategoryPic(): RequestHandler {
   return (req, _, next) => {
     const body: any = {};
     try {

@@ -21,5 +21,6 @@ const Config = {
   STRIPE_ENDPOINT_SECRET: process.env['STRIPE_ENDPOINT_SECRET']!,
   EMAIL_SENDER: process.env['EMAIL_SENDER']!,
   EMAIL_SENDER_PASSWORD: process.env['EMAIL_SENDER_PASSWORD']!,
+  NODE_ENV: process.env['NODE_ENV']!,
 };
 export default Config;

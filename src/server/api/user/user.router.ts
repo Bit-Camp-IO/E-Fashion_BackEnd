@@ -2,7 +2,7 @@ import { Router } from 'express';
 import controller from './user.controller';
 import cartController from './cart.controller';
 import { isAuth } from '@server/middleware/isAuth';
-import { UplaodProfilePic } from '@server/middleware/upload';
+import { UploadProfilePic } from '@server/middleware/upload';
 
 const router = Router();
 
@@ -10,7 +10,7 @@ router.get('/me', isAuth, controller.getMe);
 
 router.patch('/me/edit', isAuth, controller.editMe);
 
-router.post('/profile-image', isAuth, UplaodProfilePic(), controller.updateProfile);
+router.post('/profile-image', isAuth, UploadProfilePic(), controller.updateProfile);
 
 router.post('/favorites', isAuth, controller.addToFav);
 router.delete('/favorites', isAuth, controller.removeFav);

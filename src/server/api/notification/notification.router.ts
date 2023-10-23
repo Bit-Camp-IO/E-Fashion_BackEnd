@@ -1,13 +1,13 @@
 import { Router } from 'express';
-import controler from './notification.controller';
+import controller from './notification.controller';
 import { isAuth } from '@server/middleware/isAuth';
 
 const router = Router();
 
 router.use(isAuth);
 
-router.get('/list', controler.getAll);
-router.post('/subscribe', controler.subscribe);
-router.delete('/unsubscribe', controler.unsubscribe);
+router.get('/list', controller.getAll);
+router.post('/subscribe', controller.subscribe);
+router.delete('/unsubscribe', controller.unsubscribe);
 
 export default router;

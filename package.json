@@ -66,6 +66,7 @@
     "socket.io": "^4.7.2",
     "stripe": "^12.16.0",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.0"
+    "swagger-ui-express": "^5.0.0",
+    "winston": "^3.11.0"
   }
 }

@@ -13,30 +13,31 @@ import { createDocs } from './docs/swagger';
 import { Server as ServerIo } from 'socket.io';
 import * as http from 'http';
 import { initSocket } from './websocket/sockets';
+import { AddressInfo } from 'net';
+import { logger } from './middleware/logger';
 
-function createServer(): express.Express {
+export function createServer(): express.Express {
   const app = express();
   const server = http.createServer(app);
-  const io = new ServerIo(server, {
-    cors: {
-      origin: '*',
-    },
-  });
+  const io = new ServerIo(server, { cors: { origin: '*' } });
+  app.disable('x-powered-by');
+
   app.set('io', io);
   initSocket(io);
-
   initMiddleware(app);
   initApi(app);
   initAdminApi(app);
   _404Middleware(app);
   errorMiddleware(app);
   server.listen(Config.PORT, () => {
-    console.log(`app listen in port ${Config.PORT}`);
+    const address = server.address() as AddressInfo;
+    log.info(`app listen on [${address.address}]:${address.port}`);
   });
   return app;
 }
 
 function initMiddleware(app: express.Express) {
+  logger(app);
   stripeWebhook(app);
   cors(app);
   staticFileMiddleware(app);
@@ -44,5 +45,3 @@ function initMiddleware(app: express.Express) {
   JSONMiddleware(app);
   createDocs(app);
 }
-
-createServer();
