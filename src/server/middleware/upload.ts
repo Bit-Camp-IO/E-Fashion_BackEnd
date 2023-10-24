@@ -46,8 +46,8 @@ export function UploadProfilePic(): RequestHandler {
 }
 export function UploadProductsPics(): RequestHandler {
   return (req, _, next) => {
-    const body: any = {
-      imagesPath: [],
+    const body: { imagesPath: string[] } & Record<string, string | string[]> = {
+      imagesPath: [] as string[],
     };
     try {
       if (req.get('Content-type') === 'application/json') {
@@ -92,7 +92,7 @@ export function UploadProductsPics(): RequestHandler {
 
 export function UploadCategoryPic(): RequestHandler {
   return (req, _, next) => {
-    const body: any = {};
+    const body: { image: string } & Record<string, string> = { image: '' };
     try {
       if (req.get('Content-type') === 'application/json') {
         next();

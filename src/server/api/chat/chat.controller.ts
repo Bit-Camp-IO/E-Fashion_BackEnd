@@ -6,7 +6,7 @@ import { createChat, getChatMessages, getUserChat, saveMessageToChat } from '@/c
 import { DuplicateError, NotFoundError, UnauthorizedError } from '@/core/errors';
 import { NewMessageSchema, newMessageSchema } from './chat.valid';
 import { validateId } from '@/core/utils';
-import { SocketEvent, emitUserEvent } from '@server/websocket/sockets';
+import { SocketEvent, emitUserEvent, inWebSocket } from '@server/websocket/sockets';
 import Notification, { NotificationType } from '@/core/notification';
 
 @Controller()
@@ -52,15 +52,18 @@ class UserController {
       }
       throw RequestError._500();
     }
-    emitUserEvent(req.app.get('io'), message.result.to, SocketEvent.NEW_MESSAGE, {
-      ...message.result.message,
-      me: false,
-    });
-    const notif = new Notification(NotificationType.NEW_MESSAGE, message.result.to);
-    await notif.push({
-      title: 'New Message',
-      body: message.result.message.content,
-    });
+    if (inWebSocket(message.result.to)) {
+      emitUserEvent(req.app.get('io'), message.result.to, SocketEvent.NEW_MESSAGE, {
+        ...message.result.message,
+        me: false,
+      });
+    } else {
+      const notif = new Notification(NotificationType.NEW_MESSAGE, message.result.to);
+      await notif.push({
+        title: 'New Message',
+        body: message.result.message.content,
+      });
+    }
     res.JSON(HttpStatus.Created, message.result.message);
   }
   async getMessages(req: Request, res: Response) {
