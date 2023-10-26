@@ -39,6 +39,30 @@ This project includes Swagger documentation for the API endpoints. You can acces
 
 The Swagger documentation provides details about the available API endpoints, request and response formats, and how to use the API effectively.
 
+## Features
+
+### Firebase Notifications
+
+- **Real-time Notifications**: Send instant notifications to users.
+- **Various Notification Types**: Differentiate between general, message, and order status notifications.
+- **User-Centric**: Address specific users or broadcast messages to everyone.
+- **Notification History**: Store notifications for future reference.
+
+### Real-Time Chat with Socket.io
+
+E-Fash backend supports real-time chat functionality for customer support using Socket.io. This feature fosters seamless communication between users.
+
+### Email Integration
+
+We've integrated email capabilities for various essential functions, such as order confirmations, password resets, and important notifications. This integration ensures that you receive critical information in your inbox promptly.
+
+
+## Authentication
+
+- **JWT Tokens**: Secure user authentication and authorization using JSON Web Tokens.
+- **Google Authentication**: Enable users to log in seamlessly with their Google accounts.
+- **Password Reset**: Allow users to reset their passwords using email-based one-time passwords (OTPs).
+
 ## Scripts
 - `npm start`: Start the application in development mode.
 - `npm run start-production`: Start the application in production mode.
@@ -47,4 +71,4 @@ The Swagger documentation provides details about the available API endpoints, re
 - `npm test`: Run tests 
 
 ## License
-This project is licensed under the ISC License.
+This project is licensed under the Apache-2 License.
