@@ -23,6 +23,7 @@ export enum OrderStatus {
   WAY,
   DELIVERED,
 }
+
 export class OrderServices {
   async getAllOrder(userId: string): AsyncSafeResult<OrderResult[]> {
     try {

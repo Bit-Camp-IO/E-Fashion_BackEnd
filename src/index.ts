@@ -8,6 +8,14 @@ import { createServer } from './server/index';
 // import cluster from 'cluster';
 // import path from 'path';
 
+process.on('uncaughtException', (err: Error) => {
+  log.error(err);
+});
+
+process.on('unhandledRejection', reason => {
+  log.error(reason);
+});
+
 async function main() {
   await initDB();
   createServer();

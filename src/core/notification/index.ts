@@ -55,6 +55,7 @@ class Notification {
         title: n.title,
         body: n.body,
         imageUrl: n.imageUrl,
+        date: n.createdAt,
       }));
       return { result: response, error: null };
     } catch (error) {
@@ -80,6 +81,9 @@ class Notification {
     await firebase.messaging().send({
       topic: this.to,
       notification: { ...message },
+      data: {
+        type: this.type,
+      },
     });
   }
   private async pushForUser(message: NotificationMessage) {
@@ -90,6 +94,9 @@ class Notification {
     await firebase.messaging().sendEachForMulticast({
       tokens: user.devices,
       notification: { ...message },
+      data: {
+        type: this.type,
+      },
     });
   }
 }

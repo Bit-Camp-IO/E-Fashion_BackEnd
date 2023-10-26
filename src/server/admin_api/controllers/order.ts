@@ -8,6 +8,7 @@ import { Admin } from '@/core/admin/admin';
 import { orderStatusSchema } from '../valid';
 import { validateId } from '@/core/utils';
 import Notification, { NotificationType } from '@/core/notification';
+import { OrderStatus } from '@/core/order';
 
 @Controller()
 class OrderController {
@@ -26,11 +27,24 @@ class OrderController {
     }
     const noti = new Notification(NotificationType.STATUS_ORDER, order.result.user);
     await noti.push({
-      title: `Order ${order.result.status}`,
-      body: `Order Id ${order.result._id} now ${order.result.status}`,
+      title: `Order #${order.result._id?.toString().slice(0, 4)}`,
+      body: _formatNotificationBody(order.result.status),
     });
     res.JSON(HttpStatus.Ok, order.result);
   }
 }
 
 export default new OrderController();
+
+function _formatNotificationBody(status: OrderStatus): string {
+  switch (status) {
+    case OrderStatus.PROGRESS:
+      return `Your order is being processed`;
+    case OrderStatus.WAY:
+      return `Your order is on it's way`;
+    case OrderStatus.DELIVERED:
+      return `Your order has been delivered`;
+    default:
+      return '';
+  }
+}
