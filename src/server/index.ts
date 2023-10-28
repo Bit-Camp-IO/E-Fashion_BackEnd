@@ -1,3 +1,5 @@
+import { AddressInfo } from 'node:net';
+import * as http from 'node:http';
 import express from 'express';
 import initApi from './api';
 import initAdminApi from './admin_api';
@@ -11,18 +13,16 @@ import { staticFileMiddleware } from './middleware/staticFile';
 import { parseJsonMiddleware } from './middleware/parseJson';
 import { createDocs } from './docs/swagger';
 import { Server as ServerIo } from 'socket.io';
-import * as http from 'http';
 import { initSocket } from './websocket/sockets';
-import { AddressInfo } from 'net';
 import { logger } from './middleware/logger';
+import { securityHeader } from './middleware/securityHeader';
 
 export function createServer(): express.Express {
   const app = express();
   const server = http.createServer(app);
   const io = new ServerIo(server, { cors: { origin: '*' } });
-  app.disable('x-powered-by');
-
   app.set('io', io);
+
   initSocket(io);
   initMiddleware(app);
   initApi(app);
@@ -37,6 +37,7 @@ export function createServer(): express.Express {
 }
 
 function initMiddleware(app: express.Express) {
+  securityHeader(app);
   logger(app);
   stripeWebhook(app);
   cors(app);

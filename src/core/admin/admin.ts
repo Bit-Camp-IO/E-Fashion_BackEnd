@@ -1,13 +1,13 @@
+import bcrypt from 'bcrypt';
+import { Document } from 'mongoose';
 import * as Product from '../product';
 import { ProductData, ProductResponse } from '../product/interfaces';
 import { AsyncSafeResult } from '@type/common';
 import { AdminData, AdminResult } from './interfaces';
 import AdminModel from '@/database/models/admin';
-import bcrypt from 'bcrypt';
+import { CategoryData, CategoryResult } from '../category/interfaces';
 import { DuplicateError, NotFoundError, PermissionError } from '../errors';
 import UserModel, { UserDB } from '@/database/models/user';
-import { Document } from 'mongoose';
-import { CategoryData, CategoryResult } from '../category/interfaces';
 import * as Category from '../category';
 import { BrandData, BrandResult } from '../brand/interfaces';
 import {

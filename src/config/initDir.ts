@@ -1,5 +1,5 @@
-import { existsSync, mkdirSync } from 'fs';
-import { join } from 'path';
+import { existsSync, mkdirSync } from 'node:fs';
+import { join } from 'node:path';
 
 const Dirs = ['/uploads/profile', '/uploads/product', '/uploads/category', 'logs'];
 
