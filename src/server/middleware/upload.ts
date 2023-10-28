@@ -3,8 +3,8 @@ import RequestError from '@server/utils/errors';
 import { HttpStatus } from '@server/utils/status';
 import busboy from 'busboy';
 import { RequestHandler } from 'express';
-import { createWriteStream } from 'fs';
-import path from 'path';
+import { createWriteStream } from 'node:fs';
+import path from 'node:path';
 
 const mimeImage = ['image/jpeg', 'image/png'];
 

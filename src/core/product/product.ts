@@ -1,3 +1,4 @@
+import { join } from 'node:path';
 import BrandModel from '@/database/models/brand';
 import type * as T from './interfaces';
 import { InvalidDataError, NotFoundError } from '../errors';
@@ -5,7 +6,6 @@ import CategoryModel from '@/database/models/categorie';
 import ProductModel from '@/database/models/product';
 import * as Helper from './helper';
 import { AsyncSafeResult } from '@type/common';
-import { join } from 'path';
 import { removeFile } from '../utils';
 import Config from '@/config';
 

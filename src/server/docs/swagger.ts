@@ -2,7 +2,7 @@ import swaggerJSDoc from 'swagger-jsdoc';
 import { Express } from 'express';
 import { version } from '../../../package.json';
 import swaggerUI from 'swagger-ui-express';
-import { join } from 'path';
+import { join } from 'node:path';
 
 const options: swaggerJSDoc.Options = {
   definition: {
@@ -18,7 +18,7 @@ const options: swaggerJSDoc.Options = {
         bearerAuth: {
           type: 'http',
           schema: 'bearer',
-          bearerFromat: 'JWT',
+          bearerFormat: 'JWT',
         },
       },
     },

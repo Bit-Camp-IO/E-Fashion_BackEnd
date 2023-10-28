@@ -1,4 +1,4 @@
-import {Admin, SuperAdmin} from '@/core/admin/admin';
+import { Admin, SuperAdmin } from '@/core/admin/admin';
 import Manager from '@/core/admin/manager';
 
 export {};

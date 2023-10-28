@@ -1,4 +1,4 @@
-import { join } from 'path';
+import { join } from 'node:path';
 
 const Config = {
   PORT: process.env['PORT']!,
@@ -22,5 +22,6 @@ const Config = {
   EMAIL_SENDER: process.env['EMAIL_SENDER']!,
   EMAIL_SENDER_PASSWORD: process.env['EMAIL_SENDER_PASSWORD']!,
   NODE_ENV: process.env['NODE_ENV']!,
+  Default_Notification: false, // Change this if you want to customize notification
 };
 export default Config;

@@ -13,7 +13,7 @@ import { CartDB } from '@/database/models/cart';
 import { removeFile } from '../utils';
 import { AddAddressData } from '../address/interfaces';
 import { AddressResult, addAddress, getUserAddress, removeAddress } from '../address';
-import { join } from 'path';
+import { join } from 'node:path';
 import Config from '@/config';
 import bcrypt from 'bcrypt';
 
