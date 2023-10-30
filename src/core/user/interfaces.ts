@@ -1,11 +1,5 @@
 import { AddressData } from '../address/interfaces';
 
-export interface FavItem {
-  title: string;
-  price: number;
-  id: string;
-}
-
 export interface CartItemData {
   id: string;
   quantity: number;

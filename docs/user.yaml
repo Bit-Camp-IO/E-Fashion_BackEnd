@@ -65,6 +65,13 @@ paths:
       description: Adds a product to the user's favorites list.
       security:
         - bearerAuth: []
+      parameters:
+        - in: query
+          name: data
+          schema:
+            type: string
+          default: full
+          description: send 'id' if you want only list of id
       requestBody:
         required: true
         content:
@@ -83,9 +90,15 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/FavItem'
+                oneOf:
+                  - $ref: '#/components/schemas/FavDataItems'
+                  - $ref: '#/components/schemas/FavIdItems'
+                example:
+                  FavDataItems:
+                    title: string
+                    price: 10
+                    imageUrl: string
+                  FavIdItems: [string]
     delete:
       tags:
         - Favorites
@@ -113,6 +126,13 @@ paths:
         - Favorites
       summary: Get Favorites List
       description: Get all products in user's favorites list.
+      parameters:
+        - in: query
+          name: data
+          schema:
+            type: string
+          default: full
+          description: send 'id' if you want only list of id
       security:
         - bearerAuth: []
       responses:
@@ -121,9 +141,15 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/FavItem'
+                oneOf:
+                  - $ref: '#/components/schemas/FavDataItems'
+                  - $ref: '#/components/schemas/FavIdItems'
+                example:
+                  FavDataItems:
+                    title: string
+                    price: 10
+                    imageUrl: string
+                  FavIdItems: [string]
 
   /api/user/address:
     get:
@@ -195,7 +221,7 @@ components:
           example: Mahmoud Khaled
         profile:
           type: string
-          example: /profile_imge.png
+          example: /profile_image.png
         provider:
           type: string
           example: LOCAL
@@ -205,12 +231,9 @@ components:
         settings:
           type: object
           properties:
-            darkmode:
-              type: string
-              exmple: dark
             language:
               type: string
-              exmple: en
+              example: en
             address:
               $ref: '#/components/schemas/Address'
     Address:
@@ -229,12 +252,41 @@ components:
         isPrimary:
           type: boolean
           example: false
-    FavItem:
+    FavDataItems:
+      type: array
+      items:
+        type: object
+        properties:
+          title:
+            type: string
+          price:
+            type: number
+          id:
+            type: string
+    FavIdItems:
+      type: array
+      items:
+        type: string
+    EditUserData:
       type: object
       properties:
-        title:
+        email:
           type: string
-        price:
-          type: number
+        phoneNumber:
+          type: string
+        fullName:
+          type: string
+    CartItemData:
+      type: object
+      properties:
         id:
+          type: number
+        size:
           type: string
+        color:
+          type: string
+      required:
+        - id
+        - quantity
+        - size
+        - color

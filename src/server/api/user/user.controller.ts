@@ -1,11 +1,12 @@
-import { NotFoundError } from '@/core/errors';
+import { NotFoundError, UnauthorizedError } from '@/core/errors';
 import { User } from '@/core/user';
 import { validateId } from '@/core/utils';
 import { Controller, Validate } from '@server/decorator';
 import RequestError from '@server/utils/errors';
 import { HttpStatus } from '@server/utils/status';
 import { Request, Response } from 'express';
-import { EditUserSchem, addressSchema, editUserSchema } from './user.valid';
+import { EditUserSchema, addressSchema, editUserSchema } from './user.valid';
+import { Favorites } from '@/core/favorites';
 
 @Controller()
 class UserController {
@@ -21,7 +22,7 @@ class UserController {
   @Validate(editUserSchema)
   async editMe(req: Request, res: Response) {
     const user = new User(req.userId!);
-    const body: EditUserSchem = req.body;
+    const body: EditUserSchema = req.body;
     const userResult = await user.editMe(body);
     if (userResult.error) {
       throw RequestError._500();
@@ -30,9 +31,11 @@ class UserController {
   }
 
   async getMyFav(req: Request, res: Response) {
-    const user = new User(req.userId!);
-    const myFav = await user.myFav();
+    const fav = new Favorites(req.userId!);
+    const myFav = await fav.getAll(req.query['data'] !== 'id');
     if (myFav.error) {
+      if (myFav.error instanceof UnauthorizedError)
+        throw new RequestError(myFav.error, HttpStatus.Unauthorized);
       throw RequestError._500();
     }
     res.JSON(HttpStatus.Ok, myFav.result);
@@ -41,11 +44,13 @@ class UserController {
   async addToFav(req: Request, res: Response) {
     const id = req.body['id'];
     if (!validateId(id)) throw new RequestError(`id '${id}' is not valid`, HttpStatus.BadRequest);
-    const user = new User(req.userId!);
-    const favList = await user.addToFav(id);
+    const user = new Favorites(req.userId!);
+    const favList = await user.add(id, req.query['data'] !== 'id');
     if (favList.error) {
       if (favList.error instanceof NotFoundError)
-        throw new RequestError(favList.error.message, HttpStatus.BadRequest);
+        throw new RequestError(favList.error, HttpStatus.BadRequest);
+      if (favList.error instanceof UnauthorizedError)
+        throw new RequestError(favList.error, HttpStatus.Unauthorized);
       throw RequestError._500();
     }
     res.JSON(HttpStatus.Ok, favList.result);
@@ -54,8 +59,8 @@ class UserController {
   async removeFav(req: Request, res: Response) {
     const id = req.body['id'];
     if (!validateId(id)) throw new RequestError(`id '${id}' is not valid`, HttpStatus.BadRequest);
-    const user = new User(req.userId!);
-    const error = await user.removeFav(id);
+    const user = new Favorites(req.userId!);
+    const error = await user.remove(id);
     if (error) throw RequestError._500();
     res.JSON(HttpStatus.Ok);
   }
