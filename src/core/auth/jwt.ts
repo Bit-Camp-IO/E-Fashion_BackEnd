@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import { createToken, verifyToken } from './token';
 import Config from '@/config';
 import { AsyncSafeResult, SafeResult } from '@type/common';
-import { DuplicateError, InvalidCredentialsError } from '../errors';
+import { AppError, ErrorType } from '../errors';
 
 interface UserRegistrationData {
   email: string;
@@ -30,6 +30,7 @@ export class JWTAuthService {
   static async register(userData: UserRegistrationData): AsyncSafeResult<AuthResponse> {
     try {
       const hashedPassword = await bcrypt.hash(userData.password, 12);
+
       let user = await new UserModel({
         email: userData.email,
         password: hashedPassword,
@@ -37,16 +38,19 @@ export class JWTAuthService {
         fullName: userData.fullName,
         provider: 'LOCAL',
       }).save();
+
       const accessToken = createToken(
         { id: user._id },
         Config.ACCESS_TOKEN_PRIVATE_KEY,
         Config.ACCESS_TOKEN_EXP,
       );
+
       const refreshToken = createToken(
         { id: user._id },
         Config.REFRESH_TOKEN_PRIVATE_KEY,
         Config.REFRESH_TOKEN_EXP,
       );
+
       const result = {
         id: user._id,
         email: user.email,
@@ -58,7 +62,8 @@ export class JWTAuthService {
       return { result, error: null };
     } catch (err) {
       if (err.code === 11000) {
-        err = new DuplicateError('User');
+        err = new AppError(ErrorType.Duplicate, 'User Already Exists');
+        // err = new DuplicateError('User');
       }
       return { error: err, result: null };
     }
@@ -69,12 +74,12 @@ export class JWTAuthService {
       const { email, password } = userData;
       const user = await UserModel.findOne({ email }).select('+password').exec();
       if (!user) {
-        throw new InvalidCredentialsError();
+        throw AppError.invalidCredentials();
       }
 
       const validPass = await bcrypt.compare(password, user.password);
       if (!validPass) {
-        throw new InvalidCredentialsError();
+        throw AppError.invalidCredentials();
       }
 
       const accessToken = createToken(
@@ -82,11 +87,13 @@ export class JWTAuthService {
         Config.ACCESS_TOKEN_PRIVATE_KEY,
         Config.ACCESS_TOKEN_EXP,
       );
+
       const refreshToken = createToken(
         { id: user._id },
         Config.REFRESH_TOKEN_PRIVATE_KEY,
         Config.REFRESH_TOKEN_EXP,
       );
+
       const result: AuthResponse = {
         id: user._id,
         email: user.email,
@@ -95,11 +102,13 @@ export class JWTAuthService {
         accessToken,
         refreshToken,
       };
+
       return { result, error: null };
     } catch (err) {
       return { error: err, result: null };
     }
   }
+
   static verifyAccessToken(token: string): SafeResult<string> {
     try {
       return {
@@ -110,18 +119,22 @@ export class JWTAuthService {
       return { error: err, result: null };
     }
   }
+
   static async refreshToken(token: string): AsyncSafeResult<string> {
     try {
       const payload = verifyToken(token, Config.REFRESH_TOKEN_PUBLIC_KEY);
       const user = await UserModel.findById(payload.id);
+
       if (!user) {
-        throw new Error('');
+        throw AppError.unauthorized();
       }
+
       const newAccessToken = createToken(
         { id: user._id },
         Config.ACCESS_TOKEN_PRIVATE_KEY,
         Config.ACCESS_TOKEN_EXP,
       );
+
       return { error: null, result: newAccessToken };
     } catch (err) {
       return { error: err, result: null };

@@ -9,12 +9,12 @@ import {
 import { UserResult } from './interfaces';
 import { Cart } from './cart';
 import { CartDB } from '@/database/models/cart';
-import { removeFile } from '../utils';
 import { AddAddressData } from '../address/interfaces';
 import { AddressResult, addAddress, getUserAddress, removeAddress } from '../address';
 import { join } from 'node:path';
 import Config from '@/config';
 import bcrypt from 'bcrypt';
+import { removeFile } from '../utils';
 
 interface ProfileImageResult {
   path: string;

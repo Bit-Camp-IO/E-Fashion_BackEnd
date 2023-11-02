@@ -1,3 +1,32 @@
+export enum ErrorType {
+  InvalidToken = 1,
+  Unauthorized,
+  Duplicate,
+  InvalidCredentials,
+  UnauthorizedGoogle,
+  ManagerExist,
+  Permission,
+  NotFound,
+  InvalidData,
+}
+
+export class AppError extends Error {
+  constructor(public type: ErrorType, message: string) {
+    super(message);
+  }
+
+  static invalidCredentials(): AppError {
+    return new AppError(ErrorType.InvalidCredentials, 'Invalid email or password');
+  }
+
+  static unauthorized(): AppError {
+    return new AppError(
+      ErrorType.Unauthorized,
+      'You do not have permission to access this endpoint.',
+    );
+  }
+}
+
 export class InvalidTokenError extends Error {
   constructor() {
     super('Invalid or expired token');
