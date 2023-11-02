@@ -7,7 +7,8 @@ export interface CartItemData {
   color: string;
 }
 
-export interface CartItem extends Omit<CartItemData, 'id'> {
+export interface CartItem extends CartItemData {
+  id: string;
   productId: string;
   imageUrl: string;
   title: string;

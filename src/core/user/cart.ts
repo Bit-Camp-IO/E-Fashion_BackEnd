@@ -18,12 +18,14 @@ export class Cart {
       if (!product) {
         throw new NotFoundError('Product');
       }
+
       const itemIndex = this.cart.items.findIndex(
         i =>
           i.product.toString() === product._id.toString() &&
           item.color === i.color &&
           item.size === i.size,
       );
+
       if (itemIndex !== -1) {
         this.cart.items[itemIndex].quantity += item.quantity;
       } else {
@@ -35,18 +37,21 @@ export class Cart {
         };
         this.cart.items.push(cartItem);
       }
+
       this.cart.totalQuantity += item.quantity;
       await this.cart.save();
+
       return { result: await this._formatCart(), error: null };
     } catch (err) {
       return { error: err, result: null };
     }
   }
+
   async removeItem(id: string): AsyncSafeResult<CartResult> {
     try {
-      const item = this.cart.items.find(i => i.product.toString() === id);
-      if (!item) throw new NotFoundError('Product with id ' + id);
-      (this.cart.items as Types.DocumentArray<any>).pull({ product: id });
+      const item = this.cart.items.find(i => i._id?.toString() === id);
+      if (!item) throw new NotFoundError('Item with id ' + id);
+      (this.cart.items as Types.DocumentArray<any>).pull({ _id: id });
       if (this.cart.items.length === 1) {
         this.cart.totalQuantity = 0;
       } else {
@@ -61,9 +66,8 @@ export class Cart {
 
   async editItemQuantity(id: string, newQ: number): AsyncSafeResult<CartResult> {
     try {
-      const itemIndex = this.cart.items.findIndex(i => i.product.toString() === id);
-      if (itemIndex === -1)
-        return { error: new NotFoundError('Product with id ' + id), result: null };
+      const itemIndex = this.cart.items.findIndex(i => i._id?.toString() === id);
+      if (itemIndex === -1) return { error: new NotFoundError('Item with id ' + id), result: null };
       const newItem = (this.cart.items as Types.DocumentArray<any>)[itemIndex];
       const qdi = newQ - newItem.quantity;
       newItem.quantity = newQ;
@@ -85,6 +89,7 @@ export class Cart {
     const { totalPrice } = getCartItemsInfo(this.cart);
     return {
       items: this.cart.items.map(i => ({
+        id: i._id!.toString(),
         productId: i.product._id,
         title: i.product.title,
         color: i.color,
