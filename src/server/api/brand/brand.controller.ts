@@ -1,6 +1,6 @@
 import { getAllBrands } from '@/core/brand';
 import { Controller } from '@server/decorator';
-import RequestError from '@server/utils/errors';
+import { unwrapResult } from '@server/utils/errors';
 import { HttpStatus } from '@server/utils/status';
 import { Request, Response } from 'express';
 
@@ -8,10 +8,11 @@ import { Request, Response } from 'express';
 class CategoryController {
   public async getList(_req: Request, res: Response) {
     const category = await getAllBrands();
-    if (category.error) {
-      throw RequestError._500();
-    }
-    res.JSON(HttpStatus.Ok, category.result);
+    // if (category.error) {
+    //   throw RequestError._500();
+    // }
+    const result = unwrapResult(category);
+    res.JSON(HttpStatus.Ok, result);
   }
 }
 

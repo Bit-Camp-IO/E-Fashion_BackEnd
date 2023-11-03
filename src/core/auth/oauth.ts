@@ -4,9 +4,9 @@ import Config from '@/config';
 import jwt from 'jsonwebtoken';
 import UserModel from '@/database/models/user';
 import { AuthResponse } from './jwt';
-import { AsyncSafeResult } from '@type/common';
+import { AsyncSafeResult } from '../types';
 import { createToken } from './token';
-import { UnauthorizedGoogleError } from '../errors';
+import { AppError, ErrorType } from '../errors';
 
 interface GooglePayload {
   email: string;
@@ -66,7 +66,10 @@ export class OAuthAuthService {
       };
       return { result, error: null };
     } catch {
-      return { result: null, error: new UnauthorizedGoogleError() };
+      return {
+        result: null,
+        error: new AppError(ErrorType.UnauthorizedGoogle, 'Failed to authenticate with Google.'),
+      };
     }
   }
 }

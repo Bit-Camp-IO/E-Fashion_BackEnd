@@ -1,7 +1,7 @@
 import BrandModel from '@/database/models/brand';
 import { BrandData, BrandDoc, BrandResult } from './interfaces';
-import { AsyncSafeResult } from '@type/common';
-import { DuplicateError, NotFoundError } from '../errors';
+import { AsyncSafeResult } from '../types';
+import { AppError, ErrorType } from '../errors';
 import ProductModel from '@/database/models/product';
 
 export async function createBrand(data: BrandData): AsyncSafeResult<BrandResult> {
@@ -15,7 +15,10 @@ export async function createBrand(data: BrandData): AsyncSafeResult<BrandResult>
     return { result: _formatBrand(brand), error: null };
   } catch (err) {
     if (err.code === 11000) {
-      return { error: new DuplicateError('Brand with name ' + data.name), result: null };
+      return {
+        error: new AppError(ErrorType.Duplicate, 'Brand already exists. [' + data.name + ']'),
+        result: null,
+      };
     }
     return { error: err, result: null };
   }
@@ -38,7 +41,7 @@ export async function updateBrand(
   try {
     const brand = await BrandModel.findByIdAndUpdate(id, { $set: data }, { new: true });
     if (!brand) {
-      throw new NotFoundError('Brand with id' + id);
+      throw AppError.notFound('Brand not found.');
     }
     return { result: _formatBrand(brand), error: null };
   } catch (err) {
@@ -49,7 +52,9 @@ export async function updateBrand(
 export async function removeBrand(id: string): Promise<Error | null> {
   try {
     const brand = await BrandModel.findById(id);
-    if (!brand) return new NotFoundError('Brand with ' + id);
+    if (!brand) {
+      throw AppError.notFound('Brand not found.');
+    }
     await BrandModel.findByIdAndRemove(id);
     return null;
   } catch (err) {
@@ -63,7 +68,9 @@ export async function addProductsToBrand(
 ): AsyncSafeResult<BrandResult> {
   try {
     const brand = await BrandModel.findById(brandId);
-    if (!brand) return { error: new NotFoundError('Brand with ' + brandId), result: null };
+    if (!brand) {
+      throw AppError.notFound('Brand not found.');
+    }
     await ProductModel.updateMany(
       { _id: { $in: prodIds } },
       { $set: { brand: brand._id, brandName: brand.name } },

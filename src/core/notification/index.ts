@@ -2,8 +2,9 @@ import firebase from 'firebase-admin';
 import firebaseConfig from '../../../firebase.json';
 import NotificationModel, { NotificationDB } from '@/database/models/notification';
 import UserModel from '@/database/models/user';
-import { AsyncSafeResult } from '@type/common';
+import { AsyncSafeResult } from '../types';
 import Config from '@/config';
+import { AppError } from '../errors';
 
 export enum NotificationType {
   GENERAL = 'GENERAL',
@@ -97,7 +98,7 @@ class Notification {
   private async pushForUser(message: NotificationMessage) {
     const user = await UserModel.findById(this.to);
     if (!user) {
-      throw new Error();
+      throw AppError.unauthorized();
     }
     let notification: NotificationMessage | undefined = undefined;
     if (Config.Default_Notification) {

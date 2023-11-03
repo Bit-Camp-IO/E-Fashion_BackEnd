@@ -1,8 +1,10 @@
 import AddressModel, { AddressDB } from '@/database/models/address';
-import { AddAddressData, AddressData } from './interfaces';
+import { AddAddressData, AddressResult } from './interfaces';
 import UserModel from '@/database/models/user';
-import { AsyncSafeResult } from '@type/common';
-import { NotFoundError } from '../errors';
+import { AsyncSafeResult } from '../types';
+import { AppError } from '../errors';
+
+export * from './interfaces';
 
 export async function addAddress(
   id: string,
@@ -10,9 +12,13 @@ export async function addAddress(
 ): AsyncSafeResult<AddressResult> {
   try {
     const address = await AddressModel.create(addressData);
-    const user = await UserModel.findByIdAndUpdate(id, { $set: { address: address } }, { new: true });
+    const user = await UserModel.findByIdAndUpdate(
+      id,
+      { $set: { address: address } },
+      { new: true },
+    );
     if (!user) {
-      throw new NotFoundError('User with id' + id);
+      throw AppError.unauthorized();
     }
     return { result: _formatAddress(address), error: null };
   } catch (err) {
@@ -20,17 +26,15 @@ export async function addAddress(
   }
 }
 
-export interface AddressResult extends AddressData {
-  id: string;
-}
-
 export async function getUserAddress(userId: string): AsyncSafeResult<AddressResult> {
   try {
     const user = await UserModel.findById(userId, { address: 1 }).populate<{
       address: AddressDB;
     }>('address');
-    if (!user) throw new NotFoundError('User');
-    if (!user.address) throw new NotFoundError('Address')
+    if (!user) {
+      throw AppError.unauthorized();
+    }
+    if (!user.address) throw AppError.notFound('Address not found.');
     return { error: null, result: _formatAddress(user.address) };
   } catch (error) {
     return { error, result: null };
@@ -41,7 +45,7 @@ export async function removeAddress(id: string, addressId: string): Promise<null
   try {
     const user = await UserModel.findByIdAndUpdate(id, { $unset: { address: 1 } });
     if (!user) {
-      throw new NotFoundError('User with id' + id);
+      throw AppError.unauthorized();
     }
     await AddressModel.findByIdAndRemove(addressId);
     return null;
@@ -56,7 +60,7 @@ function _formatAddress(add: AddressDB): AddressResult {
     isPrimary: add.isPrimary,
     location: {
       latitude: add.latitude,
-      longitude: add.longitude
-    }
+      longitude: add.longitude,
+    },
   };
 }

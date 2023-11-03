@@ -1,8 +1,8 @@
 import ReviewModel from '@/database/models/review';
 import { ProductReviewData, ReviewUserResponse, ReviewsResponse } from './interfaces';
-import { AsyncSafeResult } from '@type/common';
+import { AsyncSafeResult } from '../types';
 import { UserDB } from '@/database/models/user';
-import { NotFoundError } from '../errors';
+import { AppError } from '../errors';
 import * as Helper from './helper';
 import ProductModel from '@/database/models/product';
 
@@ -11,7 +11,7 @@ export async function listReviews(productId: string): AsyncSafeResult<ReviewsRes
     const reviews = await ReviewModel.find({ product: productId }).populate<{ user: UserDB }>(
       'user',
     );
-    if (!reviews) throw new NotFoundError('Product with id ' + productId);
+    if (!reviews) throw AppError.notFound('Product with id ' + productId + ' not found.');
     return { result: Helper._formatReviewList(reviews), error: null };
   } catch (err) {
     return { error: err, result: null };
@@ -26,7 +26,7 @@ export async function userRateOnProduct(
     const review = await ReviewModel.findOne({
       $and: [{ user: userId }, { product: productId }],
     }).populate('user');
-    if (!review) throw new NotFoundError('Rate');
+    if (!review) throw AppError.notFound('Rate not found.');
     const result: ReviewUserResponse = Helper._formatReview(review);
     return { result, error: null };
   } catch (error) {
@@ -40,7 +40,7 @@ export async function addReviewToProduct(
   try {
     const product = await ProductModel.findById(reviewData.productId);
     if (!product) {
-      throw new NotFoundError('Product with Id ' + reviewData.productId);
+      throw AppError.notFound('Product with Id ' + reviewData.productId + ' not found.');
     }
     let review = await ReviewModel.findOne({
       $and: [{ user: reviewData.userId }, { product: reviewData.productId }],
@@ -78,14 +78,14 @@ export async function removeReview(reviewId: string, userId: string): Promise<Er
   try {
     const review = await ReviewModel.findById(reviewId);
     if (!review) {
-      throw new NotFoundError('Review with id ' + reviewId);
+      throw AppError.notFound('Review with id ' + reviewId + ' not found.');
     }
 
     const productId = review.product;
     const product = await ProductModel.findById(productId);
 
     if (!product) {
-      throw new NotFoundError('Product with id ' + productId);
+      throw AppError.notFound('Product with id ' + productId + ' not found.');
     }
 
     await ProductModel.findByIdAndUpdate(productId, { $pull: { reviews: reviewId } });

@@ -2,8 +2,8 @@ import UserModel from '@/database/models/user';
 import bcrypt from 'bcrypt';
 import { createToken, verifyToken } from './token';
 import Config from '@/config';
-import { AsyncSafeResult, SafeResult } from '@type/common';
 import { AppError, ErrorType } from '../errors';
+import { AsyncSafeResult, SafeResult } from '../types';
 
 interface UserRegistrationData {
   email: string;

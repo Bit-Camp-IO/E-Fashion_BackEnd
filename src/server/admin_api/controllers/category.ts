@@ -4,9 +4,8 @@ import { CreateCategorySchema, createCategorySchema, updateCategorySchema } from
 import { Request, Response } from 'express';
 import { Admin } from '@/core/admin/admin';
 import { CategoryData } from '@/core/category/interfaces';
-import RequestError from '@server/utils/errors';
+import RequestError, { handleResultError, unwrapResult } from '@server/utils/errors';
 import { HttpStatus } from '@server/utils/status';
-import { DuplicateError, NotFoundError } from '@/core/errors';
 import { validateId } from '@/core/utils';
 
 @Controller()
@@ -17,12 +16,13 @@ class CategoryController {
     const admin = req.admin as Admin;
     const body: CreateCategorySchema = req.body;
     const category = await admin.addCategory(body);
-    if (category.error) {
-      if (category.error instanceof DuplicateError)
-        throw new RequestError(category.error.message, HttpStatus.BadRequest);
-      throw RequestError._500();
-    }
-    res.JSON(HttpStatus.Created, category.result);
+    // if (category.error) {
+    //   if (category.error instanceof DuplicateError)
+    //     throw new RequestError(category.error.message, HttpStatus.BadRequest);
+    //   throw RequestError._500();
+    // }
+    const result = unwrapResult(category);
+    res.JSON(HttpStatus.Created, result);
   }
 
   @Validate(updateCategorySchema)
@@ -38,10 +38,11 @@ class CategoryController {
       gender: body.gender,
     };
     const product = await admin.editCategory(productData, id);
-    if (product.error) {
-      throw RequestError._500();
-    }
-    res.JSON(HttpStatus.Ok, product.result);
+    // if (product.error) {
+    //   throw RequestError._500();
+    // }
+    const result = unwrapResult(product);
+    res.JSON(HttpStatus.Ok, result);
   }
 
   @Guard(AdminRole.ADMIN)
@@ -49,10 +50,13 @@ class CategoryController {
     const admin = req.admin as Admin;
     const { id } = req.params;
     const error = await admin.removeCategory(id);
+    // if (error) {
+    //   if (error instanceof NotFoundError)
+    //     throw new RequestError(error.message, HttpStatus.NotFound);
+    //   throw RequestError._500();
+    // }
     if (error) {
-      if (error instanceof NotFoundError)
-        throw new RequestError(error.message, HttpStatus.NotFound);
-      throw RequestError._500();
+      handleResultError(error);
     }
     res.JSON(HttpStatus.Ok);
   }
@@ -64,12 +68,13 @@ class CategoryController {
       if (!validateId) throw new RequestError('Invalid id' + id, HttpStatus.BadRequest);
     }
     const cat = await admin.addProductsToCategory(req.params['id']!, ids);
-    if (cat.error) {
-      if (cat.error instanceof NotFoundError)
-        throw new RequestError(cat.error.message, HttpStatus.BadRequest);
-      throw RequestError._500();
-    }
-    res.JSON(HttpStatus.Accepted, cat);
+    // if (cat.error) {
+    //   if (cat.error instanceof NotFoundError)
+    //     throw new RequestError(cat.error.message, HttpStatus.BadRequest);
+    //   throw RequestError._500();
+    // }
+    const result = unwrapResult(cat);
+    res.JSON(HttpStatus.Accepted, result);
   }
 
   @Guard(AdminRole.ADMIN)
@@ -80,8 +85,11 @@ class CategoryController {
       if (!validateId) throw new RequestError('Invalid id' + id, HttpStatus.BadRequest);
     }
     const error = await admin.removeProductsFromCategory(req.params['id']!, ids);
+    // if (error) {
+    //   throw RequestError._500();
+    // }
     if (error) {
-      throw RequestError._500();
+      handleResultError(error);
     }
     res.JSON(HttpStatus.Ok);
   }

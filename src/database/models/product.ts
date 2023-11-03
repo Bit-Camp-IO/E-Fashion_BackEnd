@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import { BrandDB } from './brand';
-import { CategorieDB } from './categorie';
+import { CategoryDB } from './category';
 import { AdminDB } from './admin';
 import { ObjectId, Relation } from '@type/database';
 
@@ -18,7 +18,7 @@ export interface ProductDB extends Document {
   is_new: boolean;
   available: boolean;
   discount?: number;
-  category: Relation<CategorieDB>;
+  category: Relation<CategoryDB>;
   addedBy: Relation<AdminDB>;
   tags: string[];
   gender: number;

@@ -1,11 +1,11 @@
 import { join } from 'node:path';
 import BrandModel from '@/database/models/brand';
 import type * as T from './interfaces';
-import { InvalidDataError, NotFoundError } from '../errors';
-import CategoryModel from '@/database/models/categorie';
+import { AppError } from '../errors';
+import CategoryModel from '@/database/models/category';
 import ProductModel from '@/database/models/product';
 import * as Helper from './helper';
-import { AsyncSafeResult } from '@type/common';
+import { AsyncSafeResult } from '../types';
 import { removeFile } from '../utils';
 import Config from '@/config';
 
@@ -21,13 +21,13 @@ export async function createProduct(
     };
     if (data.brandId) {
       const brand = await BrandModel.findById(data.brandId);
-      if (!brand) throw new InvalidDataError('Invalid Brand id ' + data.brandId);
+      if (!brand) throw AppError.invalid('Invalid Brand id ' + data.brandId);
       productModelData.brand = brand._id.toString();
       productModelData.brandName = brand.name;
     }
     if (data.categoryId) {
       const category = await CategoryModel.findById(data.categoryId);
-      if (!category) throw new InvalidDataError('Invalid Brand id ' + data.categoryId);
+      if (!category) throw AppError.invalid('Invalid Brand id ' + data.categoryId);
       productModelData.category = category._id;
     }
     const product = await ProductModel.create(productModelData);
@@ -100,7 +100,7 @@ export async function updateProduct(
       },
       { new: true },
     );
-    if (!product) throw new NotFoundError('Product with' + id);
+    if (!product) throw AppError.invalid('Product with' + id + ' not found.');
     return { result: Helper._formatProduct(product), error: null };
   } catch (err) {
     return { error: err, result: null };

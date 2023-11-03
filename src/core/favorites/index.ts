@@ -1,8 +1,8 @@
 import ProductModel, { ProductDB } from '@/database/models/product';
-import { NotFoundError, UnauthorizedError } from '../errors';
+import { AppError } from '../errors';
 import UserModel from '@/database/models/user';
 import { FavItem } from './interface';
-import { AsyncSafeResult } from '@type/common';
+import { AsyncSafeResult } from '../types';
 
 export class Favorites {
   constructor(private userId: string) {}
@@ -11,7 +11,10 @@ export class Favorites {
     try {
       const product = await ProductModel.findById(productId);
       if (!product)
-        return { error: new NotFoundError('Product with id ' + productId), result: null };
+        return {
+          error: AppError.notFound('Product with id ' + productId + ' not found'),
+          result: null,
+        };
       let user = await UserModel.findByIdAndUpdate(
         this.userId,
         {
@@ -19,7 +22,7 @@ export class Favorites {
         },
         { new: true },
       );
-      if (!user) return { error: new UnauthorizedError(), result: null };
+      if (!user) throw AppError.unauthorized();
       if (!populate) {
         return { result: user.favorites, error: null };
       }
@@ -43,7 +46,7 @@ export class Favorites {
   async getAll(populate: boolean): AsyncSafeResult<string[] | FavItem[]> {
     try {
       const user = await UserModel.findById(this.userId).exec();
-      if (!user) return { error: new UnauthorizedError(), result: null };
+      if (!user) throw AppError.unauthorized();
       if (!populate) {
         return { result: user.favorites, error: null };
       }

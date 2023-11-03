@@ -11,7 +11,7 @@ export type StripeMetadata = {
   collectionId?: string;
 };
 
-export async function createPaymnetIntents(d: StripeMetadata): Promise<null | string> {
+export async function createPaymentIntents(d: StripeMetadata): Promise<null | string> {
   try {
     const payment = await stripe.paymentIntents.create({
       amount: paymentAmount(d.totalPrice),

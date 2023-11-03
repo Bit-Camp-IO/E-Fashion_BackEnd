@@ -1,7 +1,7 @@
-import CategoryModel, { CategorieDB } from '@/database/models/categorie';
+import CategoryModel, { CategoryDB } from '@/database/models/category';
 import { CategoryData, CategoryResult } from './interfaces';
-import { AsyncSafeResult } from '@type/common';
-import { DuplicateError, NotFoundError } from '../errors';
+import { AsyncSafeResult } from '../types';
+import { AppError, ErrorType } from '../errors';
 import { removeFile } from '../utils';
 import { join } from 'path';
 import Config from '@/config';
@@ -23,7 +23,10 @@ export async function createCategory(
     return { result: _formatCategory(category), error: null };
   } catch (err) {
     if (err.code === 11000) {
-      return { error: new DuplicateError('Category with name ' + data.name), result: null };
+      return {
+        error: new AppError(ErrorType.Duplicate, 'Category with name ' + data.name),
+        result: null,
+      };
     }
     return { error: err, result: null };
   }
@@ -33,7 +36,7 @@ export async function getCategoryForUser(id: string): AsyncSafeResult<CategoryRe
   try {
     const category = await CategoryModel.findById(id);
     if (!category) {
-      throw new NotFoundError('Category with id' + id);
+      throw AppError.notFound('Category with id' + id);
     }
     return { result: _formatCategory(category), error: null };
   } catch (err) {
@@ -64,7 +67,7 @@ export async function updateCategory(
   try {
     const category = await CategoryModel.findByIdAndUpdate(id, { $set: cData }, { new: true });
     if (!category) {
-      throw new NotFoundError('Category with id' + id);
+      throw AppError.notFound('Category with id' + id);
     }
     return { result: _formatCategory(category), error: null };
   } catch (err) {
@@ -78,7 +81,7 @@ export async function AddProductToCategory(
 ): AsyncSafeResult<CategoryResult> {
   try {
     const cat = await CategoryModel.findById(catId);
-    if (!cat) return { error: new NotFoundError('Catergory with ' + catId), result: null };
+    if (!cat) return { error: AppError.notFound('Category with ' + catId), result: null };
     await ProductModel.updateMany(
       { _id: { $in: prodIds } },
       { $addToSet: { categories: cat._id } },
@@ -104,7 +107,7 @@ export async function removeProductFromCategory(
 export async function removeCategory(id: string): Promise<Error | null> {
   try {
     const category = await CategoryModel.findById(id);
-    if (!category) return new NotFoundError('Category with ' + id);
+    if (!category) return AppError.notFound('Category with ' + id);
     await removeFile(join(Config.CatImagesDir, category.imageURL));
     await CategoryModel.findByIdAndRemove(id);
     return null;
@@ -113,7 +116,7 @@ export async function removeCategory(id: string): Promise<Error | null> {
   }
 }
 
-function _formatCategory(cDoc: CategorieDB): CategoryResult {
+function _formatCategory(cDoc: CategoryDB): CategoryResult {
   return {
     id: cDoc.id.toString(),
     name: cDoc.name,

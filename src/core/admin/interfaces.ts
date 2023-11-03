@@ -12,3 +12,18 @@ export interface AdminData {
   phone: string;
   address?: string;
 }
+
+export interface AdminLogin {
+  email: string;
+  password: string;
+}
+
+export interface TokenResult {
+  token: string;
+}
+
+export enum AdminRole {
+  ADMIN = 'admin',
+  SUPER_ADMIN = 'superadmin',
+  MANAGER = 'manager',
+}

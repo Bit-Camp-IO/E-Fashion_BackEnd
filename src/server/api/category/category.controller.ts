@@ -1,7 +1,7 @@
 import { getAllCategories, getCategoryForUser } from '@/core/category';
 import { Gender, stringToGender } from '@/core/gender';
 import { Controller } from '@server/decorator';
-import RequestError from '@server/utils/errors';
+import { unwrapResult } from '@server/utils/errors';
 import { HttpStatus } from '@server/utils/status';
 import { Request, Response } from 'express';
 
@@ -10,9 +10,10 @@ class CategoryController {
   public async getOne(req: Request, res: Response) {
     const { id } = req.params;
     const category = await getCategoryForUser(id);
-    if (category.error) {
-      throw RequestError._500();
-    }
+    // if (category.error) {
+    //   throw RequestError._500();
+    // }
+    unwrapResult(category);
     res.JSON(HttpStatus.Ok, category.result);
   }
 
@@ -21,9 +22,10 @@ class CategoryController {
     let gender: Gender | undefined = stringToGender(genderQ);
 
     const category = await getAllCategories(gender);
-    if (category.error) {
-      throw RequestError._500();
-    }
+    // if (category.error) {
+    //   throw RequestError._500();
+    // }
+    unwrapResult(category);
     res.JSON(HttpStatus.Ok, category.result);
   }
 }

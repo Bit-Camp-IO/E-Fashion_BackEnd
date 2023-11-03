@@ -2,7 +2,7 @@ import mongoose, { Schema } from 'mongoose';
 import { AdminDB } from './admin';
 import { ObjectId, Relation } from '@type/database';
 
-export interface CategorieDB extends mongoose.Document {
+export interface CategoryDB extends mongoose.Document {
   name: string;
   description?: string;
   imageURL: string;
@@ -10,7 +10,7 @@ export interface CategorieDB extends mongoose.Document {
   gender: number;
 }
 
-const categorySchema = new Schema<CategorieDB>(
+const categorySchema = new Schema<CategoryDB>(
   {
     name: {
       type: String,

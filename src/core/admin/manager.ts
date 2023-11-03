@@ -1,6 +1,6 @@
 import AdminModel from '@/database/models/admin';
-import { DuplicateError, ManagerExistError } from '../errors';
-import { AsyncSafeResult } from '@type/common';
+import { AppError, ErrorType } from '../errors';
+import { AsyncSafeResult } from '../types';
 import { AdminData, AdminResult } from './interfaces';
 import bcrypt from 'bcrypt';
 import { SuperAdmin } from './admin';
@@ -36,7 +36,7 @@ class Manager extends SuperAdmin {
       return { result, error: null };
     } catch (err) {
       if (err.code === 11000) {
-        err = new DuplicateError('Super Admin');
+        err = new AppError(ErrorType.Duplicate, 'Super admin already registered.');
       }
       return { error: err, result: null };
     }
@@ -47,7 +47,7 @@ export async function createManager(managerData: AdminData): AsyncSafeResult<Adm
   try {
     const managerExist = await Manager.managerExist();
     if (managerExist) {
-      throw new ManagerExistError();
+      throw new AppError(ErrorType.ManagerExist, 'Manager already assigned to this project role.');
     }
     const hashedPassword = await bcrypt.hash(managerData.password, 12);
     const manager = await AdminModel.create({

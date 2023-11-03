@@ -1,5 +1,7 @@
+import { AppError } from '../errors';
+
 interface WithError {
-  error: Error;
+  error: Error | AppError;
   result: null;
 }
 

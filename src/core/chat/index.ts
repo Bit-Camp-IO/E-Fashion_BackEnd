@@ -1,7 +1,7 @@
 import ChatModel, { ChatDB, ChatStatus } from '@/database/models/chat';
 import { ChatData, MessageResult } from './interfaces';
-import { AsyncSafeResult } from '@type/common';
-import { DuplicateError, NotFoundError, UnauthorizedError } from '../errors';
+import { AsyncSafeResult } from '../types';
+import { AppError, ErrorType } from '../errors';
 import AdminModel from '@/database/models/admin';
 import { verifyToken } from '../auth/token';
 import Config from '@/config';
@@ -15,7 +15,7 @@ export async function createChat(userId: string): AsyncSafeResult<ChatData> {
     });
 
     if (chatExists) {
-      throw new DuplicateError('An Active or Waiting chat ');
+      throw new AppError(ErrorType.Duplicate, 'An Active or Waiting chat ');
     }
     const chat = await ChatModel.create({
       user: userId,
@@ -46,7 +46,7 @@ export async function saveMessageToChat(
     const chat = await ChatModel.findById(chatID);
 
     if (!chat) {
-      throw new NotFoundError('Chat with id' + chatID);
+      throw AppError.notFound('Chat with id' + chatID);
     }
     let to: string = '';
     if (senderId === chat.user.toString()) {
@@ -54,7 +54,7 @@ export async function saveMessageToChat(
     } else if (senderId === chat.admin?.toString()) {
       to = chat.user.toString();
     } else {
-      throw new UnauthorizedError();
+      throw AppError.permission();
     }
     // const chat = await ChatModel.findByIdAndUpdate(
     //   chatID,
@@ -68,12 +68,12 @@ export async function saveMessageToChat(
     //   },
     //   { new: true },
     // );
-    const mesobj = {
+    const messageObj = {
       sender: senderId,
       content,
       createdAt: new Date(),
     };
-    chat.messages.push(mesobj);
+    chat.messages.push(messageObj);
     await chat.save();
     const lastMessage = chat.messages[chat.messages.length - 1];
     const result = {
@@ -105,7 +105,7 @@ export async function getChatById(id: string): AsyncSafeResult<ChatData> {
     const chat = await ChatModel.findOne({ id });
 
     if (!chat) {
-      throw new NotFoundError('Chat with id ' + id);
+      throw AppError.notFound('Chat not found.');
     }
     return { result: _formatChat(chat), error: null };
   } catch (err) {
@@ -117,7 +117,7 @@ export async function getUserChat(id: string): AsyncSafeResult<ChatData> {
   try {
     const chat = await ChatModel.findOne({ user: id, status: ['active', 'waiting'] });
     if (!chat) {
-      throw new NotFoundError('chat');
+      throw AppError.notFound('Chat not found.');
     }
     return { result: _formatChat(chat), error: null };
   } catch (err) {
@@ -132,10 +132,10 @@ export async function getChatMessages(
   try {
     const chat = await ChatModel.findById(id);
     if (!chat) {
-      throw new NotFoundError('chat');
+      throw AppError.notFound('Chat not found.');
     }
     if (userId !== chat.user.toString() && userId !== chat.admin?.toString()) {
-      throw new UnauthorizedError();
+      throw AppError.permission();
     }
     return { result: _formatMessages(chat, userId), error: null };
   } catch (error) {
@@ -147,7 +147,7 @@ export async function changeStatus(id: string, stuatus: string): AsyncSafeResult
   try {
     const chat = await ChatModel.findByIdAndUpdate(id, { $set: { status: stuatus } });
     if (!chat) {
-      throw new NotFoundError('Chat wit id' + id);
+      throw AppError.notFound('Chat not found.');
     }
     return { result: _formatChat(chat), error: null };
   } catch (error) {
@@ -161,7 +161,7 @@ export async function acceptChat(adminId: string, chatId: string): AsyncSafeResu
       $set: { status: 'active', admin: adminId },
     });
     if (!chat) {
-      throw new NotFoundError('Chat wit id' + chatId);
+      throw AppError.notFound('Chat not found.');
     }
     return { result: _formatChat(chat), error: null };
   } catch (error) {
@@ -173,10 +173,10 @@ export async function isChatActiveWithId(userId: string, chatId: string): Promis
   try {
     const chat = await ChatModel.findById(chatId);
     if (!chat) {
-      throw new NotFoundError('Chat ');
+      throw AppError.notFound('Chat not found.');
     }
     if (chat.user.toString() !== userId || chat.admin?.toString() !== userId) {
-      throw new UnauthorizedError();
+      throw AppError.permission();
     }
     return chat.status === ChatStatus.ACTIVE;
   } catch (err) {
@@ -188,15 +188,15 @@ export async function connectUser(token: string, chatId: string): AsyncSafeResul
   try {
     const chat = await ChatModel.findById(chatId);
     if (!chat) {
-      throw new NotFoundError('Chat ');
+      throw AppError.notFound('Chat not found.');
     }
     const userID = verifyToken(token, Config.ACCESS_TOKEN_PUBLIC_KEY).id;
     const user = await UserModel.findById(userID);
     if (!user) {
-      throw new UnauthorizedError();
+      throw AppError.permission();
     }
     if (chat.user!.toString() !== userID) {
-      throw new UnauthorizedError();
+      throw AppError.permission();
     }
     return { result: userID, error: null };
   } catch (error) {
@@ -208,15 +208,15 @@ export async function connectAdmin(token: string, chatId: string): AsyncSafeResu
   try {
     const chat = await ChatModel.findById(chatId);
     if (!chat) {
-      throw new NotFoundError('Chat ');
+      throw AppError.notFound('Chat not found.');
     }
     const adminId = verifyToken(token, Config.ACCESS_TOKEN_PUBLIC_KEY).id;
     const admin = await AdminModel.findById(adminId);
     if (!admin) {
-      throw new UnauthorizedError();
+      throw AppError.permission();
     }
     if (chat.admin!.toString() !== adminId) {
-      throw new UnauthorizedError();
+      throw AppError.permission();
     }
     return { result: adminId, error: null };
   } catch (error) {

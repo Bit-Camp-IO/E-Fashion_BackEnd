@@ -1,11 +1,11 @@
-import { AsyncSafeResult } from '@type/common';
+import { AsyncSafeResult } from '../types';
 import { OrderPaymentMethod, OrderResult, PaymentIntents } from './interfaces';
 import { OrderPayment } from './order';
 import UserModel, { UserDB } from '@/database/models/user';
 import CartModel, { CartDB } from '@/database/models/cart';
-import { InvalidDataError } from '../errors';
+import { AppError } from '../errors';
 import { getCartItemsInfo } from '../user/cart';
-import { createPaymnetIntents } from '../payment/stripe';
+import { createPaymentIntents } from '../payment/stripe';
 import OrderModel from '@/database/models/order';
 import * as Helper from './helper';
 
@@ -19,7 +19,7 @@ export class CartOrder extends OrderPayment {
 
       let clientSecret: string | null = null;
       const { totalPrice } = await this.populateCart(user);
-      clientSecret = await createPaymnetIntents({
+      clientSecret = await createPaymentIntents({
         userId: user._id.toString(),
         totalPrice: totalPrice,
       });
@@ -36,9 +36,9 @@ export class CartOrder extends OrderPayment {
   ): Promise<{ totalPrice: number; user: UserDB; cart: CartDB }> {
     await user.populate<{ cart: CartDB | null }>('cart');
     const cart = user.cart;
-    if (!cart) throw new InvalidDataError('Cart Not exsits');
+    if (!cart) throw AppError.invalid('Cart Not exist');
     if (cart.items.length === 0) {
-      throw new InvalidDataError('Cart is empty!');
+      throw AppError.invalid('Cart is empty!');
     }
     await cart.populate('items.product');
     const totalPrice = getCartItemsInfo(cart).totalPrice;
