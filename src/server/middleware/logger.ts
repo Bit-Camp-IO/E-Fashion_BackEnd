@@ -6,7 +6,12 @@ export function logger(app: express.Express) {
     const path = req.path;
     const method = req.method;
     const msStart = new Date().getTime();
-    logRequest(method, path, req.ip, req.get('user-agent') || '');
+    logRequest(
+      method,
+      path,
+      process.env['NODE_ENV'] === 'production' ? '[RESTRICTED]' : req.ip,
+      req.get('user-agent') || '',
+    );
     res.end = function (...d: any) {
       logResponse(method, path, res.statusCode, new Date().getTime() - msStart);
       res.end = end;
