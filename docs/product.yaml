@@ -1,0 +1,366 @@
+paths:
+  '/api/product/list':
+    get:
+      tags:
+        - Products
+      summary: Products List
+      description: Endpoint for getting a list of products with filter, sort, or search.
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: number
+          default: 1
+          description: Number of page
+        - in: query
+          name: limit
+          schema:
+            type: number
+          default: 20
+          description: Number of returned products
+        - in: query
+          name: max-price
+          schema:
+            type: number
+          description: Set max price limit
+        - in: query
+          name: min-price
+          schema:
+            type: number
+          description: Set min price limit
+        - in: query
+          name: gender
+          schema:
+            type: number
+          description: Filter with gender (0 = all | 1 = male | 2 = female)
+        - in: query
+          name: categories
+          schema:
+            type: string
+          description: Filter with Categories IDs e.x. categories=1,2,3
+        - in: query
+          name: brands
+          schema:
+            type: string
+          description: Filter with Brands IDs e.x. brands=1,2,3
+        - in: query
+          name: discount
+          schema:
+            type: boolean
+          description: Return products with a discount
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Search with the name of products
+        - in: query
+          name: sort-price
+          schema:
+            type: string
+          description: Sort with price (1, -1, asc, desc)
+        - in: query
+          name: sort-new
+          schema:
+            type: string
+          description: Sort with the most recent product (1, -1, asc, desc)
+        - in: query
+          name: sort-popularity
+          schema:
+            type: string
+          description: Sort with rate (1, -1, asc, desc)
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductsList'
+
+  '/api/product/{product_id}':
+    get:
+      tags:
+        - Products
+      summary: Product Data
+      description: Get all product data
+      parameters:
+        - name: product_id
+          in: path
+          description: ID of the product in the URL
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+
+  '/api/product/list/info':
+    get:
+      tags:
+        - Products
+      summary: Get information about products
+      description: Retrieves product information available in the database, such as minimum price, maximum price, colors, and sizes.
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  minPrice:
+                    type: number
+                    example: 10
+                  maxPrice:
+                    type: number
+                    example: 1000
+                  colors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          example: red
+                        hex:
+                          type: string
+                          example: '#ff0000'
+                  sizes:
+                    type: array
+                    items:
+                      type: string
+                      example:
+                        - s
+                        - m
+                        - l
+
+  '/api/product/{product_id}/rate':
+    get:
+      tags:
+        - Products
+        - Reviews
+      summary: Reviews List
+      description: Get all reviews and rate for the product
+      parameters:
+        - name: product_id
+          in: path
+          description: ID of the product in the URL
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewList'
+
+    post:
+      tags:
+        - Products
+        - Reviews
+      summary: Add or edit review
+      description: Add a new review for the product or update if it already exists
+      parameters:
+        - name: product_id
+          in: path
+          description: ID of the product in the URL
+          required: true
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                comment:
+                  type: string
+                rate:
+                  type: number
+                  required: true
+                  example: 4
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+
+  '/api/product/{product_id}/rate/my-rating':
+    get:
+      tags:
+        - Products
+        - Reviews
+      summary: User Review on product
+      description: Get the user review on the product by ID
+      parameters:
+        - name: product_id
+          in: path
+          description: ID of the product in the URL
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+
+  '/api/product/rate/{review_id}':
+    delete:
+      tags:
+        - Products
+        - Reviews
+      summary: Remove Review
+      description: Remove a review from the product
+      parameters:
+        - name: review_id
+          in: path
+          description: ID of the product in the URL
+          required: true
+          type: string
+      responses:
+        '204':
+          description: successful operation
+
+components:
+  schemas:
+    ProductsList:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+            example: 64bc9cea76944a21267274a9
+          title:
+            type: string
+            example: Men's Slim-Fit Jeans
+          imageUrl:
+            type: string
+            example: /Men's_Slim-Fit_Jeans.png
+          price:
+            type: number
+            example: 18.99
+          oldPrice:
+            type: number
+            example: 20.99
+          discount:
+            type: number
+            example: 2
+
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 64bc9cea76944a21267274a9
+        title:
+          type: string
+          example: Men's Slim-Fit Jeans
+        imagesUrl:
+          type: array
+          items:
+            type: string
+            example:
+              - /Men's_Slim-Fit_Jeans.png
+              - /Men's_Slim-Fit_Jeans2.png
+              - /Men's_Slim-Fit_Jeans3.png
+        price:
+          type: number
+          example: 18.99
+        oldPrice:
+          type: number
+          example: 20.99
+        discount:
+          type: number
+          example: 2
+        colors:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                example: red
+              hex:
+                type: string
+                example: '#ff0000'
+        sizes:
+          type: array
+          items:
+            type: string
+            example:
+              - s
+              - m
+              - l
+        isNew:
+          type: boolean
+          example: true
+        available:
+          type: boolean
+          example: true
+        rate:
+          type: number
+          example: 4
+        brand:
+          type: string
+          example: Zara
+        description:
+          type: string
+          example: These slim-fit jeans are perfect for a casual day out. They feature a classic five-pocket design and are made from stretch denim for added comfort. Available in multiple washes
+        gender:
+          type: number
+          example: 1
+          description: Gender is a number from 0 to 2 => man = 1 | women = 2 | all = 0
+
+    Review:
+      type: object
+      properties:
+        id:
+          type: string
+        user:
+          type: object
+          properties:
+            id:
+              type: string
+            fullName:
+              type: string
+            profileImage:
+              type: string
+        comment:
+          type: string
+        rate:
+          type: number
+        createdAt:
+          type: date
+        updatedAt:
+          type: date
+
+    ReviewList:
+      type: object
+      properties:
+        average:
+          type: number
+        rateCount:
+          type: object
+          properties:
+            1:
+              type: number
+            2:
+              type: number
+            3:
+              type: number
+            4:
+              type: number
+            5:
+              type: number
+            total:
+              type: number
+        reviews:
+          $ref: '#/components/schemas/Review'

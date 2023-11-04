@@ -14,10 +14,10 @@ const options: swaggerJSDoc.Options = {
       license: { name: 'Apache License', url: 'https://www.apache.org/licenses/LICENSE-2.0' },
     },
     components: {
-      securitySchemas: {
+      securitySchemes: {
         bearerAuth: {
           type: 'http',
-          schema: 'bearer',
+          scheme: 'bearer',
           bearerFormat: 'JWT',
         },
       },

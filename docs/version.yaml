@@ -1,0 +1,9 @@
+paths:
+  '/api/version':
+    get:
+      tags:
+        - Version
+      description: Response with API version
+      responses:
+        '200':
+          description: successful operation
