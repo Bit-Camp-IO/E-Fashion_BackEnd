@@ -1,8 +1,7 @@
-import { NotFoundError } from '@/core/errors';
 import * as ProductServices from '@/core/product';
 import { validateId } from '@/core/utils';
 import { Controller, Validate } from '@server/decorator';
-import RequestError from '@server/utils/errors';
+import RequestError, { handleResultError, unwrapResult } from '@server/utils/errors';
 import { HttpStatus } from '@server/utils/status';
 import { Request, RequestHandler, Response } from 'express';
 import { ReviewSchema, reviewSchema } from './product.valid';
@@ -74,29 +73,32 @@ class ProductController implements ProductHandler {
     if (_sortWithRate) options.sort.popularity = _sortWithRate;
 
     const products = await ProductServices.getProductsList(options);
-    if (products.error) {
-      throw RequestError._500();
-    }
+    // if (products.error) {
+    //   throw RequestError._500();
+    // }
+    unwrapResult(products);
     res.JSON(HttpStatus.Ok, products.result);
   }
 
   async getOne(req: Request, res: Response) {
     const productId = req.params.id;
     const product = await ProductServices.getProductForUser(productId);
-    if (product.error) {
-      if (product.error instanceof NotFoundError) {
-        throw new RequestError(product.error.message, HttpStatus.NotFound);
-      }
-      throw RequestError._500();
-    }
+    // if (product.error) {
+    //   if (product.error instanceof NotFoundError) {
+    //     throw new RequestError(product.error.message, HttpStatus.NotFound);
+    //   }
+    //   throw RequestError._500();
+    // }
+    unwrapResult(product);
     res.JSON(HttpStatus.Ok, product.result);
   }
 
   async listInfo(_: Request, res: Response) {
     const info = await ProductServices.productsInfo();
-    if (info.error) {
-      throw RequestError._500();
-    }
+    // if (info.error) {
+    //   throw RequestError._500();
+    // }
+    unwrapResult(info);
     res.JSON(HttpStatus.Ok, info.result);
   }
 
@@ -112,12 +114,13 @@ class ProductController implements ProductHandler {
       comment: body.comment,
     };
     const review = await ProductServices.addReviewToProduct(reviewData);
-    if (review.error) {
-      if (review.error instanceof NotFoundError) {
-        throw new RequestError(review.error.message, HttpStatus.BadRequest);
-      }
-      throw RequestError._500();
-    }
+    // if (review.error) {
+    //   if (review.error instanceof NotFoundError) {
+    //     throw new RequestError(review.error.message, HttpStatus.BadRequest);
+    //   }
+    //   throw RequestError._500();
+    // }
+    unwrapResult(review);
     res.JSON(HttpStatus.Created, review.result);
   }
 
@@ -125,11 +128,14 @@ class ProductController implements ProductHandler {
     const reviewId = req.params['id'];
     if (!validateId(reviewId)) throw new RequestError('invalid review id', HttpStatus.BadRequest);
     const error = await ProductServices.removeReview(reviewId, req.userId!);
+    // if (error) {
+    //   if (error instanceof NotFoundError) {
+    //     throw new RequestError(error.message, HttpStatus.BadRequest);
+    //   }
+    //   throw RequestError._500();
+    // }
     if (error) {
-      if (error instanceof NotFoundError) {
-        throw new RequestError(error.message, HttpStatus.BadRequest);
-      }
-      throw RequestError._500();
+      handleResultError(error);
     }
     res.JSON(HttpStatus.Ok);
   }
@@ -138,12 +144,13 @@ class ProductController implements ProductHandler {
     const productId = req.params.id;
     if (!validateId(productId)) throw new RequestError('invalid product id', HttpStatus.BadRequest);
     const reviews = await ProductServices.listReviews(productId);
-    if (reviews.error) {
-      if (reviews.error instanceof NotFoundError) {
-        throw new RequestError(reviews.error.message, HttpStatus.NotFound);
-      }
-      throw RequestError._500();
-    }
+    // if (reviews.error) {
+    //   if (reviews.error instanceof NotFoundError) {
+    //     throw new RequestError(reviews.error.message, HttpStatus.NotFound);
+    //   }
+    //   throw RequestError._500();
+    // }
+    unwrapResult(reviews);
     res.JSON(HttpStatus.Ok, reviews.result);
   }
 
@@ -151,12 +158,13 @@ class ProductController implements ProductHandler {
     const productId = req.params.id;
     if (!validateId(productId)) throw new RequestError('invalid product id', HttpStatus.BadRequest);
     const review = await ProductServices.userRateOnProduct(req.userId!, productId);
-    if (review.error) {
-      if (review.error instanceof NotFoundError) {
-        throw new RequestError(review.error.message, HttpStatus.NotFound);
-      }
-      throw RequestError._500();
-    }
+    // if (review.error) {
+    //   if (review.error instanceof NotFoundError) {
+    //     throw new RequestError(review.error.message, HttpStatus.NotFound);
+    //   }
+    //   throw RequestError._500();
+    // }
+    unwrapResult(review);
     res.JSON(HttpStatus.Ok, review.result);
   }
 }

@@ -2,11 +2,11 @@ import bcrypt from 'bcrypt';
 import { Document } from 'mongoose';
 import * as Product from '../product';
 import { ProductData, ProductResponse } from '../product/interfaces';
-import { AsyncSafeResult } from '@type/common';
+import { AsyncSafeResult } from '../types';
 import { AdminData, AdminResult } from './interfaces';
 import AdminModel from '@/database/models/admin';
 import { CategoryData, CategoryResult } from '../category/interfaces';
-import { DuplicateError, NotFoundError, PermissionError } from '../errors';
+import { AppError } from '../errors';
 import UserModel, { UserDB } from '@/database/models/user';
 import * as Category from '../category';
 import { BrandData, BrandResult } from '../brand/interfaces';
@@ -57,7 +57,7 @@ export class Admin implements AdminService {
     try {
       const user = await UserModel.findById({ _id: id });
       if (!user) {
-        throw new NotFoundError('User With id ' + id);
+        throw AppError.notFound('User not found.');
       }
       return { result: user, error: null };
     } catch (err) {
@@ -93,10 +93,10 @@ export class Admin implements AdminService {
     try {
       const user = await UserModel.findById({ _id: id });
       if (!user) {
-        throw new NotFoundError('User With id ' + id);
+        throw AppError.notFound('User not found.');
       }
       if (user.banned) {
-        throw new Error('User is already banned');
+        throw AppError.invalid('User is already banned');
       }
       user.banned = true;
       await user.save();
@@ -110,10 +110,10 @@ export class Admin implements AdminService {
     try {
       const user = await UserModel.findById({ _id: id });
       if (!user) {
-        throw new NotFoundError('User With id ' + id);
+        throw AppError.notFound('User not found.');
       }
       if (!user.banned) {
-        throw new Error('User is not banned');
+        throw AppError.invalid('User is already banned');
       }
       user.banned = false;
       await user.save();
@@ -224,7 +224,7 @@ export class SuperAdmin extends Admin implements SuperAdminService {
       return { error: null, result };
     } catch (err) {
       if (err.code === 11000) {
-        err = new DuplicateError('Admin');
+        err = AppError.invalid('Can not create Admin');
       }
       return { error: err, result: null };
     }
@@ -233,14 +233,14 @@ export class SuperAdmin extends Admin implements SuperAdminService {
   async removeAdmin(id: string): Promise<Error | null> {
     try {
       const adminDB = await AdminModel.findById(id);
-      if (!adminDB) throw new Error('');
+      if (!adminDB) throw AppError.notFound('Admin not found.');
 
       if (this._id === adminDB._id.toString()) {
-        return new PermissionError();
+        throw AppError.permission();
       }
 
       if (this._role === 'superadmin' && ['superadmin', 'manager'].includes(adminDB.role)) {
-        return new PermissionError();
+        throw AppError.permission();
       }
 
       await AdminModel.deleteOne({ _id: id });

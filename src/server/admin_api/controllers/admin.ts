@@ -1,10 +1,10 @@
 import { Controller, Guard, Validate } from '@server/decorator';
-import RequestError from '@server/utils/errors';
+import RequestError, { handleResultError, unwrapResult } from '@server/utils/errors';
 import { HttpStatus } from '@server/utils/status';
 import { Request, Response } from 'express';
 import { AdminBody, adminSchema } from '../valid';
 import { AdminRole, getAdminServices } from '@/core/admin';
-import { DuplicateError, PermissionError, UnauthorizedError } from '@/core/errors';
+// import { DuplicateError, PermissionError, UnauthorizedError } from '@/core/errors';
 import { Admin, SuperAdmin } from '@/core/admin/admin';
 
 @Controller()
@@ -21,13 +21,14 @@ class AdminController {
       phone: body.phone,
       address: body.address,
     });
-    if (newAdmin.error) {
-      if (newAdmin.error instanceof DuplicateError) {
-        throw new RequestError(newAdmin.error.message, HttpStatus.BadRequest);
-      }
-      throw RequestError._500();
-    }
-    res.JSON(HttpStatus.Created, newAdmin.result);
+    // if (newAdmin.error) {
+    //   if (newAdmin.error instanceof DuplicateError) {
+    //     throw new RequestError(newAdmin.error.message, HttpStatus.BadRequest);
+    //   }
+    //   throw RequestError._500();
+    // }
+    const result = unwrapResult(newAdmin);
+    res.JSON(HttpStatus.Created, result);
   }
 
   public async removeAdmin(req: Request, res: Response) {
@@ -35,22 +36,25 @@ class AdminController {
     if (!id) {
       throw new RequestError('Require admin id to remove', HttpStatus.BadRequest);
     }
-    const { result: superAdmin, error } = await getAdminServices(
-      req.userId!,
-      AdminRole.SUPER_ADMIN,
-    );
+    let { result: superAdmin, error } = await getAdminServices(req.userId!, AdminRole.SUPER_ADMIN);
+    // if (error) {
+    //   if (error instanceof UnauthorizedError) {
+    //     throw new RequestError(error.message, HttpStatus.Unauthorized);
+    //   }
+    //   throw RequestError._500();
+    // }
     if (error) {
-      if (error instanceof UnauthorizedError) {
-        throw new RequestError(error.message, HttpStatus.Unauthorized);
-      }
-      throw RequestError._500();
+      handleResultError(error);
     }
-    const err = await superAdmin.removeAdmin(id);
-    if (err) {
-      if (err instanceof PermissionError) {
-        throw new RequestError(err.message, HttpStatus.Unauthorized);
-      }
-      throw RequestError._500();
+    error = await superAdmin!.removeAdmin(id);
+    // if (err) {
+    //   if (err instanceof PermissionError) {
+    //     throw new RequestError(err.message, HttpStatus.Unauthorized);
+    //   }
+    //   throw RequestError._500();
+    // }
+    if (error) {
+      handleResultError(error);
     }
     res.JSON(HttpStatus.Ok);
   }
@@ -61,27 +65,34 @@ class AdminController {
       req.userId!,
       AdminRole.SUPER_ADMIN,
     );
+    // if (error) {
+    //   if (error instanceof UnauthorizedError) {
+    //     throw new RequestError(error.message, HttpStatus.Unauthorized);
+    //   }
+    //   throw RequestError._500();
+    // }
     if (error) {
-      if (error instanceof UnauthorizedError) {
-        throw new RequestError(error.message, HttpStatus.Unauthorized);
-      }
-      throw RequestError._500();
+      handleResultError(error);
     }
     const adminsList = await superAdmin.getAdminsList(role);
 
-    if (adminsList.error) {
-      throw RequestError._500();
-    }
-    res.JSON(HttpStatus.Ok, adminsList.result);
+    // if (adminsList.error) {
+    //   throw RequestError._500();
+    // }
+    const result = unwrapResult(adminsList);
+    res.JSON(HttpStatus.Ok, result);
   }
 
   public async getAllUsers(req: Request, res: Response) {
     const { result: admin, error } = await getAdminServices(req.userId!, AdminRole.ADMIN);
+    // if (error) {
+    //   if (error instanceof UnauthorizedError) {
+    //     throw new RequestError(error.message, HttpStatus.Unauthorized);
+    //   }
+    //   throw RequestError._500();
+    // }
     if (error) {
-      if (error instanceof UnauthorizedError) {
-        throw new RequestError(error.message, HttpStatus.Unauthorized);
-      }
-      throw RequestError._500();
+      handleResultError(error);
     }
     const users = await admin.getAllUsers();
     res.JSON(HttpStatus.Ok, users.result);
@@ -90,11 +101,14 @@ class AdminController {
   public async getOneUser(req: Request, res: Response) {
     const { id } = req.params;
     const { result: admin, error } = await getAdminServices(req.userId!, AdminRole.ADMIN);
+    // if (error) {
+    //   if (error instanceof UnauthorizedError) {
+    //     throw new RequestError(error.message, HttpStatus.Unauthorized);
+    //   }
+    //   throw RequestError._500();
+    // }
     if (error) {
-      if (error instanceof UnauthorizedError) {
-        throw new RequestError(error.message, HttpStatus.Unauthorized);
-      }
-      throw RequestError._500();
+      handleResultError(error);
     }
     const user = await admin.getOneUser(id);
     res.JSON(HttpStatus.Ok, user.result);
@@ -104,22 +118,28 @@ class AdminController {
   public async banUser(req: Request, res: Response) {
     const { id } = req.params;
     const admin = req.admin as Admin;
-    const result = await admin.banUser(id);
-    if (result instanceof Error) {
-      throw new RequestError(result.message, HttpStatus.BadRequest);
+    const error = await admin.banUser(id);
+    // if (result instanceof Error) {
+    //   throw new RequestError(result.message, HttpStatus.BadRequest);
+    // }
+    if (error) {
+      handleResultError(error);
     }
-    res.JSON(HttpStatus.Ok, result);
+    res.JSON(HttpStatus.Ok);
   }
 
   @Guard(AdminRole.ADMIN)
   public async unBanUser(req: Request, res: Response) {
     const { id } = req.params;
     const admin = req.admin as Admin;
-    const result = await admin.unBanUser(id);
-    if (result instanceof Error) {
-      throw new RequestError(result.message, HttpStatus.BadRequest);
+    const error = await admin.unBanUser(id);
+    // if (error instanceof Error) {
+    //   throw new RequestError(error.message, HttpStatus.BadRequest);
+    // }
+    if (error) {
+      handleResultError(error);
     }
-    res.JSON(HttpStatus.Ok, result);
+    res.JSON(HttpStatus.Ok, error);
   }
 }
 

@@ -1,20 +1,15 @@
 import UserModel, { UserDB } from '@/database/models/user';
-import { AsyncSafeResult } from '@type/common';
-import {
-  InvalidCredentialsError,
-  InvalidDataError,
-  NotFoundError,
-  UnauthorizedError,
-} from '../errors';
+import { AsyncSafeResult } from '../types';
+import { AppError, ErrorType } from '../errors';
 import { UserResult } from './interfaces';
 import { Cart } from './cart';
 import { CartDB } from '@/database/models/cart';
-import { removeFile } from '../utils';
 import { AddAddressData } from '../address/interfaces';
 import { AddressResult, addAddress, getUserAddress, removeAddress } from '../address';
 import { join } from 'node:path';
 import Config from '@/config';
 import bcrypt from 'bcrypt';
+import { removeFile } from '../utils';
 
 interface ProfileImageResult {
   path: string;
@@ -25,7 +20,7 @@ export class User {
   async getMyCart(): AsyncSafeResult<Cart> {
     try {
       const user = await UserModel.findById(this._id).populate<{ cart: CartDB }>('cart').exec();
-      if (!user) return { error: new NotFoundError('User with id ' + this._id), result: null };
+      if (!user) throw AppError.unauthorized();
       let cart = user.cart;
       if (!cart) {
         cart = await Cart.createCart();
@@ -41,7 +36,7 @@ export class User {
   async me(): AsyncSafeResult<UserResult> {
     try {
       const user = await UserModel.findById(this._id);
-      if (!user) return { error: new NotFoundError('User with id ' + this._id), result: null };
+      if (!user) throw AppError.unauthorized();
       const result: UserResult = _formatUser(user);
       return { result, error: null };
     } catch (err) {
@@ -52,9 +47,7 @@ export class User {
   async editMe(data: any): AsyncSafeResult<UserResult> {
     try {
       const user = await UserModel.findByIdAndUpdate(this._id, data, { new: true });
-      if (!user) {
-        throw new InvalidDataError('Invalid user data');
-      }
+      if (!user) throw AppError.unauthorized();
       return { result: _formatUser(user), error: null };
     } catch (error) {
       return { error, result: null };
@@ -64,9 +57,7 @@ export class User {
   async updateProfileImage(path: string): AsyncSafeResult<ProfileImageResult> {
     try {
       const user = await UserModel.findByIdAndUpdate(this._id, { $set: { profileImage: path } });
-      if (!user) {
-        throw new NotFoundError('User With id ' + this._id);
-      }
+      if (!user) throw AppError.unauthorized();
       await removeFile(join(Config.ProfileImagesDir + user.profileImage));
       return { error: null, result: { path: path } };
     } catch (err) {
@@ -78,12 +69,14 @@ export class User {
     try {
       const user = await UserModel.findById(this._id).select('+password').exec();
       if (!user) {
-        throw new NotFoundError('User With id ' + this._id);
+        throw AppError.unauthorized();
       }
+
       const validPass = await bcrypt.compare(data.oldPassword, user?.password);
       if (!validPass) {
-        throw new InvalidCredentialsError('Invalid old password');
+        throw new AppError(ErrorType.InvalidData, 'The provided old password is not valid.');
       }
+
       const hashedPassword = await bcrypt.hash(data.newPassword, 12);
       user.password = hashedPassword;
       await user.save();
@@ -107,9 +100,7 @@ export class User {
   async addDevice(devId: string): Promise<Error | null> {
     try {
       const user = await UserModel.findByIdAndUpdate(this._id, { $addToSet: { devices: devId } });
-      if (!user) {
-        throw new UnauthorizedError();
-      }
+      if (!user) throw AppError.unauthorized();
       return null;
     } catch (err) {
       return err;
@@ -124,9 +115,7 @@ export class User {
         u = { $pull: { devices: devId } };
       }
       const user = await UserModel.findByIdAndUpdate(this._id, u);
-      if (!user) {
-        throw new UnauthorizedError();
-      }
+      if (!user) throw AppError.unauthorized();
       return null;
     } catch (err) {
       return err;

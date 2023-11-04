@@ -1,9 +1,9 @@
 import CartModel, { CartDB } from '@/database/models/cart';
-import { AsyncSafeResult } from '@type/common';
 import { CartItemData, CartResult } from './interfaces';
 import ProductModel from '@/database/models/product';
-import { NotFoundError } from '../errors';
+import { AppError } from '../errors';
 import { Types } from 'mongoose';
+import { AsyncSafeResult } from '../types';
 
 export class Cart {
   constructor(private cart: CartDB) {}
@@ -16,7 +16,7 @@ export class Cart {
     try {
       const product = await ProductModel.findById(item.id);
       if (!product) {
-        throw new NotFoundError('Product');
+        throw AppError.invalid('Product not found.');
       }
 
       const itemIndex = this.cart.items.findIndex(
@@ -49,9 +49,9 @@ export class Cart {
 
   async removeItem(id: string): AsyncSafeResult<CartResult> {
     try {
-      const item = this.cart.items.find(i => i._id?.toString() === id);
-      if (!item) throw new NotFoundError('Item with id ' + id);
-      (this.cart.items as Types.DocumentArray<any>).pull({ _id: id });
+      const item = this.cart.items.find(i => i.product.toString() === id);
+      if (!item) throw AppError.invalid('Product with id ' + id + ' not found.');
+      (this.cart.items as Types.DocumentArray<any>).pull({ product: id });
       if (this.cart.items.length === 1) {
         this.cart.totalQuantity = 0;
       } else {
@@ -66,8 +66,8 @@ export class Cart {
 
   async editItemQuantity(id: string, newQ: number): AsyncSafeResult<CartResult> {
     try {
-      const itemIndex = this.cart.items.findIndex(i => i._id?.toString() === id);
-      if (itemIndex === -1) return { error: new NotFoundError('Item with id ' + id), result: null };
+      const itemIndex = this.cart.items.findIndex(i => i.product.toString() === id);
+      if (itemIndex === -1) throw AppError.invalid('Product with id ' + id + ' not found.');
       const newItem = (this.cart.items as Types.DocumentArray<any>)[itemIndex];
       const qdi = newQ - newItem.quantity;
       newItem.quantity = newQ;

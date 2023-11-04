@@ -1,8 +1,8 @@
-import { AsyncSafeResult } from '@type/common';
+import { AsyncSafeResult } from '../types';
 import { OrderPaymentMethod, OrderResult, PaymentIntents } from './interfaces';
 import { OrderPayment } from './order';
-import { InvalidDataError, NotFoundError } from '../errors';
-import { createPaymnetIntents } from '../payment/stripe';
+import { AppError } from '../errors';
+import { createPaymentIntents } from '../payment/stripe';
 import CollectionModel from '@/database/models/collection';
 import OrderModel from '@/database/models/order';
 import * as Helper from './helper';
@@ -16,7 +16,7 @@ export class CollectionOrder extends OrderPayment {
       const user = await this.getUserWithAddress();
       let clientSecret: string | null = null;
       const price = await this.getCollectionPrice();
-      clientSecret = await createPaymnetIntents({
+      clientSecret = await createPaymentIntents({
         userId: user._id.toString(),
         totalPrice: price,
         collectionId: this.collectionId,
@@ -31,13 +31,15 @@ export class CollectionOrder extends OrderPayment {
   }
   async getCollectionPrice() {
     const collection = await CollectionModel.findById(this.collectionId);
-    if (!collection) throw new NotFoundError('Collection ');
+    if (!collection) throw AppError.notFound('Collection not found');
 
     return collection.price;
   }
+
   async cash(): AsyncSafeResult<OrderResult> {
     return this.createOrder('CASH');
   }
+
   async stripe(): AsyncSafeResult<OrderResult> {
     return this.createOrder('STRIPE');
   }
@@ -46,7 +48,7 @@ export class CollectionOrder extends OrderPayment {
     try {
       const user = await this.getUserWithAddress();
       const collection = await CollectionModel.findById(this.collectionId);
-      if (!collection) throw new InvalidDataError('Invalid collection id');
+      if (!collection) throw AppError.invalid('Invalid collection id');
       const order = await OrderModel.create({
         address: {
           latitude: user.address.latitude,

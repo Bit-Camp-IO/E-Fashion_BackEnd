@@ -1,11 +1,11 @@
 import mongoose, { Schema } from 'mongoose';
 import { ObjectId, RelationList } from '@type/database';
-import { CategorieDB } from './categorie';
+import { CategoryDB } from './category';
 import { BrandDB } from './brand';
-import  { ProductDB } from './product';
+import { ProductDB } from './product';
 
 export interface DiscountDB {
-  categories?: RelationList<CategorieDB>;
+  categories?: RelationList<CategoryDB>;
   brands?: RelationList<BrandDB>;
   products?: RelationList<ProductDB>;
   percentage: number;
@@ -19,7 +19,7 @@ const discountSchema = new Schema<DiscountDB>({
   brands: [{ type: ObjectId, ref: 'Brand' }],
   percentage: { type: Number, required: true },
   startDate: { type: Number, required: true, default: Date.now },
-  endDate: { type: Number, required: true }
+  endDate: { type: Number, required: true },
 });
 
 const DiscountModel = mongoose.model('Discount', discountSchema);

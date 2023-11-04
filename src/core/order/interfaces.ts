@@ -22,3 +22,16 @@ export type OrderPaymentMethod = 'CASH' | 'STRIPE';
 export interface PaymentIntents {
   clientSecret: string;
 }
+
+export type OrderFactoryData = {
+  userId: string;
+  collectionId?: string;
+};
+
+export type OrderType = 'cart' | 'collection' | string | undefined;
+
+export enum OrderStatus {
+  PROGRESS = 1,
+  WAY,
+  DELIVERED,
+}

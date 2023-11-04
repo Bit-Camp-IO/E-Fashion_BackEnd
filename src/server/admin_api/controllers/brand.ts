@@ -4,9 +4,8 @@ import { CreateBrandSchema, createBrandSchema, updateBrandSchema } from '../vali
 import { Request, Response } from 'express';
 import { Admin } from '@/core/admin/admin';
 import { BrandData } from '@/core/brand/interfaces';
-import RequestError from '@server/utils/errors';
+import RequestError, { handleResultError, unwrapResult } from '@server/utils/errors';
 import { HttpStatus } from '@server/utils/status';
-import { DuplicateError, NotFoundError } from '@/core/errors';
 import { validateId } from '@/core/utils';
 
 @Controller()
@@ -23,12 +22,8 @@ class BrandController {
       logo: body.logo || '',
     };
     const brand = await admin.addBrand(brandData);
-    if (brand.error) {
-      if (brand.error instanceof DuplicateError)
-        throw new RequestError(brand.error.message, HttpStatus.BadRequest);
-      throw RequestError._500();
-    }
-    res.JSON(HttpStatus.Created, brand.result);
+    const result = unwrapResult(brand);
+    res.JSON(HttpStatus.Created, result);
   }
 
   @Validate(updateBrandSchema)
@@ -43,10 +38,8 @@ class BrandController {
       link: body.link,
     };
     const brand = await admin.editBrand(productData, id);
-    if (brand.error) {
-      throw RequestError._500();
-    }
-    res.JSON(HttpStatus.Ok, brand.result);
+    const result = unwrapResult(brand);
+    res.JSON(HttpStatus.Ok, result);
   }
 
   @Guard(AdminRole.ADMIN)
@@ -55,9 +48,7 @@ class BrandController {
     const { id } = req.params;
     const error = await admin.removeBrand(id);
     if (error) {
-      if (error instanceof NotFoundError)
-        throw new RequestError(error.message, HttpStatus.NotFound);
-      throw RequestError._500();
+      handleResultError(error);
     }
     res.JSON(HttpStatus.Ok);
   }
@@ -70,12 +61,8 @@ class BrandController {
       if (!validateId) throw new RequestError('Invalid id' + id, HttpStatus.BadRequest);
     }
     const brand = await admin.addProductsToBrand(req.params['id']!, ids);
-    if (brand.error) {
-      if (brand.error instanceof NotFoundError)
-        throw new RequestError(brand.error.message, HttpStatus.BadRequest);
-      throw RequestError._500();
-    }
-    res.JSON(HttpStatus.Accepted, brand);
+    const result = unwrapResult(brand);
+    res.JSON(HttpStatus.Ok, result);
   }
 
   @Guard(AdminRole.ADMIN)
@@ -87,7 +74,7 @@ class BrandController {
     }
     const error = await admin.removeProductsFromBrand(req.params['id']!, ids);
     if (error) {
-      throw RequestError._500();
+      handleResultError(error);
     }
     res.JSON(HttpStatus.Ok);
   }

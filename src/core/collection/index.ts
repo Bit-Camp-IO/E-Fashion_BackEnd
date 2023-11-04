@@ -1,7 +1,7 @@
 import CollectionModel, { CollectionDB } from '@/database/models/collection';
-import { AsyncSafeResult } from '@type/common';
+import { AsyncSafeResult } from '../types';
 import { CollectionInput, CollectionListResult, CollectionResult } from './interfaces';
-import { NotFoundError } from '../errors';
+import { AppError } from '../errors';
 
 export * from './interfaces';
 
@@ -14,11 +14,12 @@ class Collection {
       return { error, result: null };
     }
   }
+
   async edit(id: string, data: Partial<CollectionInput>): AsyncSafeResult<CollectionResult> {
     try {
       const collection = await CollectionModel.findByIdAndUpdate(id, data, { new: true });
       if (!collection) {
-        throw new NotFoundError('Collection ');
+        throw AppError.notFound('Collection not found.');
       }
       return { result: this._formatCollection(collection), error: null };
     } catch (error) {
@@ -30,7 +31,7 @@ class Collection {
     try {
       const collection = await CollectionModel.findByIdAndDelete(id);
       if (!collection) {
-        throw new NotFoundError('Collection ');
+        throw AppError.notFound('Collection not found.');
       }
       return null;
     } catch (error) {
@@ -42,7 +43,7 @@ class Collection {
     try {
       const collection = await CollectionModel.findById(id);
       if (!collection) {
-        throw new NotFoundError('Collection ');
+        throw AppError.notFound('Collection not found.');
       }
       return { result: this._formatCollection(collection), error: null };
     } catch (error) {

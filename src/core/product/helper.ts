@@ -1,11 +1,11 @@
 import ProductModel, { ProductDB } from '@/database/models/product';
 import type * as T from './interfaces';
-import { NotFoundError } from '../errors';
+import { AppError } from '../errors';
 import { ReviewDB } from '@/database/models/review';
 
 export async function _getProduct(id: string): Promise<ProductDB> {
   const product = await ProductModel.findById(id);
-  if (!product) throw new NotFoundError('Product with id ' + id);
+  if (!product) throw AppError.notFound('Product with id ' + id + ' not found.');
   return product;
 }
 
