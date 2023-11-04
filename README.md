@@ -1,12 +1,31 @@
 ![Project Version](https://img.shields.io/badge/version-0.0.1-blue)
-
+[![License](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://opensource.org/licenses/Apache-2.0)
 
 
 
 # E-Fash e-commerce Backend
 
-This repository functions as the backend for the E-Fash e-commerce app. It is built using TypeScript, Express.js, and MongoDB with Mongoose. The project follows the principles of clean architecture to maintain modularity and scalability.
+This repository functions as the backend for the E-Fash e-commerce app, serving E-Fashion Flutter and Kotlin applications. Built with TypeScript, Express.js, and MongoDB utilizing Mongoose, the project adheres to clean architecture principles, ensuring modularity and scalability at its core
 
+## Technologies & Libraries Used
+
+We aimed to minimize reliance on third-party services, prioritizing in-house solutions wherever possible.
+
+- Express.js
+- Mongoose
+- Socket.io
+- Winston
+- Busboy
+- Dotenv
+- Firebase-Admin
+- Joi
+- Jsonwebtoken
+- Nodemailer
+- Stripe
+- Swagger-jsdoc
+- Swagger-ui-express
+- Axios
+- Bcrypt
 
 ## Getting Started
 
@@ -32,6 +51,7 @@ This repository functions as the backend for the E-Fash e-commerce app. It is bu
 6. Start the project:
    ```bash
    npm run start
+
 ## Swagger Documentation
 This project includes Swagger documentation for the API endpoints. You can access it at:
 
@@ -59,7 +79,8 @@ We've integrated email capabilities for various essential functions, such as ord
 
 ## Authentication
 
-- **JWT Tokens**: Secure user authentication and authorization using JSON Web Tokens.
+- **JWT Tokens**: Secure user authentication and authorization using JSON Web Tokens for implementing refresh and access tokens.
+
 - **Google Authentication**: Enable users to log in seamlessly with their Google accounts.
 - **Password Reset**: Allow users to reset their passwords using email-based one-time passwords (OTPs).
 
