@@ -1,5 +1,6 @@
+import * as fs from 'fs';
 import firebase from 'firebase-admin';
-import firebaseConfig from '../../../firebase.json';
+// import firebaseConfig from '../../../firebase.json';
 import NotificationModel, { NotificationDB } from '@/database/models/notification';
 import UserModel from '@/database/models/user';
 import { AsyncSafeResult } from '../types';
@@ -25,11 +26,21 @@ class Notification {
   constructor(private type: NotificationType, private to: string) {}
 
   static init() {
-    try {
-      firebase.initializeApp({
-        credential: firebase.credential.cert(firebaseConfig as firebase.ServiceAccount),
-      });
-    } catch {
+    if (fs.existsSync('firebase.json')) {
+      const firebaseConfig = JSON.parse(fs.readFileSync('firebase.json', 'utf-8'));
+      try {
+        firebase.initializeApp({
+          credential: firebase.credential.cert(firebaseConfig as firebase.ServiceAccount),
+        });
+      } catch {
+        log.warn('There is no firebase.json file\nSome features will not work.');
+        log.warn('You can create one for free at https://console.firebase.google.com/');
+        log.warn(
+          'For more information, see https://firebase.google.com/docs/web/setup#configure_firebase_web_app',
+        );
+        log.warn('After creating a firebase.json file, restart the server.');
+        return;
+      }
       return;
     }
   }

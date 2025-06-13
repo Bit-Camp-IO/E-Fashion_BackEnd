@@ -15,3 +15,5 @@ scripts/
 push.sh
 firebase.json
 logs
+
+keys

@@ -6,7 +6,7 @@
   "scripts": {
     "start": "ts-node -r tsconfig-paths/register ./src/index.ts",
     "start-production": "node ./dist/src/index.js",
-    "start-watch": "nodemon",
+    "start-watch": "tsx ./src/index.ts",
     "build": "tsc && tsc-alias",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -67,6 +67,7 @@
     "stripe": "^12.16.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
+    "tsx": "^4.20.3",
     "winston": "^3.11.0"
   }
 }

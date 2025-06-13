@@ -1,5 +1,3 @@
-import { config } from 'dotenv';
-config();
 import Config from './index';
 import { CreateProDir } from './initDir';
 

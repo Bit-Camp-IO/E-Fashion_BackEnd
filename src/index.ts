@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import './config/init';
 import './log';
 import { initDB } from './database/init';
